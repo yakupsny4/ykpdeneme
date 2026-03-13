@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
+
 <meta charset="UTF-8">
-<title>Halı Saha Takım İstatistikleri</title>
+
+<title>Halı Saha Mini Lig</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:#0f172a;
+background:linear-gradient(135deg,#0f172a,#020617);
 color:white;
 margin:0;
 padding:20px;
@@ -16,106 +19,188 @@ padding:20px;
 
 h1{
 text-align:center;
+margin-bottom:40px;
 }
 
-.container{
+.players{
 display:flex;
-gap:20px;
 flex-wrap:wrap;
+justify-content:center;
+gap:20px;
 }
 
-.player-card{
+.player{
 background:#1e293b;
-border-radius:10px;
-padding:15px;
 width:200px;
+border-radius:12px;
+padding:15px;
 text-align:center;
 cursor:pointer;
 transition:0.3s;
 }
 
-.player-card:hover{
-transform:scale(1.05);
+.player:hover{
+transform:scale(1.08);
 background:#334155;
 }
 
-.player-card img{
+.player img{
 width:100%;
+height:200px;
+object-fit:cover;
 border-radius:10px;
+}
+
+.section{
+margin-top:50px;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-margin-top:30px;
+margin-top:15px;
 }
 
 th,td{
 padding:10px;
-border-bottom:1px solid #444;
 text-align:center;
+border-bottom:1px solid #333;
 }
 
 th{
 background:#1e293b;
 }
 
-#playerDetail{
-margin-top:30px;
+.profile{
+margin-top:40px;
 background:#1e293b;
 padding:20px;
 border-radius:10px;
 display:none;
+text-align:center;
+}
+
+.profile img{
+width:160px;
+border-radius:10px;
+margin-bottom:10px;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<h1>⚽ Halı Saha Takım İstatistikleri</h1>
+<h1>⚽ Halı Saha Mini Lig</h1>
 
-<div class="container" id="players"></div>
+<div class="players" id="players"></div>
 
-<h2>Puan Tablosu</h2>
+<div class="section">
+
+<h2>🏆 Puan Tablosu</h2>
 
 <table>
+
 <thead>
+
 <tr>
+
 <th>Oyuncu</th>
 <th>Maç</th>
 <th>Gol</th>
 <th>Asist</th>
 <th>MVP</th>
 <th>Puan</th>
+
 </tr>
+
 </thead>
 
-<tbody id="table"></tbody>
+<tbody id="puan"></tbody>
 
 </table>
 
-<div id="playerDetail"></div>
+</div>
+
+<div class="section">
+
+<h2>⚽ Gol Krallığı</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Oyuncu</th>
+<th>Gol</th>
+</tr>
+</thead>
+
+<tbody id="gol"></tbody>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>🎯 Asist Krallığı</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Oyuncu</th>
+<th>Asist</th>
+</tr>
+</thead>
+
+<tbody id="asist"></tbody>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>⭐ MVP Sıralaması</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Oyuncu</th>
+<th>MVP</th>
+</tr>
+</thead>
+
+<tbody id="mvp"></tbody>
+
+</table>
+
+</div>
+
+<div class="profile" id="profil"></div>
 
 <script>
 
-const players = [
+const players=[
 
 {
-name:"Ahmet",
-age:24,
+name:"Yakup",
+age:23,
 height:"180",
 position:"Forvet",
 matches:10,
-goals:8,
-assists:4,
-mvp:3,
+goals:9,
+assists:3,
+mvp:4,
 image:"https://i.imgur.com/4YQZ4.jpg"
 },
 
 {
-name:"Mehmet",
-age:22,
+name:"Emre",
+age:24,
 height:"175",
 position:"Orta Saha",
 matches:10,
@@ -126,37 +211,44 @@ image:"https://i.imgur.com/4YQZ4.jpg"
 },
 
 {
-name:"Ali",
-age:26,
+name:"Mert",
+age:25,
 height:"182",
 position:"Defans",
 matches:9,
-goals:1,
-assists:2,
+goals:2,
+assists:1,
 mvp:0,
 image:"https://i.imgur.com/4YQZ4.jpg"
 }
 
 ]
 
-function calculatePoints(p){
+function puanHesapla(p){
 
 return (p.goals*4)+(p.assists*3)+(p.mvp*5)
 
 }
 
-function loadPlayers(){
+function siteYukle(){
 
-const container=document.getElementById("players")
-const table=document.getElementById("table")
+const oyuncular=document.getElementById("players")
+
+const puanTablo=document.getElementById("puan")
+
+const golTablo=document.getElementById("gol")
+
+const asistTablo=document.getElementById("asist")
+
+const mvpTablo=document.getElementById("mvp")
 
 players.forEach(p=>{
 
-const points=calculatePoints(p)
+let puan=puanHesapla(p)
 
-container.innerHTML+=`
+oyuncular.innerHTML+=`
 
-<div class="player-card" onclick="showDetail('${p.name}')">
+<div class="player" onclick="profilGoster('${p.name}')">
 
 <img src="${p.image}">
 
@@ -168,21 +260,49 @@ container.innerHTML+=`
 
 `
 
-table.innerHTML+=`
+puanTablo.innerHTML+=`
 
 <tr>
 
 <td>${p.name}</td>
-
 <td>${p.matches}</td>
+<td>${p.goals}</td>
+<td>${p.assists}</td>
+<td>${p.mvp}</td>
+<td>${puan}</td>
 
+</tr>
+
+`
+
+golTablo.innerHTML+=`
+
+<tr>
+
+<td>${p.name}</td>
 <td>${p.goals}</td>
 
+</tr>
+
+`
+
+asistTablo.innerHTML+=`
+
+<tr>
+
+<td>${p.name}</td>
 <td>${p.assists}</td>
 
-<td>${p.mvp}</td>
+</tr>
 
-<td>${points}</td>
+`
+
+mvpTablo.innerHTML+=`
+
+<tr>
+
+<td>${p.name}</td>
+<td>${p.mvp}</td>
 
 </tr>
 
@@ -192,19 +312,19 @@ table.innerHTML+=`
 
 }
 
-function showDetail(name){
+function profilGoster(name){
 
 const p=players.find(x=>x.name===name)
 
-const detail=document.getElementById("playerDetail")
+const profil=document.getElementById("profil")
 
-detail.style.display="block"
+profil.style.display="block"
 
-detail.innerHTML=`
+profil.innerHTML=`
 
 <h2>${p.name}</h2>
 
-<img src="${p.image}" width="150">
+<img src="${p.image}">
 
 <p>Yaş: ${p.age}</p>
 
@@ -220,15 +340,16 @@ detail.innerHTML=`
 
 <p>MVP: ${p.mvp}</p>
 
-<p>Puan: ${calculatePoints(p)}</p>
+<p>Puan: ${puanHesapla(p)}</p>
 
 `
 
 }
 
-loadPlayers()
+siteYukle()
 
 </script>
 
 </body>
+
 </html>
