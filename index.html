@@ -1,52 +1,234 @@
-------------------------------------------------
-LOGO           LİG ADI              MENÜ
-            (Arkadaş Ligi)
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Halı Saha Takım İstatistikleri</title>
 
-Menü:
-Ana Sayfa | Puan Durumu | Oyuncular | Maçlar | İstatistik
-------------------------------------------------
+<style>
 
-🔥 SON MAÇLAR
------------------------------------------------
-Takım A   3 - 2   Takım B
-Takım C   1 - 1   Takım D
-Takım E   4 - 0   Takım F
------------------------------------------------
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+margin:0;
+padding:20px;
+}
 
-📊 PUAN DURUMU
------------------------------------------------
-#  Takım     O   G   B   M   P
-1  Kartallar 5   4   0   1   12
-2  Aslanlar  5   3   1   1   10
-3  Yıldızlar 5   2   1   2   7
------------------------------------------------
+h1{
+text-align:center;
+}
 
-👑 GOL KRALLIĞI
------------------------------------------------
-1. Ahmet      8 gol
-2. Mehmet     6 gol
-3. Yusuf      5 gol
------------------------------------------------
+.container{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
 
-⭐ HAFTANIN MVP'si
------------------------------------------------
-Oyuncu Fotoğrafı
+.player-card{
+background:#1e293b;
+border-radius:10px;
+padding:15px;
+width:200px;
+text-align:center;
+cursor:pointer;
+transition:0.3s;
+}
 
-Ahmet Kaya
-2 Gol - 1 Asist
------------------------------------------------
+.player-card:hover{
+transform:scale(1.05);
+background:#334155;
+}
 
-📅 GELECEK MAÇLAR
------------------------------------------------
-Pazar 21:00
-Kartallar vs Aslanlar
+.player-card img{
+width:100%;
+border-radius:10px;
+}
 
-Pazartesi 20:30
-Yıldızlar vs Kaplanlar
------------------------------------------------
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:30px;
+}
 
-Footer
------------------------------------------------
-Site sahibi: Senin Ligin
-Instagram | İletişim
------------------------------------------------
+th,td{
+padding:10px;
+border-bottom:1px solid #444;
+text-align:center;
+}
+
+th{
+background:#1e293b;
+}
+
+#playerDetail{
+margin-top:30px;
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>⚽ Halı Saha Takım İstatistikleri</h1>
+
+<div class="container" id="players"></div>
+
+<h2>Puan Tablosu</h2>
+
+<table>
+<thead>
+<tr>
+<th>Oyuncu</th>
+<th>Maç</th>
+<th>Gol</th>
+<th>Asist</th>
+<th>MVP</th>
+<th>Puan</th>
+</tr>
+</thead>
+
+<tbody id="table"></tbody>
+
+</table>
+
+<div id="playerDetail"></div>
+
+<script>
+
+const players = [
+
+{
+name:"Ahmet",
+age:24,
+height:"180",
+position:"Forvet",
+matches:10,
+goals:8,
+assists:4,
+mvp:3,
+image:"https://i.imgur.com/4YQZ4.jpg"
+},
+
+{
+name:"Mehmet",
+age:22,
+height:"175",
+position:"Orta Saha",
+matches:10,
+goals:4,
+assists:7,
+mvp:1,
+image:"https://i.imgur.com/4YQZ4.jpg"
+},
+
+{
+name:"Ali",
+age:26,
+height:"182",
+position:"Defans",
+matches:9,
+goals:1,
+assists:2,
+mvp:0,
+image:"https://i.imgur.com/4YQZ4.jpg"
+}
+
+]
+
+function calculatePoints(p){
+
+return (p.goals*4)+(p.assists*3)+(p.mvp*5)
+
+}
+
+function loadPlayers(){
+
+const container=document.getElementById("players")
+const table=document.getElementById("table")
+
+players.forEach(p=>{
+
+const points=calculatePoints(p)
+
+container.innerHTML+=`
+
+<div class="player-card" onclick="showDetail('${p.name}')">
+
+<img src="${p.image}">
+
+<h3>${p.name}</h3>
+
+<p>${p.position}</p>
+
+</div>
+
+`
+
+table.innerHTML+=`
+
+<tr>
+
+<td>${p.name}</td>
+
+<td>${p.matches}</td>
+
+<td>${p.goals}</td>
+
+<td>${p.assists}</td>
+
+<td>${p.mvp}</td>
+
+<td>${points}</td>
+
+</tr>
+
+`
+
+})
+
+}
+
+function showDetail(name){
+
+const p=players.find(x=>x.name===name)
+
+const detail=document.getElementById("playerDetail")
+
+detail.style.display="block"
+
+detail.innerHTML=`
+
+<h2>${p.name}</h2>
+
+<img src="${p.image}" width="150">
+
+<p>Yaş: ${p.age}</p>
+
+<p>Boy: ${p.height} cm</p>
+
+<p>Mevki: ${p.position}</p>
+
+<p>Maç: ${p.matches}</p>
+
+<p>Gol: ${p.goals}</p>
+
+<p>Asist: ${p.assists}</p>
+
+<p>MVP: ${p.mvp}</p>
+
+<p>Puan: ${calculatePoints(p)}</p>
+
+`
+
+}
+
+loadPlayers()
+
+</script>
+
+</body>
+</html>
