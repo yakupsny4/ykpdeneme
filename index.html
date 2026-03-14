@@ -276,7 +276,32 @@ oyuncular.forEach((o,i)=>{
 
 alan.innerHTML+=`
 
-<div class="card">
+<div class="player-card">
+
+<img src="${o.resim}">
+
+<div class="player-name">${o.isim}</div>
+
+<div class="player-stats">
+
+Yaş: ${o.yas}<br>
+Boy: ${o.boy}<br>
+Kilo: ${o.kilo}<br>
+Değer: ${o.deger}<br>
+
+⚽ Gol: ${o.gol}<br>
+🎯 Asist: ${o.asist}<br>
+⭐ MVP: ${o.mvp}<br>
+
+</div>
+
+<button onclick="golEkle(${i})">Gol</button>
+<button onclick="asistEkle(${i})">Asist</button>
+<button onclick="mvpEkle(${i})">MVP</button>
+<button onclick="macEkle(${i})">Maç</button>
+<button onclick="oyuncuSil(${i})">Sil</button>
+
+</div>
 
 <img src="${o.resim}">
 
@@ -411,3 +436,51 @@ goster()
 
 </body>
 </html>
+.player-card{
+
+background:linear-gradient(180deg,#1a1a1a,#0d0d0d);
+border:2px solid #ffd000;
+box-shadow:0 0 10px #ffd00033;
+width:220px;
+display:inline-block;
+margin:10px;
+padding:12px;
+border-radius:12px;
+text-align:center;
+transition:0.3s;
+
+}
+
+.player-card:hover{
+
+transform:scale(1.05);
+box-shadow:0 0 15px #ffd00066;
+
+}
+
+.player-card img{
+
+width:120px;
+height:120px;
+object-fit:cover;
+border-radius:100px;
+border:3px solid #ffd000;
+margin-bottom:10px;
+
+}
+
+.player-name{
+
+font-size:18px;
+font-weight:bold;
+color:#ffd000;
+
+}
+
+.player-stats{
+
+font-size:13px;
+margin-top:5px;
+line-height:1.6;
+
+}
