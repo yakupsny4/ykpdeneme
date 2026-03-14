@@ -1,0 +1,30 @@
+body{
+
+font-family: Arial;
+background:#121212;
+color:white;
+text-align:center;
+
+}
+
+h1{
+color:orange;
+}
+
+.menu a{
+
+margin:15px;
+font-size:20px;
+color:white;
+text-decoration:none;
+background:orange;
+padding:10px 20px;
+border-radius:10px;
+
+}
+
+.menu a:hover{
+
+background:red;
+
+}
