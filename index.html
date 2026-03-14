@@ -1,25 +1,279 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="tr">
 <head>
+<meta charset="UTF-8">
 <title>Halı Saha Ligi</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+font-family:Arial;
+background:#0b0b0b;
+color:white;
+margin:0;
+}
+
+header{
+background:black;
+padding:20px;
+text-align:center;
+border-bottom:3px solid #ffd000;
+}
+
+header h1{
+color:#ffd000;
+}
+
+nav{
+text-align:center;
+padding:10px;
+background:#111;
+}
+
+nav a{
+color:white;
+margin:10px;
+text-decoration:none;
+font-weight:bold;
+}
+
+nav a:hover{
+color:#00ff88;
+}
+
+section{
+padding:20px;
+max-width:1000px;
+margin:auto;
+}
+
+h2{
+color:#ffd000;
+border-bottom:2px solid #00ff88;
+padding-bottom:5px;
+}
+
+/* Lig tablosu */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th{
+background:#ffd000;
+color:black;
+padding:10px;
+}
+
+td{
+background:#1a1a1a;
+padding:10px;
+text-align:center;
+border-bottom:1px solid #333;
+}
+
+/* Oyuncu kartları */
+
+.players{
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+}
+
+.card{
+background:#111;
+padding:15px;
+border-radius:10px;
+width:200px;
+text-align:center;
+border:2px solid #00ff88;
+}
+
+.card img{
+width:100%;
+border-radius:10px;
+}
+
+.card h3{
+color:#ffd000;
+}
+
+/* Fikstür */
+
+.match{
+background:#111;
+padding:10px;
+margin:10px 0;
+border-left:4px solid #00ff88;
+}
+
+/* Footer */
+
+footer{
+text-align:center;
+padding:20px;
+background:black;
+margin-top:30px;
+border-top:3px solid #ffd000;
+}
+
+</style>
 </head>
 
 <body>
 
+<header>
 <h1>⚽ Halı Saha Ligi</h1>
+<p>Arkadaş Grubu Futbol Ligi</p>
+</header>
 
-<div class="menu">
-<a href="players.html">Oyuncular</a>
-<a href="matches.html">Maçlar</a>
+<nav>
+<a href="#lig">Lig Tablosu</a>
+<a href="#oyuncular">Oyuncular</a>
+<a href="#gol">Gol Krallığı</a>
+<a href="#fikstur">Fikstür</a>
+</nav>
+
+<section id="lig">
+
+<h2>🏆 Lig Tablosu</h2>
+
+<table>
+<tr>
+<th>Takım</th>
+<th>O</th>
+<th>G</th>
+<th>B</th>
+<th>M</th>
+<th>P</th>
+</tr>
+
+<tr>
+<td>Kartallar</td>
+<td>5</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>12</td>
+</tr>
+
+<tr>
+<td>Aslanlar</td>
+<td>5</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>10</td>
+</tr>
+
+<tr>
+<td>Yıldızlar</td>
+<td>5</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>7</td>
+</tr>
+
+<tr>
+<td>Şimşekler</td>
+<td>5</td>
+<td>1</td>
+<td>0</td>
+<td>4</td>
+<td>3</td>
+</tr>
+
+</table>
+
+</section>
+
+<section id="oyuncular">
+
+<h2>👤 Oyuncular</h2>
+
+<div class="players">
+
+<div class="card">
+<img src="https://i.imgur.com/1X6bX.jpg">
+<h3>Ahmet</h3>
+<p>Forvet</p>
+<p>Gol: 6</p>
 </div>
 
-<h2>Son Maç</h2>
+<div class="card">
+<img src="https://i.imgur.com/1X6bX.jpg">
+<h3>Mehmet</h3>
+<p>Orta Saha</p>
+<p>Gol: 4</p>
+</div>
 
-<div id="lastMatch"></div>
+<div class="card">
+<img src="https://i.imgur.com/1X6bX.jpg">
+<h3>Ali</h3>
+<p>Defans</p>
+<p>Gol: 2</p>
+</div>
 
-<script src="script.js"></script>
+</div>
+
+</section>
+
+<section id="gol">
+
+<h2>⚽ Gol Krallığı</h2>
+
+<table>
+
+<tr>
+<th>Oyuncu</th>
+<th>Gol</th>
+</tr>
+
+<tr>
+<td>Ahmet</td>
+<td>6</td>
+</tr>
+
+<tr>
+<td>Mehmet</td>
+<td>4</td>
+</tr>
+
+<tr>
+<td>Ali</td>
+<td>2</td>
+</tr>
+
+</table>
+
+</section>
+
+<section id="fikstur">
+
+<h2>📅 Fikstür</h2>
+
+<div class="match">
+Kartallar 5 - 3 Aslanlar
+</div>
+
+<div class="match">
+Yıldızlar 2 - 2 Şimşekler
+</div>
+
+<div class="match">
+Kartallar 4 - 1 Şimşekler
+</div>
+
+</section>
+
+<footer>
+
+<p>Halı Saha Ligi Sitesi</p>
+
+</footer>
 
 </body>
-</html>
+  </html>
