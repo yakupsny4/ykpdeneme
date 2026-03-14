@@ -8,43 +8,52 @@
 
 body{
 font-family:Arial;
-background:#0f0f0f;
+background:#0b0b0b;
 color:white;
 margin:0;
 padding:20px;
 }
 
 h1{
-color:#ffd000;
 text-align:center;
+color:#ffd000;
 }
 
-.container{
-max-width:1200px;
-margin:auto;
-}
-
-button{
-background:#ffd000;
-border:none;
-padding:10px 15px;
-cursor:pointer;
-font-weight:bold;
-margin:5px;
+.panel{
+background:#151515;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
 }
 
 input{
 padding:8px;
 margin:5px;
+border:none;
+border-radius:5px;
+}
+
+button{
+background:#ffd000;
+border:none;
+padding:8px 12px;
+margin:3px;
+cursor:pointer;
+font-weight:bold;
+border-radius:5px;
+}
+
+button:hover{
+background:#ffe75a;
 }
 
 .card{
-background:#1c1c1c;
-padding:15px;
-margin:10px;
-border-radius:10px;
-display:inline-block;
+background:#1b1b1b;
 width:220px;
+display:inline-block;
+margin:10px;
+padding:10px;
+border-radius:10px;
 text-align:center;
 }
 
@@ -55,8 +64,8 @@ border-radius:10px;
 
 table{
 width:100%;
-border-collapse:collapse;
 margin-top:20px;
+border-collapse:collapse;
 }
 
 th{
@@ -66,9 +75,13 @@ padding:10px;
 }
 
 td{
-border-bottom:1px solid #333;
 padding:8px;
+border-bottom:1px solid #333;
 text-align:center;
+}
+
+.section{
+margin-top:40px;
 }
 
 </style>
@@ -76,9 +89,9 @@ text-align:center;
 
 <body>
 
-<div class="container">
-
 <h1>⚽ Halısaha Ligi</h1>
+
+<div class="panel">
 
 <h2>Oyuncu Ekle</h2>
 
@@ -91,16 +104,24 @@ text-align:center;
 
 <button onclick="oyuncuEkle()">Oyuncu Ekle</button>
 
+</div>
+
+<div class="section">
+
 <h2>Oyuncular</h2>
 
 <div id="oyuncular"></div>
+
+</div>
+
+<div class="section">
 
 <h2>Puan Tablosu</h2>
 
 <table>
 <thead>
 <tr>
-<th>İsim</th>
+<th>Oyuncu</th>
 <th>Maç</th>
 <th>Gol</th>
 <th>Asist</th>
@@ -109,13 +130,36 @@ text-align:center;
 </tr>
 </thead>
 
-<tbody id="puanTablo"></tbody>
+<tbody id="puan"></tbody>
 
 </table>
 
-<h2>Kadro Oluştur</h2>
+</div>
 
-<button onclick="kadroOlustur()">Yapay Zeka Kadro Kur</button>
+<div class="section">
+
+<h2>Gol Krallığı</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Oyuncu</th>
+<th>Gol</th>
+</tr>
+</thead>
+
+<tbody id="gol"></tbody>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>🤖 AI Kadro Kur</h2>
+
+<button onclick="kadroKur()">Takım Oluştur</button>
 
 <div id="takimlar"></div>
 
@@ -123,34 +167,100 @@ text-align:center;
 
 <script>
 
-let oyuncular = []
+let oyuncular=[]
 
-function puanHesapla(o){
+if(localStorage.getItem("oyuncular")){
 
-return (o.gol*4)+(o.asist*3)+(o.mvp*5)+(o.mac*1)
+oyuncular=JSON.parse(localStorage.getItem("oyuncular"))
+
+}
+
+function kaydet(){
+
+localStorage.setItem("oyuncular",JSON.stringify(oyuncular))
+
+}
+
+function puan(o){
+
+return (o.gol*4)+(o.asist*3)+(o.mvp*6)+(o.mac*1)
 
 }
 
 function oyuncuEkle(){
 
-let oyuncu={
+let o={
 
-isim:document.getElementById("isim").value,
-yas:document.getElementById("yas").value,
-boy:document.getElementById("boy").value,
-kilo:document.getElementById("kilo").value,
-deger:document.getElementById("deger").value,
-resim:document.getElementById("resim").value,
+isim:isim.value,
+yas:yas.value,
+boy:boy.value,
+kilo:kilo.value,
+deger:deger.value,
+resim:resim.value,
 
 gol:0,
 asist:0,
 mvp:0,
 mac:0,
-puan:0
+}
+
+oyuncular.push(o)
+
+kaydet()
+
+goster()
 
 }
 
-oyuncular.push(oyuncu)
+function oyuncuSil(i){
+
+if(confirm("Oyuncu silinsin mi?")){
+
+oyuncular.splice(i,1)
+
+kaydet()
+
+goster()
+
+}
+
+}
+
+function golEkle(i){
+
+oyuncular[i].gol++
+
+kaydet()
+
+goster()
+
+}
+
+function asistEkle(i){
+
+oyuncular[i].asist++
+
+kaydet()
+
+goster()
+
+}
+
+function mvpEkle(i){
+
+oyuncular[i].mvp++
+
+kaydet()
+
+goster()
+
+}
+
+function macEkle(i){
+
+oyuncular[i].mac++
+
+kaydet()
 
 goster()
 
@@ -163,8 +273,6 @@ let alan=document.getElementById("oyuncular")
 alan.innerHTML=""
 
 oyuncular.forEach((o,i)=>{
-
-o.puan=puanHesapla(o)
 
 alan.innerHTML+=`
 
@@ -179,10 +287,11 @@ alan.innerHTML+=`
 <p>Kilo: ${o.kilo}</p>
 <p>Değer: ${o.deger}</p>
 
-<button onclick="gol(${i})">Gol</button>
-<button onclick="asist(${i})">Asist</button>
-<button onclick="mvp(${i})">MVP</button>
-<button onclick="mac(${i})">Maç</button>
+<button onclick="golEkle(${i})">Gol</button>
+<button onclick="asistEkle(${i})">Asist</button>
+<button onclick="mvpEkle(${i})">MVP</button>
+<button onclick="macEkle(${i})">Maç</button>
+<button onclick="oyuncuSil(${i})">Sil</button>
 
 </div>
 
@@ -192,37 +301,19 @@ alan.innerHTML+=`
 
 puanTablo()
 
-}
+golKralligi()
 
-function gol(i){
-oyuncular[i].gol++
-goster()
-}
-
-function asist(i){
-oyuncular[i].asist++
-goster()
-}
-
-function mvp(i){
-oyuncular[i].mvp++
-goster()
-}
-
-function mac(i){
-oyuncular[i].mac++
-goster()
 }
 
 function puanTablo(){
 
-let tablo=document.getElementById("puanTablo")
+let tablo=document.getElementById("puan")
 
 tablo.innerHTML=""
 
-oyuncular.sort((a,b)=>b.puan-a.puan)
+let sirali=[...oyuncular].sort((a,b)=>puan(b)-puan(a))
 
-oyuncular.forEach(o=>{
+sirali.forEach(o=>{
 
 tablo.innerHTML+=`
 
@@ -233,7 +324,7 @@ tablo.innerHTML+=`
 <td>${o.gol}</td>
 <td>${o.asist}</td>
 <td>${o.mvp}</td>
-<td>${o.puan}</td>
+<td>${puan(o)}</td>
 
 </tr>
 
@@ -243,28 +334,78 @@ tablo.innerHTML+=`
 
 }
 
-function kadroOlustur(){
+function golKralligi(){
 
-let karisik=[...oyuncular].sort(()=>Math.random()-0.5)
+let tablo=document.getElementById("gol")
 
-let yarisi=Math.ceil(karisik.length/2)
+tablo.innerHTML=""
 
-let takim1=karisik.slice(0,yarisi)
-let takim2=karisik.slice(yarisi)
+let sirali=[...oyuncular].sort((a,b)=>b.gol-a.gol)
 
-let alan=document.getElementById("takimlar")
+sirali.forEach(o=>{
 
-alan.innerHTML=`
+tablo.innerHTML+=`
 
-<h3>Sarı Takım</h3>
-${takim1.map(o=>o.isim).join("<br>")}
+<tr>
 
-<h3>Siyah Takım</h3>
-${takim2.map(o=>o.isim).join("<br>")}
+<td>${o.isim}</td>
+<td>${o.gol}</td>
+
+</tr>
+
+`
+
+})
+
+}
+
+function kadroKur(){
+
+let sirali=[...oyuncular].sort((a,b)=>puan(b)-puan(a))
+
+let t1=[]
+let t2=[]
+let g1=0
+let g2=0
+
+sirali.forEach(o=>{
+
+let g=puan(o)
+
+if(g1<=g2){
+
+t1.push(o.isim)
+
+g1+=g
+
+}else{
+
+t2.push(o.isim)
+
+g2+=g
+
+}
+
+})
+
+takimlar.innerHTML=`
+
+<h3>🟡 Sarı Takım</h3>
+${t1.join("<br>")}
+
+<h3>⚫ Siyah Takım</h3>
+${t2.join("<br>")}
+
+<p>Takım Gücü</p>
+
+Sarı: ${g1} <br>
+Siyah: ${g2}
 
 `
 
 }
+
+goster()
 
 </script>
 
