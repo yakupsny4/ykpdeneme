@@ -1,546 +1,158 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>Halısaha Ligi</title>
-
-<style>
-
-body{
-font-family:Arial;
-background:#0b0b0b;
-color:white;
-margin:0;
-padding:20px;
-}
-
-h1{
-text-align:center;
-color:#ffd000;
-}
-
-.panel{
-background:#151515;
-padding:15px;
-border-radius:10px;
-margin-bottom:20px;
-}
-
-input{
-padding:8px;
-margin:5px;
-border:none;
-border-radius:5px;
-}
-
-button{
-background:#ffd000;
-border:none;
-padding:8px 12px;
-margin:3px;
-cursor:pointer;
-font-weight:bold;
-border-radius:5px;
-}
-
-button:hover{
-background:#ffe75a;
-}
-
-.card{
-background:#1b1b1b;
-width:220px;
-display:inline-block;
-margin:10px;
-padding:10px;
-border-radius:10px;
-text-align:center;
-}
-
-.card img{
-width:100%;
-border-radius:10px;
-}
-
-table{
-width:100%;
-margin-top:20px;
-border-collapse:collapse;
-}
-
-th{
-background:#ffd000;
-color:black;
-padding:10px;
-}
-
-td{
-padding:8px;
-border-bottom:1px solid #333;
-text-align:center;
-}
-
-.section{
-margin-top:40px;
-}
-
-</style>
-.player-card{
-
-background:#1b1b1b;
-width:220px;
-display:inline-block;
-margin:10px;
-padding:12px;
-border-radius:12px;
-text-align:center;
-border:2px solid #ffd000;
-transition:0.3s;
-
-}
-
-.player-card:hover{
-
-transform:scale(1.05);
-
-}
-
-.player-card img{
-
-width:120px;
-height:120px;
-object-fit:cover;
-border-radius:100px;
-border:3px solid #ffd000;
-margin-bottom:10px;
-
-}
-
-.player-name{
-
-font-size:18px;
-font-weight:bold;
-color:#ffd000;
-
-}
-
-.player-stats{
-
-font-size:13px;
-line-height:1.5;
-
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizim Halı Saha Anıları ⚽</title>
+    <style>
+        :root {
+            --green: #2ecc71;
+            --dark-green: #27ae60;
+            --night: #2c3e50;
+            --gold: #f1c40f;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .match-card {
+            background: white;
+            max-width: 600px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 2px solid var(--green);
+        }
+        .header {
+            background: var(--night);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .info-bar {
+            background: #eee;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #ddd;
+        }
+        .score-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            gap: 20px;
+            background: linear-gradient(to bottom, #fff, #f9f9f9);
+        }
+        .score { font-size: 4rem; font-weight: 800; color: var(--night); }
+        .team-label { font-weight: bold; text-transform: uppercase; color: var(--dark-green); }
+        
+        .details { padding: 20px; }
+        .section-title { 
+            border-left: 5px solid var(--green); 
+            padding-left: 10px; 
+            margin: 20px 0 10px;
+            font-weight: bold;
+        }
+        .mom-box { 
+            background: var(--gold); 
+            padding: 15px; 
+            border-radius: 10px; 
+            text-align: center;
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+        .notes-area {
+            width: 100%;
+            height: 80px;
+            border: 1px dashed #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+        .save-btn {
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .save-btn:hover { background: var(--dark-green); }
+        
+        @media print {
+            .save-btn { display: none; } /* PDF alırken butonu gizler */
+        }
+    </style>
 </head>
-
 <body>
 
-<h1>⚽ Halısaha Ligi</h1>
-
-<div class="panel">
-
-<h2>Oyuncu Ekle</h2>
-
-<input id="isim" placeholder="İsim">
-<input id="yas" placeholder="Yaş">
-<input id="boy" placeholder="Boy">
-<input id="kilo" placeholder="Kilo">
-<input id="deger" placeholder="Piyasa Değeri">
-<input id="resim" placeholder="Resim URL">
-
-<button onclick="oyuncuEkle()">Oyuncu Ekle</button>
-
-</div>
-
-<div class="section">
-
-<h2>Oyuncular</h2>
-
-<div id="oyuncular"></div>
-
-</div>
-
-<div class="section">
-
-<h2>Puan Tablosu</h2>
-
-<table>
-<thead>
-<tr>
-<th>Oyuncu</th>
-<th>Maç</th>
-<th>Gol</th>
-<th>Asist</th>
-<th>MVP</th>
-<th>Puan</th>
-</tr>
-</thead>
-
-<tbody id="puan"></tbody>
-
-</table>
-
-</div>
-
-<div class="section">
-
-<h2>Gol Krallığı</h2>
-
-<table>
-
-<thead>
-<tr>
-<th>Oyuncu</th>
-<th>Gol</th>
-</tr>
-</thead>
-
-<tbody id="gol"></tbody>
-
-</table>
-
-</div>
-
-<div class="section">
-
-<h2>🤖 AI Kadro Kur</h2>
-
-<button onclick="kadroKur()">Takım Oluştur</button>
-
-<div id="takimlar"></div>
-
-</div>
-
-<script>
-
-let oyuncular=[]
-
-if(localStorage.getItem("oyuncular")){
-
-oyuncular=JSON.parse(localStorage.getItem("oyuncular"))
-
-}
-
-function kaydet(){
-
-localStorage.setItem("oyuncular",JSON.stringify(oyuncular))
-
-}
-
-function puan(o){
-
-return (o.gol*4)+(o.asist*3)+(o.mvp*6)+(o.mac*1)
-
-}
-
-function oyuncuEkle(){
-
-let o={
-
-isim:isim.value,
-yas:yas.value,
-boy:boy.value,
-kilo:kilo.value,
-deger:deger.value,
-resim:resim.value,
-
-gol:0,
-asist:0,
-mvp:0,
-mac:0,
-}
-
-oyuncular.push(o)
-
-kaydet()
-
-goster()
-
-}
-
-function oyuncuSil(i){
-
-if(confirm("Oyuncu silinsin mi?")){
-
-oyuncular.splice(i,1)
-
-kaydet()
-
-goster()
-
-}
-
-}
-
-function golEkle(i){
-
-oyuncular[i].gol++
-
-kaydet()
-
-goster()
-
-}
-
-function asistEkle(i){
-
-oyuncular[i].asist++
-
-kaydet()
-
-goster()
-
-}
-
-function mvpEkle(i){
-
-oyuncular[i].mvp++
-
-kaydet()
-
-goster()
-
-}
-
-function macEkle(i){
-
-oyuncular[i].mac++
-
-kaydet()
-
-goster()
-function goster(){
-
-let alan=document.getElementById("oyuncular")
-
-alan.innerHTML=""
-
-oyuncular.forEach((o,i)=>{
-
-alan.innerHTML+=`
-
-<div class="player-card">
-
-<img src="${o.resim}">
-
-<div class="player-name">${o.isim}</div>
-
-<div class="player-stats">
-
-Yaş: ${o.yas}<br>
-Boy: ${o.boy}<br>
-Kilo: ${o.kilo}<br>
-Değer: ${o.deger}<br>
-
-⚽ Gol: ${o.gol}<br>
-🎯 Asist: ${o.asist}<br>
-⭐ MVP: ${o.mvp}
-
-</div>
-
-<button onclick="golEkle(${i})">Gol</button>
-<button onclick="asistEkle(${i})">Asist</button>
-<button onclick="mvpEkle(${i})">MVP</button>
-<button onclick="macEkle(${i})">Maç</button>
-<button onclick="oyuncuSil(${i})">Sil</button>
-
-</div>
-
-`
-
-})
-
-puanTablo()
-golKralligi()
-
-}
-</div>
-
-<button onclick="golEkle(${i})">Gol</button>
-<button onclick="asistEkle(${i})">Asist</button>
-<button onclick="mvpEkle(${i})">MVP</button>
-<button onclick="macEkle(${i})">Maç</button>
-<button onclick="oyuncuSil(${i})">Sil</button>
-
-</div>
-
-<img src="${o.resim}">
-
-<h3>${o.isim}</h3>
-
-<p>Yaş: ${o.yas}</p>
-<p>Boy: ${o.boy}</p>
-<p>Kilo: ${o.kilo}</p>
-<p>Değer: ${o.deger}</p>
-
-<button onclick="golEkle(${i})">Gol</button>
-<button onclick="asistEkle(${i})">Asist</button>
-<button onclick="mvpEkle(${i})">MVP</button>
-<button onclick="macEkle(${i})">Maç</button>
-<button onclick="oyuncuSil(${i})">Sil</button>
-
-</div>
-
-`
-
-})
-
-puanTablo()
-
-golKralligi()
-
-}
-
-function puanTablo(){
-
-let tablo=document.getElementById("puan")
-
-tablo.innerHTML=""
-
-let sirali=[...oyuncular].sort((a,b)=>puan(b)-puan(a))
-
-sirali.forEach(o=>{
-
-tablo.innerHTML+=`
-
-<tr>
-
-<td>${o.isim}</td>
-<td>${o.mac}</td>
-<td>${o.gol}</td>
-<td>${o.asist}</td>
-<td>${o.mvp}</td>
-<td>${puan(o)}</td>
-
-</tr>
-
-`
-
-})
-
-}
-
-function golKralligi(){
-
-let tablo=document.getElementById("gol")
-
-tablo.innerHTML=""
-
-let sirali=[...oyuncular].sort((a,b)=>b.gol-a.gol)
-
-sirali.forEach(o=>{
-
-tablo.innerHTML+=`
-
-<tr>
-
-<td>${o.isim}</td>
-<td>${o.gol}</td>
-
-</tr>
-
-`
-
-})
-
-}
-
-function kadroKur(){
-
-let sirali=[...oyuncular].sort((a,b)=>puan(b)-puan(a))
-
-let t1=[]
-let t2=[]
-let g1=0
-let g2=0
-
-sirali.forEach(o=>{
-
-let g=puan(o)
-
-if(g1<=g2){
-
-t1.push(o.isim)
-
-g1+=g
-
-}else{
-
-t2.push(o.isim)
-
-g2+=g
-
-}
-
-})
-
-takimlar.innerHTML=`
-
-<h3>🟡 Sarı Takım</h3>
-${t1.join("<br>")}
-
-<h3>⚫ Siyah Takım</h3>
-${t2.join("<br>")}
-
-<p>Takım Gücü</p>
-
-Sarı: ${g1} <br>
-Siyah: ${g2}
-
-`
-
-}
-
-goster()
-
-</script>
+    <div class="match-card">
+        <div class="header">
+            <h2 style="margin:0">⚽ MAÇ GÜNLÜĞÜ</h2>
+            <p style="margin:5px 0 0; opacity:0.8">Dostluk kazansın (ama biz yendik)</p>
+        </div>
+
+        <!-- Maç Bilgileri -->
+        <div class="info-bar">
+            <span>📅 <input type="date" id="matchDate"></span>
+            <span>📍 <input type="text" placeholder="Saha Adı (Örn: Şampiyon Halı Saha)" id="pitchName"></span>
+        </div>
+
+        <!-- Skor -->
+        <div class="score-area">
+            <div style="text-align:right">
+                <div class="team-label">Bizim Tayfa</div>
+                <input type="number" value="0" id="scoreA" style="font-size:3rem; width:60px; text-align:center; border:none; background:none; font-weight:bold;">
+            </div>
+            <div style="font-size: 1.5rem; color:#ccc">-</div>
+            <div style="text-align:left">
+                <div class="team-label">Rakipler</div>
+                <input type="number" value="0" id="scoreB" style="font-size:3rem; width:60px; text-align:center; border:none; background:none; font-weight:bold;">
+            </div>
+        </div>
+
+        <div class="details">
+            <!-- Kadrolar -->
+            <div class="section-title">KADROLAR</div>
+            <div style="display:flex; gap:10px;">
+                <textarea placeholder="Bizimkiler (Virgülle ayır)" style="width:50%; height:60px; border-radius:5px; border:1px solid #ddd; padding:5px;" id="playersA"></textarea>
+                <textarea placeholder="Onlar (Virgülle ayır)" style="width:50%; height:60px; border-radius:5px; border:1px solid #ddd; padding:5px;" id="playersB"></textarea>
+            </div>
+
+            <!-- Maçın Adamı -->
+            <div class="section-title">🌟 MAÇIN ADAMI (MOM)</div>
+            <div class="mom-box">
+                <input type="text" placeholder="Kim parladı?" id="momName" style="background:transparent; border:none; text-align:center; width:100%; font-weight:bold; font-size:1.1rem; outline:none;">
+            </div>
+
+            <!-- Maç Notları -->
+            <div class="section-title">📝 MAÇ GEYİKLERİ & NOTLAR</div>
+            <textarea class="notes-area" placeholder="Örn: Ahmet'in boş kaleye kaçırdığı gol, Mehmet'in 30 metreden füzesi..." id="matchNotes"></textarea>
+        </div>
+
+        <button class="save-btn" onclick="saveMemory()">BU ANIYI KAYDET (PDF AL)</button>
+    </div>
+
+    <p style="margin-top:20px; font-size:0.8rem; color:#888;">* Sayfayı farklı kaydet diyerek veya ekran görüntüsü alarak saklayabilirsin.</p>
+
+    <script>
+        function saveMemory() {
+            window.print(); // Sayfayı PDF olarak kaydetmek için en kolay yol
+            alert("Maç anısı hazır! Bu sayfayı PDF olarak kaydedebilir veya ekran görüntüsü alabilirsin.");
+        }
+        
+        // Bugünün tarihini otomatik seç
+        document.getElementById('matchDate').valueAsDate = new Date();
+    </script>
 
 </body>
 </html>
-.player-card{
-
-background:linear-gradient(180deg,#1a1a1a,#0d0d0d);
-border:2px solid #ffd000;
-box-shadow:0 0 10px #ffd00033;
-width:220px;
-display:inline-block;
-margin:10px;
-padding:12px;
-border-radius:12px;
-text-align:center;
-transition:0.3s;
-
-}
-
-.player-card:hover{
-
-transform:scale(1.05);
-box-shadow:0 0 15px #ffd00066;
-
-}
-
-.player-card img{
-
-width:120px;
-height:120px;
-object-fit:cover;
-border-radius:100px;
-border:3px solid #ffd000;
-margin-bottom:10px;
-
-}
-
-.player-name{
-
-font-size:18px;
-font-weight:bold;
-color:#ffd000;
-
-}
-
-.player-stats{
-
-font-size:13px;
-margin-top:5px;
-line-height:1.6;
-
-}
