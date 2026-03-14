@@ -5,7 +5,6 @@
 <title>Halısaha Ligi</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-/* Kart ve efektler */
 .glass{
     backdrop-filter: blur(10px);
     background: rgba(255,255,255,0.03);
@@ -38,52 +37,56 @@
 .group:hover .player-avatar{
     transform:scale(1.1) rotate(2deg);
 }
+footer{
+    position: fixed;
+    bottom:0;
+    width:100%;
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+    padding:10px;
+    text-align:center;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.3em;
+    color:gray;
+}
 </style>
 </head>
 <body class="bg-gray-900 text-white font-sans">
 
 <main class="max-w-7xl mx-auto px-4 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-    <!-- SOL: KADRO ANALİZİ -->
-    <div class="lg:col-span-8 space-y-8">
-        <h2 class="text-2xl border-l-8 border-green-500 pl-4 font-bold mb-4">KADRO ANALİZİ</h2>
-        
-        <!-- Oyuncu kartlarının gridi -->
-        <div id="playerGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Başlangıç oyuncuları burada olacak, JS ile eklenebilir -->
-        </div>
+<div class="lg:col-span-8 space-y-8">
+    <h2 class="text-2xl border-l-8 border-green-500 pl-4 font-bold mb-4">KADRO ANALİZİ</h2>
+    <div id="playerGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
 
-        <!-- Oyuncu ekleme formu -->
-        <div class="glass p-6 rounded-3xl mt-8">
-            <h3 class="text-green-500 font-bold mb-4">Oyuncu Ekle</h3>
-            <form id="addPlayerForm" class="space-y-3">
-                <div class="flex gap-2">
-                    <input type="text" id="playerName" placeholder="İsim" class="flex-1 p-2 rounded bg-gray-800">
-                    <input type="text" id="playerNick" placeholder="Lakab" class="flex-1 p-2 rounded bg-gray-800">
-                    <input type="number" id="playerNumber" placeholder="Numara" class="w-20 p-2 rounded bg-gray-800">
-                </div>
-                <div class="flex gap-2">
-                    <input type="number" id="playerShot" placeholder="Şut (%)" class="flex-1 p-2 rounded bg-gray-800" min="0" max="100">
-                    <input type="number" id="playerDribble" placeholder="Dribling (%)" class="flex-1 p-2 rounded bg-gray-800" min="0" max="100">
-                    <input type="number" id="playerReflex" placeholder="Refleks (%)" class="flex-1 p-2 rounded bg-gray-800" min="0" max="100">
-                </div>
-                <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-2 rounded">
-                    Oyuncu Ekle
-                </button>
-            </form>
-        </div>
-
-    </div>
-
-    <!-- SAĞ PANEL: Haftanın Enleri -->
-    <div class="lg:col-span-4 space-y-6">
-        <div class="glass border-green-500/30 p-6 rounded-3xl">
-            <h3 class="text-green-500 font-bold mb-4">🏆 HAFTANIN ENLERİ</h3>
-            <div id="topPlayers" class="space-y-4">
-                <!-- JS ile güncellenecek -->
+    <div class="glass p-6 rounded-3xl mt-8">
+        <h3 class="text-green-500 font-bold mb-4">Oyuncu Ekle</h3>
+        <form id="addPlayerForm" class="space-y-3">
+            <div class="flex gap-2">
+                <input type="text" id="playerName" placeholder="İsim" class="flex-1 p-2 rounded bg-gray-800" required>
+                <input type="text" id="playerNick" placeholder="Lakab" class="flex-1 p-2 rounded bg-gray-800" required>
+                <input type="number" id="playerNumber" placeholder="Numara" class="w-20 p-2 rounded bg-gray-800" required>
             </div>
-        </div>
+            <div class="flex gap-2">
+                <input type="number" id="playerShot" placeholder="Şut (%)" class="flex-1 p-2 rounded bg-gray-800" min="0" max="100" required>
+                <input type="number" id="playerDribble" placeholder="Dribling (%)" class="flex-1 p-2 rounded bg-gray-800" min="0" max="100" required>
+                <input type="number" id="playerReflex" placeholder="Refleks (%)" class="flex-1 p-2 rounded bg-gray-800" min="0" max="100" required>
+            </div>
+            <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-2 rounded">
+                Oyuncu Ekle
+            </button>
+        </form>
     </div>
+</div>
+
+<div class="lg:col-span-4 space-y-6">
+    <div class="glass border-green-500/30 p-6 rounded-3xl">
+        <h3 class="text-green-500 font-bold mb-4">🏆 HAFTANIN ENLERİ</h3>
+        <div id="topPlayers" class="space-y-4"></div>
+    </div>
+</div>
+
 </main>
 
 <footer class="fixed bottom-0 w-full glass py-4 text-center text-[10px] uppercase tracking-[0.3em] text-gray-500">
@@ -91,14 +94,17 @@
 </footer>
 
 <script>
-// Başlangıç oyuncuları
-let players = [
+// localStorage’dan oyuncuları yükle, yoksa başlangıç oyuncuları
+let players = JSON.parse(localStorage.getItem('players')) || [
     {name:"Caner", nick:"Tank", number:99, shot:99, dribble:80, reflex:50, goals:3, assists:2},
     {name:"Kerem", nick:"Pas-Yok", number:10, shot:70, dribble:85, reflex:60, goals:1, assists:0},
     {name:"Volkan", nick:"Panter", number:1, shot:10, dribble:20, reflex:92, goals:0, assists:0},
 ];
 
-// Oyuncuları grid’e ekleme fonksiyonu
+function savePlayers(){
+    localStorage.setItem('players', JSON.stringify(players));
+}
+
 function renderPlayers(){
     const grid = document.getElementById("playerGrid");
     grid.innerHTML = "";
@@ -131,25 +137,22 @@ function renderPlayers(){
     renderTopPlayers();
 }
 
-// Haftanın Enlerini gösterme
 function renderTopPlayers(){
     const container = document.getElementById("topPlayers");
     container.innerHTML = "";
+    if(players.length===0) return;
 
-    // MVP = en çok gol atan
     const mvp = players.reduce((a,b)=>a.goals>=b.goals?a:b);
     const mvpDiv = document.createElement("div");
     mvpDiv.innerHTML = `<p class="text-[10px] uppercase text-gray-500 font-bold">MVP</p><p class="font-bold">${mvp.name} "${mvp.nick}" - ${mvp.goals} gol</p>`;
     container.appendChild(mvpDiv);
 
-    // Asist kralı
     const assistKing = players.reduce((a,b)=>a.assists>=b.assists?a:b);
     const assistDiv = document.createElement("div");
     assistDiv.innerHTML = `<p class="text-[10px] uppercase text-gray-500 font-bold">Asist Kralı</p><p class="font-bold">${assistKing.name} "${assistKing.nick}" - ${assistKing.assists} asist</p>`;
     container.appendChild(assistDiv);
 }
 
-// Form ile oyuncu ekleme
 document.getElementById("addPlayerForm").addEventListener("submit", e=>{
     e.preventDefault();
     const name = document.getElementById("playerName").value;
@@ -160,13 +163,12 @@ document.getElementById("addPlayerForm").addEventListener("submit", e=>{
     const reflex = document.getElementById("playerReflex").value;
 
     players.push({name,nick,number,shot,dribble,reflex,goals:0,assists:0});
+    savePlayers();
     renderPlayers();
-
-    // formu temizle
     e.target.reset();
 });
 
-// İlk render
+// Sayfa yüklendiğinde render
 renderPlayers();
 </script>
 
