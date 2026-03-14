@@ -1,561 +1,239 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
-
 <meta charset="UTF-8">
-
-<title>Halı Saha Mini Lig</title>
+<title>Halısaha Ligi</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:linear-gradient(135deg,#0f172a,#020617);
+background:#0f0f0f;
 color:white;
 margin:0;
 padding:20px;
 }
 
 h1{
+color:#ffd000;
 text-align:center;
-margin-bottom:40px;
 }
 
-.players{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:20px;
+.container{
+max-width:1200px;
+margin:auto;
 }
 
-.player{
-background:#1e293b;
-width:200px;
-border-radius:12px;
-padding:15px;
-text-align:center;
+button{
+background:#ffd000;
+border:none;
+padding:10px 15px;
 cursor:pointer;
-transition:0.3s;
-}
-
-.player:hover{
-transform:scale(1.08);
-background:#334155;
-}
-
-.player img{
-width:100%;
-height:200px;
-object-fit:cover;
-border-radius:10px;
-}
-
-.section{
-margin-top:50px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-}
-
-th,td{
-padding:10px;
-text-align:center;
-border-bottom:1px solid #333;
-}
-
-th{
-background:#1e293b;
-}
-
-.profile{
-margin-top:40px;
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-display:none;
-text-align:center;
-}
-
-.profile img{
-width:160px;
-border-radius:10px;
-margin-bottom:10px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<h1>⚽ Halı Saha Mini Lig</h1>
-
-<div class="players" id="players"></div>
-
-<div class="section">
-
-<h2>🏆 Puan Tablosu</h2>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Oyuncu</th>
-<th>Maç</th>
-<th>Gol</th>
-<th>Asist</th>
-<th>MVP</th>
-<th>Puan</th>
-
-</tr>
-
-</thead>
-
-<tbody id="puan"></tbody>
-
-</table>
-
-</div>
-
-<div class="section">
-
-<h2>⚽ Gol Krallığı</h2>
-
-<table>
-
-<thead>
-<tr>
-<th>Oyuncu</th>
-<th>Gol</th>
-</tr>
-</thead>
-
-<tbody id="gol"></tbody>
-
-</table>
-
-</div>
-
-<div class="section">
-
-<h2>🎯 Asist Krallığı</h2>
-
-<table>
-
-<thead>
-<tr>
-<th>Oyuncu</th>
-<th>Asist</th>
-</tr>
-</thead>
-
-<tbody id="asist"></tbody>
-
-</table>
-
-</div>
-
-<div class="section">
-
-<h2>⭐ MVP Sıralaması</h2>
-
-<table>
-
-<thead>
-<tr>
-<th>Oyuncu</th>
-<th>MVP</th>
-</tr>
-</thead>
-
-<tbody id="mvp"></tbody>
-
-</table>
-
-</div>
-
-<div class="profile" id="profil"></div>
-
-<script>
-
-const players=[
-
-{
-name:"Yakup",
-age:23,
-height:"180",
-position:"Forvet",
-matches:10,
-goals:9,
-assists:3,
-mvp:4,
-image:"https://i.imgur.com/4YQZ4.jpg"
-},
-
-{
-name:"Emre",
-age:24,
-height:"175",
-position:"Orta Saha",
-matches:10,
-goals:4,
-assists:7,
-mvp:1,
-image:"https://i.imgur.com/4YQZ4.jpg"
-},
-
-{
-name:"Mert",
-age:25,
-height:"182",
-position:"Defans",
-matches:9,
-goals:2,
-assists:1,
-mvp:0,
-image:"https://i.imgur.com/4YQZ4.jpg"
-}
-
-]
-
-function puanHesapla(p){
-
-return (p.goals*4)+(p.assists*3)+(p.mvp*5)
-
-}
-
-function siteYukle(){
-
-const oyuncular=document.getElementById("players")
-
-const puanTablo=document.getElementById("puan")
-
-const golTablo=document.getElementById("gol")
-
-const asistTablo=document.getElementById("asist")
-
-const mvpTablo=document.getElementById("mvp")
-
-players.forEach(p=>{
-
-let puan=puanHesapla(p)
-
-oyuncular.innerHTML+=`
-
-<div class="player" onclick="profilGoster('${p.name}')">
-
-<img src="${p.image}">
-
-<h3>${p.name}</h3>
-
-<p>${p.position}</p>
-
-</div>
-
-`
-
-puanTablo.innerHTML+=`
-
-<tr>
-
-<td>${p.name}</td>
-<td>${p.matches}</td>
-<td>${p.goals}</td>
-<td>${p.assists}</td>
-<td>${p.mvp}</td>
-<td>${puan}</td>
-
-</tr>
-
-`
-
-golTablo.innerHTML+=`
-
-<tr>
-
-<td>${p.name}</td>
-<td>${p.goals}</td>
-
-</tr>
-
-`
-
-asistTablo.innerHTML+=`
-
-<tr>
-
-<td>${p.name}</td>
-<td>${p.assists}</td>
-
-</tr>
-
-`
-
-mvpTablo.innerHTML+=`
-
-<tr>
-
-<td>${p.name}</td>
-<td>${p.mvp}</td>
-
-</tr>
-
-`
-
-})
-
-}
-
-function profilGoster(name){
-
-const p=players.find(x=>x.name===name)
-
-const profil=document.getElementById("profil")
-
-profil.style.display="block"
-
-profil.innerHTML=`
-
-<h2>${p.name}</h2>
-
-<img src="${p.image}">
-
-<p>Yaş: ${p.age}</p>
-
-<p>Boy: ${p.height} cm</p>
-
-<p>Mevki: ${p.position}</p>
-
-<p>Maç: ${p.matches}</p>
-
-<p>Gol: ${p.goals}</p>
-
-<p>Asist: ${p.assists}</p>
-
-<p>MVP: ${p.mvp}</p>
-
-<p>Puan: ${puanHesapla(p)}</p>
-
-`
-
-}
-
-siteYukle()
-
-</script>
-
-</body>
-
-</html>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-
-<meta charset="UTF-8">
-<title>Halı Saha Ligi</title>
-
-<style>
-
-body{
-font-family:Arial;
-background:#0f172a;
-color:white;
-margin:0;
-padding:20px;
-}
-
-h1{
-text-align:center;
-}
-
-.players{
-display:flex;
-flex-wrap:wrap;
-gap:20px;
-justify-content:center;
-margin-top:30px;
-}
-
-.player{
-background:#1e293b;
-width:180px;
-padding:15px;
-border-radius:10px;
-text-align:center;
-cursor:pointer;
-transition:0.3s;
-}
-
-.player:hover{
-background:#334155;
-transform:scale(1.05);
-}
-
-.player img{
-width:100%;
-height:180px;
-object-fit:cover;
-border-radius:10px;
-}
-
-.section{
-margin-top:40px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-}
-
-th,td{
-padding:10px;
-border-bottom:1px solid #444;
-text-align:center;
-}
-
-th{
-background:#1e293b;
-}
-
-.profile{
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-margin-top:30px;
-display:none;
-text-align:center;
-}
-
-.profile img{
-width:150px;
-border-radius:10px;
-}
-
-.form{
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-margin-top:30px;
+font-weight:bold;
+margin:5px;
 }
 
 input{
 padding:8px;
 margin:5px;
-border-radius:5px;
-border:none;
 }
 
-button{
+.card{
+background:#1c1c1c;
+padding:15px;
+margin:10px;
+border-radius:10px;
+display:inline-block;
+width:220px;
+text-align:center;
+}
+
+.card img{
+width:100%;
+border-radius:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th{
+background:#ffd000;
+color:black;
 padding:10px;
-background:#22c55e;
-border:none;
-border-radius:5px;
-color:white;
-cursor:pointer;
+}
+
+td{
+border-bottom:1px solid #333;
+padding:8px;
+text-align:center;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<h1>⚽ Halı Saha Mini Lig</h1>
+<div class="container">
 
-<div class="form">
+<h1>⚽ Halısaha Ligi</h1>
 
-<h2>Yeni Oyuncu Ekle</h2>
+<h2>Oyuncu Ekle</h2>
 
 <input id="isim" placeholder="İsim">
 <input id="yas" placeholder="Yaş">
 <input id="boy" placeholder="Boy">
-<input id="mevki" placeholder="Mevki">
-<input id="resim" placeholder="Resim linki">
+<input id="kilo" placeholder="Kilo">
+<input id="deger" placeholder="Piyasa Değeri">
+<input id="resim" placeholder="Resim URL">
 
 <button onclick="oyuncuEkle()">Oyuncu Ekle</button>
 
-</div>
+<h2>Oyuncular</h2>
 
-<div class="players" id="players"></div>
+<div id="oyuncular"></div>
 
-<div class="section">
-
-<h2>🏆 Puan Tablosu</h2>
+<h2>Puan Tablosu</h2>
 
 <table>
-
 <thead>
-
 <tr>
-
-<th>Oyuncu</th>
+<th>İsim</th>
 <th>Maç</th>
 <th>Gol</th>
 <th>Asist</th>
 <th>MVP</th>
 <th>Puan</th>
-
 </tr>
-
 </thead>
 
-<tbody id="puan"></tbody>
+<tbody id="puanTablo"></tbody>
 
 </table>
 
-</div>
+<h2>Kadro Oluştur</h2>
 
-<div class="profile" id="profil"></div>
+<button onclick="kadroOlustur()">Yapay Zeka Kadro Kur</button>
+
+<div id="takimlar"></div>
+
+</div>
 
 <script>
 
-let players=[]
+let oyuncular = []
 
-function puan(p){
-return (p.goals*4)+(p.assists*3)+(p.mvp*5)
+function puanHesapla(o){
+
+return (o.gol*4)+(o.asist*3)+(o.mvp*5)+(o.mac*1)
+
 }
 
-function siteYenile(){
+function oyuncuEkle(){
 
-const oyuncular=document.getElementById("players")
-const puanTablo=document.getElementById("puan")
+let oyuncu={
 
-oyuncular.innerHTML=""
-puanTablo.innerHTML=""
+isim:document.getElementById("isim").value,
+yas:document.getElementById("yas").value,
+boy:document.getElementById("boy").value,
+kilo:document.getElementById("kilo").value,
+deger:document.getElementById("deger").value,
+resim:document.getElementById("resim").value,
 
-players.forEach(p=>{
+gol:0,
+asist:0,
+mvp:0,
+mac:0,
+puan:0
 
-oyuncular.innerHTML+=`
+}
 
-<div class="player" onclick="profil('${p.name}')">
+oyuncular.push(oyuncu)
 
-<img src="${p.image}">
+goster()
 
-<h3>${p.name}</h3>
+}
 
-<p>${p.position}</p>
+function goster(){
+
+let alan=document.getElementById("oyuncular")
+
+alan.innerHTML=""
+
+oyuncular.forEach((o,i)=>{
+
+o.puan=puanHesapla(o)
+
+alan.innerHTML+=`
+
+<div class="card">
+
+<img src="${o.resim}">
+
+<h3>${o.isim}</h3>
+
+<p>Yaş: ${o.yas}</p>
+<p>Boy: ${o.boy}</p>
+<p>Kilo: ${o.kilo}</p>
+<p>Değer: ${o.deger}</p>
+
+<button onclick="gol(${i})">Gol</button>
+<button onclick="asist(${i})">Asist</button>
+<button onclick="mvp(${i})">MVP</button>
+<button onclick="mac(${i})">Maç</button>
 
 </div>
 
 `
 
-puanTablo.innerHTML+=`
+})
+
+puanTablo()
+
+}
+
+function gol(i){
+oyuncular[i].gol++
+goster()
+}
+
+function asist(i){
+oyuncular[i].asist++
+goster()
+}
+
+function mvp(i){
+oyuncular[i].mvp++
+goster()
+}
+
+function mac(i){
+oyuncular[i].mac++
+goster()
+}
+
+function puanTablo(){
+
+let tablo=document.getElementById("puanTablo")
+
+tablo.innerHTML=""
+
+oyuncular.sort((a,b)=>b.puan-a.puan)
+
+oyuncular.forEach(o=>{
+
+tablo.innerHTML+=`
 
 <tr>
 
-<td>${p.name}</td>
-<td>${p.matches}</td>
-<td>${p.goals}</td>
-<td>${p.assists}</td>
-<td>${p.mvp}</td>
-<td>${puan(p)}</td>
+<td>${o.isim}</td>
+<td>${o.mac}</td>
+<td>${o.gol}</td>
+<td>${o.asist}</td>
+<td>${o.mvp}</td>
+<td>${o.puan}</td>
 
 </tr>
 
@@ -565,56 +243,24 @@ puanTablo.innerHTML+=`
 
 }
 
-function oyuncuEkle(){
+function kadroOlustur(){
 
-const p={
+let karisik=[...oyuncular].sort(()=>Math.random()-0.5)
 
-name:document.getElementById("isim").value,
-age:document.getElementById("yas").value,
-height:document.getElementById("boy").value,
-position:document.getElementById("mevki").value,
-image:document.getElementById("resim").value,
+let yarisi=Math.ceil(karisik.length/2)
 
-matches:0,
-goals:0,
-assists:0,
-mvp:0
+let takim1=karisik.slice(0,yarisi)
+let takim2=karisik.slice(yarisi)
 
-}
+let alan=document.getElementById("takimlar")
 
-players.push(p)
+alan.innerHTML=`
 
-siteYenile()
+<h3>Sarı Takım</h3>
+${takim1.map(o=>o.isim).join("<br>")}
 
-}
-
-function profil(name){
-
-const p=players.find(x=>x.name===name)
-
-const profil=document.getElementById("profil")
-
-profil.style.display="block"
-
-profil.innerHTML=`
-
-<h2>${p.name}</h2>
-
-<img src="${p.image}">
-
-<p>Yaş: ${p.age}</p>
-
-<p>Boy: ${p.height}</p>
-
-<p>Mevki: ${p.position}</p>
-
-<p>Maç: ${p.matches}</p>
-
-<p>Gol: ${p.goals}</p>
-
-<p>Asist: ${p.assists}</p>
-
-<p>MVP: ${p.mvp}</p>
+<h3>Siyah Takım</h3>
+${takim2.map(o=>o.isim).join("<br>")}
 
 `
 
