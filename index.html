@@ -85,6 +85,51 @@ margin-top:40px;
 }
 
 </style>
+.player-card{
+
+background:#1b1b1b;
+width:220px;
+display:inline-block;
+margin:10px;
+padding:12px;
+border-radius:12px;
+text-align:center;
+border:2px solid #ffd000;
+transition:0.3s;
+
+}
+
+.player-card:hover{
+
+transform:scale(1.05);
+
+}
+
+.player-card img{
+
+width:120px;
+height:120px;
+object-fit:cover;
+border-radius:100px;
+border:3px solid #ffd000;
+margin-bottom:10px;
+
+}
+
+.player-name{
+
+font-size:18px;
+font-weight:bold;
+color:#ffd000;
+
+}
+
+.player-stats{
+
+font-size:13px;
+line-height:1.5;
+
+}
 </head>
 
 <body>
@@ -263,9 +308,6 @@ oyuncular[i].mac++
 kaydet()
 
 goster()
-
-}
-
 function goster(){
 
 let alan=document.getElementById("oyuncular")
@@ -291,8 +333,26 @@ Değer: ${o.deger}<br>
 
 ⚽ Gol: ${o.gol}<br>
 🎯 Asist: ${o.asist}<br>
-⭐ MVP: ${o.mvp}<br>
+⭐ MVP: ${o.mvp}
 
+</div>
+
+<button onclick="golEkle(${i})">Gol</button>
+<button onclick="asistEkle(${i})">Asist</button>
+<button onclick="mvpEkle(${i})">MVP</button>
+<button onclick="macEkle(${i})">Maç</button>
+<button onclick="oyuncuSil(${i})">Sil</button>
+
+</div>
+
+`
+
+})
+
+puanTablo()
+golKralligi()
+
+}
 </div>
 
 <button onclick="golEkle(${i})">Gol</button>
