@@ -2,173 +2,156 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Halısaha Ligi</title>
+<title>Halısaha Ligi - Saha ve Takım</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-.glass{
-    backdrop-filter: blur(10px);
-    background: rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.08);
-}
-.card-glow{
-    transition: all .35s ease;
-    box-shadow:0 10px 30px rgba(0,0,0,.5);
-}
-.card-glow:hover{
-    transform:translateY(-8px) scale(1.02);
-    box-shadow:0 25px 60px rgba(57,255,20,.25);
-}
-.stat-bar{
-    width:100%;
-    height:6px;
-    background:#1a1a1a;
-    border-radius:10px;
-    overflow:hidden;
-}
-.stat-fill{
-    height:100%;
-    background:linear-gradient(90deg,#39ff14,#00ffa6);
-    border-radius:10px;
-    transition:width 1s ease;
-}
-.player-avatar{
-    transition:transform .4s ease;
-}
-.group:hover .player-avatar{
-    transform:scale(1.1) rotate(2deg);
-}
-footer{
-    position: fixed;
-    bottom:0;
-    width:100%;
-    background: rgba(0,0,0,0.2);
-    backdrop-filter: blur(5px);
-    padding:10px;
-    text-align:center;
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:0.3em;
-    color:gray;
-}
+.glass{backdrop-filter:blur(10px);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);}
+.card-glow{transition:all .35s ease;box-shadow:0 10px 30px rgba(0,0,0,.5);}
+.card-glow:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 15px 40px rgba(57,255,20,.2);}
+.stat-bar{width:100%;height:6px;background:#1a1a1a;border-radius:10px;overflow:hidden;}
+.stat-fill{height:100%;background:linear-gradient(90deg,#39ff14,#00ffa6);border-radius:10px;transition:width 1s ease;}
+.player-avatar{transition:transform .4s ease;}
+.group:hover .player-avatar{transform:scale(1.05) rotate(2deg);}
+footer{position:fixed;bottom:0;width:100%;background: rgba(0,0,0,0.2);backdrop-filter: blur(5px);padding:10px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:0.3em;color:gray;}
+.soccer-field{position:relative;width:100%;padding-top:60%;background:green;border-radius:10px;overflow:hidden;}
+.position{position:absolute;width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s ease;}
+.position.dragging{opacity:0.7;transform:scale(1.1);}
 </style>
 </head>
 <body class="bg-gray-900 text-white font-sans">
 
 <main class="max-w-7xl mx-auto px-4 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-<div class="lg:col-span-8 space-y-8">
-    <h2 class="text-2xl border-l-8 border-green-500 pl-4 font-bold mb-4">KADRO ANALİZİ</h2>
-    <div id="playerGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+<div class="lg:col-span-8 space-y-6">
+<h2 class="text-2xl border-l-8 border-green-500 pl-4 font-bold mb-4">KADRO & SAHA</h2>
 
-    <div class="glass p-6 rounded-3xl mt-8">
-        <h3 class="text-green-500 font-bold mb-4">Oyuncu Ekle</h3>
-        <form id="addPlayerForm" class="space-y-3">
-            <div class="flex gap-2">
-                <input type="text" id="playerName" placeholder="İsim" class="flex-1 p-2 rounded bg-gray-800" required>
-                <input type="text" id="playerNick" placeholder="Lakab" class="flex-1 p-2 rounded bg-gray-800" required>
-                <input type="number" id="playerNumber" placeholder="Numara" class="w-20 p-2 rounded bg-gray-800" required>
-            </div>
-            <div class="flex gap-2">
-                <input type="number" id="playerShot" placeholder="Şut (%)" class="flex-1 p-2 rounded bg-gray-800" min="0" max="100" required>
-                <input type="number" id="playerDribble" placeholder="Dribling (%)" class="flex-1 p-2 rounded bg-gray-800" min="0" max="100" required>
-                <input type="number" id="playerReflex" placeholder="Refleks (%)" class="flex-1 p-2 rounded bg-gray-800" min="0" max="100" required>
-            </div>
-            <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-2 rounded">
-                Oyuncu Ekle
-            </button>
-        </form>
-    </div>
+<!-- Saha -->
+<div class="soccer-field" id="soccerField">
+  <div class="position" data-pos="GK" style="top:85%;left:45%;background:#ffcc00;"></div>
+  <div class="position" data-pos="DF1" style="top:65%;left:20%;background:#39ff14;"></div>
+  <div class="position" data-pos="DF2" style="top:65%;left:70%;background:#39ff14;"></div>
+  <div class="position" data-pos="MF1" style="top:45%;left:30%;background:#00dfff;"></div>
+  <div class="position" data-pos="MF2" style="top:45%;left:60%;background:#00dfff;"></div>
+  <div class="position" data-pos="FW" style="top:15%;left:45%;background:#ff4d4d;"></div>
+</div>
+
+<!-- Oyuncu Ekleme Formu -->
+<div class="glass p-6 rounded-3xl mt-6">
+<h3 class="text-green-500 font-bold mb-4">Oyuncu Ekle</h3>
+<form id="addPlayerForm" class="space-y-3">
+<div class="flex flex-wrap gap-2">
+<input type="text" id="playerName" placeholder="İsim" class="flex-1 p-2 rounded bg-gray-800" required>
+<input type="text" id="playerNick" placeholder="Lakab" class="flex-1 p-2 rounded bg-gray-800" required>
+<input type="number" id="playerNumber" placeholder="Numara" class="w-20 p-2 rounded bg-gray-800" required>
+<input type="number" id="playerAge" placeholder="Yaş" class="w-20 p-2 rounded bg-gray-800" required>
+<input type="number" id="playerHeight" placeholder="Boy" class="w-20 p-2 rounded bg-gray-800" required>
+<input type="number" id="playerWeight" placeholder="Kilo" class="w-20 p-2 rounded bg-gray-800" required>
+</div>
+<div class="flex flex-wrap gap-2 mt-2">
+<input type="number" id="playerSpeed" placeholder="Hız" class="p-2 rounded bg-gray-800" min="0" max="100" required>
+<input type="number" id="playerTechnique" placeholder="Teknik" class="p-2 rounded bg-gray-800" min="0" max="100" required>
+<input type="number" id="playerDribble" placeholder="Dribling" class="p-2 rounded bg-gray-800" min="0" max="100" required>
+<input type="number" id="playerShot" placeholder="Şut" class="p-2 rounded bg-gray-800" min="0" max="100" required>
+<input type="number" id="playerPhysic" placeholder="Fizik" class="p-2 rounded bg-gray-800" min="0" max="100" required>
+<input type="number" id="playerDefense" placeholder="Defans" class="p-2 rounded bg-gray-800" min="0" max="100" required>
+</div>
+<button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-2 rounded mt-2">
+Oyuncu Ekle
+</button>
+</form>
+</div>
 </div>
 
 <div class="lg:col-span-4 space-y-6">
-    <div class="glass border-green-500/30 p-6 rounded-3xl">
-        <h3 class="text-green-500 font-bold mb-4">🏆 HAFTANIN ENLERİ</h3>
-        <div id="topPlayers" class="space-y-4"></div>
-    </div>
+<div class="glass border-green-500/30 p-6 rounded-3xl">
+<h3 class="text-green-500 font-bold mb-4">🏆 HAFTANIN ENLERİ & TAKIM STATS</h3>
+<div id="topPlayers" class="space-y-4"></div>
+<div id="teamStats" class="text-[10px] text-gray-300 mt-4"></div>
+</div>
 </div>
 
 </main>
 
 <footer class="fixed bottom-0 w-full glass py-4 text-center text-[10px] uppercase tracking-[0.3em] text-gray-500">
-    Bu site sadece gerçek yetenekler içindir. (Ciddiye almayın)
+Bu site sadece gerçek yetenekler içindir. (Ciddiye almayın)
 </footer>
 
 <script>
-// localStorage’dan oyuncuları yükle, yoksa başlangıç oyuncuları
-let players = JSON.parse(localStorage.getItem('players')) || [
-    {name:"Caner", nick:"Tank", number:99, shot:99, dribble:80, reflex:50, goals:3, assists:2},
-    {name:"Kerem", nick:"Pas-Yok", number:10, shot:70, dribble:85, reflex:60, goals:1, assists:0},
-    {name:"Volkan", nick:"Panter", number:1, shot:10, dribble:20, reflex:92, goals:0, assists:0},
+let players=JSON.parse(localStorage.getItem('players'))||[
+{name:"Yakup Sunay",nick:"YS",number:7,age:20,height:180,weight:70,speed:70,technique:70,dribble:70,shot:70,physic:70,defense:70,goals:0,assists:0,pos:"GK"},
+{name:"Caner Tank",nick:"Tank",number:99,age:25,height:175,weight:75,speed:80,technique:75,dribble:80,shot:90,physic:80,defense:70,goals:2,assists:1,pos:"FW"}
 ];
 
-function savePlayers(){
-    localStorage.setItem('players', JSON.stringify(players));
-}
+function savePlayers(){localStorage.setItem('players',JSON.stringify(players));}
 
 function renderPlayers(){
-    const grid = document.getElementById("playerGrid");
-    grid.innerHTML = "";
-    players.forEach(player=>{
-        const div = document.createElement("div");
-        div.className = "glass card-glow p-6 rounded-3xl relative overflow-hidden group";
-        div.innerHTML = `
-            <div class="flex gap-4 items-start">
-                <div class="w-24 h-24 bg-gray-700 rounded-2xl overflow-hidden border-2 border-green-500/30">
-                    <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${player.name}" class="w-full h-full object-cover player-avatar">
-                </div>
-                <div class="flex-1">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-2xl font-black italic">${player.name} "${player.nick}"</h3>
-                        <span class="text-green-500 font-bold">#${player.number}</span>
-                    </div>
-                    <div class="space-y-2 mt-2">
-                        <div class="text-[10px] uppercase flex justify-between"><span>Şut</span> <span>${player.shot}%</span></div>
-                        <div class="stat-bar"><div class="stat-fill" style="width:${player.shot}%"></div></div>
-                        <div class="text-[10px] uppercase flex justify-between"><span>Dribling</span> <span>${player.dribble}%</span></div>
-                        <div class="stat-bar"><div class="stat-fill" style="width:${player.dribble}%"></div></div>
-                        <div class="text-[10px] uppercase flex justify-between"><span>Refleks</span> <span>${player.reflex}%</span></div>
-                        <div class="stat-bar"><div class="stat-fill" style="width:${player.reflex}%"></div></div>
-                    </div>
-                </div>
-            </div>
-        `;
-        grid.appendChild(div);
-    });
-    renderTopPlayers();
+const grid=document.getElementById("soccerField");
+const positions=grid.querySelectorAll(".position");
+positions.forEach(pos=>{
+const player=players.find(p=>p.pos===pos.dataset.pos);
+pos.innerHTML=player?`<div class="flex flex-col items-center justify-center text-black text-[10px] font-bold"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${player.name}" class="w-12 h-12 rounded-full mb-1">${player.nick}</div>`:"";
+});
+renderTopPlayers();
+renderTeamStats();
 }
 
 function renderTopPlayers(){
-    const container = document.getElementById("topPlayers");
-    container.innerHTML = "";
-    if(players.length===0) return;
-
-    const mvp = players.reduce((a,b)=>a.goals>=b.goals?a:b);
-    const mvpDiv = document.createElement("div");
-    mvpDiv.innerHTML = `<p class="text-[10px] uppercase text-gray-500 font-bold">MVP</p><p class="font-bold">${mvp.name} "${mvp.nick}" - ${mvp.goals} gol</p>`;
-    container.appendChild(mvpDiv);
-
-    const assistKing = players.reduce((a,b)=>a.assists>=b.assists?a:b);
-    const assistDiv = document.createElement("div");
-    assistDiv.innerHTML = `<p class="text-[10px] uppercase text-gray-500 font-bold">Asist Kralı</p><p class="font-bold">${assistKing.name} "${assistKing.nick}" - ${assistKing.assists} asist</p>`;
-    container.appendChild(assistDiv);
+const container=document.getElementById("topPlayers");container.innerHTML="";
+if(players.length===0) return;
+const mvp=players.reduce((a,b)=>a.goals>=b.goals?a:b);
+const assistKing=players.reduce((a,b)=>a.assists>=b.assists?a:b);
+container.innerHTML=`<p class="text-[10px] uppercase text-gray-500 font-bold">MVP</p><p class="font-bold">${mvp.name} "${mvp.nick}" - ${mvp.goals} gol</p>
+<p class="text-[10px] uppercase text-gray-500 font-bold">Asist Kralı</p><p class="font-bold">${assistKing.name} "${assistKing.nick}" - ${assistKing.assists} asist</p>`;
 }
 
-document.getElementById("addPlayerForm").addEventListener("submit", e=>{
-    e.preventDefault();
-    const name = document.getElementById("playerName").value;
-    const nick = document.getElementById("playerNick").value;
-    const number = document.getElementById("playerNumber").value;
-    const shot = document.getElementById("playerShot").value;
-    const dribble = document.getElementById("playerDribble").value;
-    const reflex = document.getElementById("playerReflex").value;
+function renderTeamStats(){
+const stats=document.getElementById("teamStats");
+if(players.length===0){stats.innerHTML="";return;}
+let sum={speed:0,technique:0,dribble:0,shot:0,physic:0,defense:0};
+players.forEach(p=>{sum.speed+=p.speed;sum.technique+=p.technique;sum.dribble+=p.dribble;sum.shot+=p.shot;sum.physic+=p.physic;sum.defense+=p.defense;});
+const avg=(v)=>Math.round(v/players.length);
+stats.innerHTML=`<p>Takım Ortalaması: Hız ${avg(sum.speed)}, Teknik ${avg(sum.technique)}, Dribling ${avg(sum.dribble)}, Şut ${avg(sum.shot)}, Fizik ${avg(sum.physic)}, Defans ${avg(sum.defense)}</p>`;
+}
 
-    players.push({name,nick,number,shot,dribble,reflex,goals:0,assists:0});
-    savePlayers();
-    renderPlayers();
-    e.target.reset();
+// Drag & Drop ile pozisyon değiştirme
+let dragItem=null;
+document.querySelectorAll(".position").forEach(pos=>{
+pos.addEventListener("dragstart",e=>{dragItem=e.target; e.target.classList.add("dragging");});
+pos.addEventListener("dragend",e=>{e.target.classList.remove("dragging");});
+pos.addEventListener("dragover",e=>{e.preventDefault();});
+pos.addEventListener("drop",e=>{
+e.preventDefault();
+if(dragItem && dragItem!==pos){
+let p1=players.find(p=>p.pos===dragItem.dataset.pos);
+let p2=players.find(p=>p.pos===pos.dataset.pos);
+if(p1) p1.pos=pos.dataset.pos;
+if(p2) p2.pos=dragItem.dataset.pos;
+savePlayers();
+renderPlayers();
+}
+});
 });
 
-// Sayfa yüklendiğinde render
+// Oyuncu ekleme
+document.getElementById("addPlayerForm").addEventListener("submit",e=>{
+e.preventDefault();
+const name=document.getElementById("playerName").value;
+const nick=document.getElementById("playerNick").value;
+const number=document.getElementById("playerNumber").value;
+const age=document.getElementById("playerAge").value;
+const height=document.getElementById("playerHeight").value;
+const weight=document.getElementById("playerWeight").value;
+const speed=document.getElementById("playerSpeed").value;
+const technique=document.getElementById("playerTechnique").value;
+const dribble=document.getElementById("playerDribble").value;
+const shot=document.getElementById("playerShot").value;
+const physic=document.getElementById("playerPhysic").value;
+const defense=document.getElementById("playerDefense").value;
+
+players.push({name,nick,number,age,height,weight,speed,technique,dribble,shot,physic,defense,goals:0,assists:0,pos:"FW"});
+savePlayers();renderPlayers();e.target.reset();
+});
+
 renderPlayers();
 </script>
 
