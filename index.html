@@ -3,156 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bizim Halı Saha Anıları ⚽</title>
+    <title>Efsaneler Sahası | Bizim Tayfa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root {
-            --green: #2ecc71;
-            --dark-green: #27ae60;
-            --night: #2c3e50;
-            --gold: #f1c40f;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0; padding: 20px;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .match-card {
-            background: white;
-            max-width: 600px;
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border: 2px solid var(--green);
-        }
-        .header {
-            background: var(--night);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .info-bar {
-            background: #eee;
-            padding: 10px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 0.9rem;
-            border-bottom: 1px solid #ddd;
-        }
-        .score-area {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            gap: 20px;
-            background: linear-gradient(to bottom, #fff, #f9f9f9);
-        }
-        .score { font-size: 4rem; font-weight: 800; color: var(--night); }
-        .team-label { font-weight: bold; text-transform: uppercase; color: var(--dark-green); }
-        
-        .details { padding: 20px; }
-        .section-title { 
-            border-left: 5px solid var(--green); 
-            padding-left: 10px; 
-            margin: 20px 0 10px;
-            font-weight: bold;
-        }
-        .mom-box { 
-            background: var(--gold); 
-            padding: 15px; 
-            border-radius: 10px; 
-            text-align: center;
-            font-weight: bold;
-            color: #7f8c8d;
-        }
-        .notes-area {
-            width: 100%;
-            height: 80px;
-            border: 1px dashed #ccc;
-            border-radius: 10px;
-            padding: 10px;
-            margin-top: 10px;
-            box-sizing: border-box;
-        }
-        .save-btn {
-            background: var(--green);
-            color: white;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .save-btn:hover { background: var(--dark-green); }
-        
-        @media print {
-            .save-btn { display: none; } /* PDF alırken butonu gizler */
-        }
+        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at top, #1a2c1a 0%, #0a0a0a 100%); }
+        .heading-font { font-family: 'Orbitron', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .card-glow:hover { border-color: #39FF14; box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); transform: translateY(-5px); transition: all 0.4s ease; }
+        .stat-bar { height: 6px; border-radius: 3px; background: #333; position: relative; overflow: hidden; }
+        .stat-fill { height: 100%; background: linear-gradient(90deg, #39FF14, #bcff00); position: absolute; }
+        .glitch-effect { text-shadow: 2px 0 #ff00c1, -2px 0 #00fff9; }
     </style>
 </head>
-<body>
+<body class="text-gray-200 min-h-screen pb-20">
 
-    <div class="match-card">
-        <div class="header">
-            <h2 style="margin:0">⚽ MAÇ GÜNLÜĞÜ</h2>
-            <p style="margin:5px 0 0; opacity:0.8">Dostluk kazansın (ama biz yendik)</p>
-        </div>
-
-        <!-- Maç Bilgileri -->
-        <div class="info-bar">
-            <span>📅 <input type="date" id="matchDate"></span>
-            <span>📍 <input type="text" placeholder="Saha Adı (Örn: Şampiyon Halı Saha)" id="pitchName"></span>
-        </div>
-
-        <!-- Skor -->
-        <div class="score-area">
-            <div style="text-align:right">
-                <div class="team-label">Bizim Tayfa</div>
-                <input type="number" value="0" id="scoreA" style="font-size:3rem; width:60px; text-align:center; border:none; background:none; font-weight:bold;">
-            </div>
-            <div style="font-size: 1.5rem; color:#ccc">-</div>
-            <div style="text-align:left">
-                <div class="team-label">Rakipler</div>
-                <input type="number" value="0" id="scoreB" style="font-size:3rem; width:60px; text-align:center; border:none; background:none; font-weight:bold;">
+    <!-- HERO SECTION: Maç Atmosferi -->
+    <div class="relative h-[400px] flex items-center justify-center overflow-hidden border-b border-green-500/20">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com')] bg-cover bg-center opacity-20 grayscale"></div>
+        <div class="relative text-center px-4">
+            <h1 class="heading-font text-6xl md:text-8xl font-black italic tracking-tighter glitch-effect mb-2">BİZİM TAYFA FC</h1>
+            <p class="text-green-400 font-bold tracking-[0.5em] uppercase text-sm mb-6">Mahallenin En İyileri (Değil)</p>
+            <div class="flex gap-4 justify-center">
+                <div class="glass p-4 rounded-xl text-center min-w-[120px]">
+                    <span class="block text-3xl font-black heading-font text-green-500">22:00</span>
+                    <span class="text-[10px] text-gray-400 uppercase">Santra Saati</span>
+                </div>
+                <div class="glass p-4 rounded-xl text-center min-w-[120px]">
+                    <span class="block text-3xl font-black heading-font text-green-500">14/14</span>
+                    <span class="text-[10px] text-gray-400 uppercase">Kadro Durumu</span>
+                </div>
             </div>
         </div>
-
-        <div class="details">
-            <!-- Kadrolar -->
-            <div class="section-title">KADROLAR</div>
-            <div style="display:flex; gap:10px;">
-                <textarea placeholder="Bizimkiler (Virgülle ayır)" style="width:50%; height:60px; border-radius:5px; border:1px solid #ddd; padding:5px;" id="playersA"></textarea>
-                <textarea placeholder="Onlar (Virgülle ayır)" style="width:50%; height:60px; border-radius:5px; border:1px solid #ddd; padding:5px;" id="playersB"></textarea>
-            </div>
-
-            <!-- Maçın Adamı -->
-            <div class="section-title">🌟 MAÇIN ADAMI (MOM)</div>
-            <div class="mom-box">
-                <input type="text" placeholder="Kim parladı?" id="momName" style="background:transparent; border:none; text-align:center; width:100%; font-weight:bold; font-size:1.1rem; outline:none;">
-            </div>
-
-            <!-- Maç Notları -->
-            <div class="section-title">📝 MAÇ GEYİKLERİ & NOTLAR</div>
-            <textarea class="notes-area" placeholder="Örn: Ahmet'in boş kaleye kaçırdığı gol, Mehmet'in 30 metreden füzesi..." id="matchNotes"></textarea>
-        </div>
-
-        <button class="save-btn" onclick="saveMemory()">BU ANIYI KAYDET (PDF AL)</button>
     </div>
 
-    <p style="margin-top:20px; font-size:0.8rem; color:#888;">* Sayfayı farklı kaydet diyerek veya ekran görüntüsü alarak saklayabilirsin.</p>
-
-    <script>
-        function saveMemory() {
-            window.print(); // Sayfayı PDF olarak kaydetmek için en kolay yol
-            alert("Maç anısı hazır! Bu sayfayı PDF olarak kaydedebilir veya ekran görüntüsü alabilirsin.");
-        }
+    <main class="max-w-7xl mx-auto px-4 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        // Bugünün tarihini otomatik seç
-        document.getElementById('matchDate').valueAsDate = new Date();
-    </script>
+        <!-- SOL: EFSANE KARTLARI -->
+        <div class="lg:col-span-8 space-y-8">
+            <h2 class="heading-font text-2xl border-l-8 border-green-500 pl-4">KADRO ANALİZİ</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Oyuncu 1 -->
+                <div class="glass card-glow p-6 rounded-3xl relative overflow-hidden group">
+                    <div class="flex gap-4 items-start relative z-10">
+                        <div class="w-24 h-24 bg-gray-700 rounded-2xl overflow-hidden border-2 border-green-500/30">
+                            <img src="https://api.dicebear.com" alt="avatar" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-2xl font-black heading-font italic">CANER "TANK"</h3>
+                                <span class="text-green-500 font-bold">#99</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3 italic">"Sahanın yarısında nefes nefese kalır ama tank gibi geçer."</p>
+                            
+                            <div class="space-y-2">
+                                <div class="text-[10px] uppercase flex justify-between"><span>Şut Gücü</span> <span>99%</span></div>
+                                <div class="stat-bar"><div class="stat-fill" style="width: 99%"></div></div>
+                                
+                                <div class="text-[10px] uppercase flex justify-between"><span>Kondisyon (Dakika)</span> <span>12 dk</span></div>
+                                <div class="stat-bar"><div class="stat-fill" style="width: 20%; background: #ff4d4d;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Hoverda çıkan gizli detay -->
+                    <div class="absolute inset-0 bg-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                </div>
+
+                <!-- Oyuncu 2 -->
+                <div class="glass card-glow p-6 rounded-3xl relative overflow-hidden group">
+                    <div class="flex gap-4 items-start relative z-10">
+                        <div class="w-24 h-24 bg-gray-700 rounded-2xl overflow-hidden border-2 border-green-500/30">
+                            <img src="https://api.dicebear.com" alt="avatar" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-2xl font-black heading-font italic">KEREM "PAS-YOK"</h3>
+                                <span class="text-green-500 font-bold">#10</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3 italic">"Pas vermek onun lügatında yok. Topu alıp eve gidebilir."</p>
+                            
+                            <div class="space-y-2">
+                                <div class="text-[10px] uppercase flex justify-between"><span>Dribling</span> <span>85%</span></div>
+                                <div class="stat-bar"><div class="stat-fill" style="width: 85%"></div></div>
+                                
+                                <div class="text-[10px] uppercase flex justify-between"><span>Pas Verme Olasılığı</span> <span>0.01%</span></div>
+                                <div class="stat-bar"><div class="stat-fill" style="width: 2%; background: #ff4d4d;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SAĞ: DERİN DETAYLAR -->
+        <div class="lg:col-span-4 space-y-6">
+            <!-- Ceza Panosu -->
+            <div class="glass border-red-500/30 p-6 rounded-3xl">
+                <h3 class="heading-font text-red-500 mb-4 flex items-center gap-2">
+                    ⚠️ CEZA LİSTESİ
+                </h3>
+                <ul class="text-sm space-y-4 text-gray-300 italic">
+                    <li class="flex items-center gap-3">
+                        <span class="bg-red-600 w-2 h-6 rounded-full"></span>
+                        <span><strong>Burak:</strong> Boş kaleye kaçırdığı için baklava ısmarlayacak.</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="bg-yellow-500 w-2 h-6 rounded-full"></span>
+                        <span><strong>Mert:</strong> Maça geç kaldığı için sahadakileri bekletti.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- "Kim Geliyor" Paneli -->
+            <div class="bg-green-600 p-8 rounded-[40px] text-black shadow-[0_20px_50px_rgba(57,255,20,0.3)]">
+                <h3 class="heading-font text-2xl font-black mb-2">BU AKŞAM?</h3>
+                <p class="text-xs font-bold uppercase opacity-70 mb-6 italic">Satanın kramponu yırtılsın.</p>
+                <div class="space-y-3 mb-6 font-bold uppercase text-sm">
+                    <div class="flex justify-between border-b border-black/10 pb-1 text-xs italic">
+                        <span>Kadrodaki Kişi</span>
+                        <span>12 / 14</span>
+                    </div>
+                </div>
+                <button onclick="alert('Kadro doldu, yedek kulübesine alındın!')" class="w-full bg-black text-white font-black py-4 rounded-2xl hover:scale-95 transition-transform heading-font">
+                    ADINI YAZDIR
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- ALT BİLGİ -->
+    <footer class="fixed bottom-0 w-full glass py-4 text-center text-[10px] uppercase tracking-[0.3em] text-gray-500">
+        Bu site sadece gerçek yetenekler içindir. (Ciddiye almayın)
+    </footer>
 
 </body>
-</html>
+                                    </html>
