@@ -3,66 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | Performance Tracker</title>
+    <title>BAD BOYS FC | Resmi Kulüp Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
-        body { background: #050505; color: #eee; font-family: 'Segoe UI', sans-serif; }
+        
+        /* Renk Şeması: Ev Sahibi (Turuncu/Siyah) & Deplasman (Mavi/Beyaz) */
+        :root {
+            --ev-turuncu: #ff6600;
+            --ev-siyah: #050505;
+            --deplasman-mavi: #007bff;
+            --deplasman-beyaz: #ffffff;
+            --deplasman-yazı: #111111;
+        }
+
+        body { background: var(--ev-siyah); color: #eee; font-family: 'Segoe UI', sans-serif; }
         .badboys-font { font-family: 'Orbitron', sans-serif; }
-        .orange-text { color: #ff6600; }
-        .orange-bg { background-color: #ff6600; }
-        .card { background: #111; border-left: 4px solid #ff6600; transition: 0.3s; position: relative; }
-        .mvp-card { border: 2px solid #ff6600; background: linear-gradient(145deg, #221100, #111); shadow: 0 0 20px rgba(255,102,0,0.4); }
+        .orange-text { color: var(--ev-turuncu); }
+        .orange-bg { background-color: var(--ev-turuncu); }
+        .card { background: #111; border-left: 4px solid var(--ev-turuncu); transition: 0.3s; position: relative; }
+        
+        /* Deplasman Renkli MVP Bölümü */
+        .mvp-card { border: 2px solid var(--deplasman-mavi); background: linear-gradient(145deg, #1a3350, #111); shadow: 0 0 20px rgba(0,123,255,0.4); }
+        .mvp-yazı { color: var(--deplasman-beyaz); }
+
         .admin-only { display: none; }
         .admin-active .admin-only { display: inline-flex; }
         .trend-up { color: #00ff00; }
         .trend-down { color: #ff0000; }
+        .deplasman-mevki { color: var(--deplasman-mavi); font-weight: bold; }
     </style>
 </head>
-<body class="p-4 pb-40 max-w-md mx-auto">
+<body class="p-4 pb-48 max-w-md mx-auto">
 
-    <div class="flex justify-between items-center mb-6">
-        <div class="text-[9px] text-zinc-600 font-black uppercase tracking-[0.3em]">Bad Boys Intelligence</div>
-        <button onclick="checkAdmin()" id="lockBtn" class="text-xl grayscale hover:grayscale-0 transition">🔒</button>
-    </div>
-
-    <header class="text-center mb-8 border-b border-zinc-800 pb-4">
+    <header class="text-center mb-10 border-b border-zinc-800 pb-6 relative">
+        <div class="flex justify-between items-center mb-6">
+            <div class="text-[9px] text-zinc-600 font-black uppercase tracking-[0.3em]">YÖNETİM SİSTEMİ</div>
+            <button onclick="checkAdmin()" id="lockBtn" class="text-xl grayscale hover:grayscale-0 transition">🔒</button>
+        </div>
+        
+        <img src="https://i.ibb.co/Xz9K3G1/badboyslogo.png" alt="BAD BOYS FC Logo" class="w-32 mx-auto mb-4 object-contain">
+        
         <h1 class="badboys-font text-3xl font-black orange-text italic">BAD BOYS FC</h1>
         <p id="adminStatus" class="text-[9px] text-zinc-500 uppercase mt-1 tracking-widest italic font-bold">İzleyici Modu</p>
     </header>
 
     <section id="mvpSection" class="mb-10">
-        <h2 class="text-[10px] font-black orange-text uppercase mb-4 tracking-widest text-center italic">✨ Haftanın En Değerlileri ✨</h2>
+        <h2 class="text-[10px] font-black orange-text uppercase mb-4 tracking-widest text-center italic border-b border-zinc-800 pb-2">✨ Haftanın En Değerlileri ✨</h2>
         <div id="mvpContainer" class="grid grid-cols-1 gap-3">
             </div>
     </section>
 
-    <div class="admin-only w-full mb-6 gap-2 flex flex-col">
-        <button onclick="resetAllData()" class="w-full py-2 bg-red-900/10 border border-red-900/30 text-red-500 text-[10px] font-black rounded uppercase">
-            Sıfırla (Yeni Sezon)
+    <div class="admin-only w-full mb-6 gap-2 flex flex-col border border-zinc-800 p-4 rounded-xl">
+        <h3 class="text-xs font-black orange-text uppercase mb-2 tracking-widest text-center">YÖNETİCİ AYARLARI</h3>
+        <button onclick="resetAllData()" class="w-full py-2.5 bg-red-900/10 border border-red-900/30 text-red-500 text-[10px] font-black rounded uppercase hover:bg-red-900/40 transition">
+            TÜM SEZONU SIFIRLA
         </button>
     </div>
 
-    <h2 class="text-[10px] font-black text-zinc-500 uppercase mb-4 tracking-widest italic border-l-2 border-zinc-800 pl-2">Oyuncu Havuzu</h2>
+    <h2 class="text-[10px] font-black text-zinc-500 uppercase mb-4 tracking-widest italic border-l-2 border-zinc-800 pl-2">OYUNCU PİYASASI</h2>
     <div id="playerContainer" class="space-y-4"></div>
 
-    <div class="fixed bottom-0 left-0 w-full bg-black/95 border-t-2 border-[#ff6600] p-5 flex justify-around items-center z-50 backdrop-blur-md">
+    <div class="fixed bottom-0 left-0 w-full bg-black/95 border-t-2 border-[#ff6600] p-6 flex justify-around items-center z-50 backdrop-blur-md shadow-2xl">
         <div class="text-center">
-            <p class="text-[8px] text-zinc-600 uppercase font-black">Market Cap</p>
+            <p class="text-[8px] text-zinc-600 uppercase font-black">Toplam Değer</p>
             <span id="totalValue" class="text-sm font-black orange-text">€0M</span>
         </div>
-        <div class="text-center">
-            <p class="text-[8px] text-zinc-600 uppercase font-black">Season Goals</p>
+        <div class="text-center border-l border-zinc-800 pl-6">
+            <p class="text-[8px] text-zinc-600 uppercase font-black">Sezon Golleri</p>
             <span id="totalGoals" class="text-sm font-black text-white italic">0</span>
         </div>
-        <div class="text-center border-l border-zinc-800 pl-4">
-            <p class="text-[8px] text-zinc-600 uppercase font-black">Roster</p>
+        <div class="text-center border-l border-zinc-800 pl-6 pr-2">
+            <p class="text-[8px] text-zinc-600 uppercase font-black">Kadro</p>
             <span id="playerCount" class="text-sm font-black text-white">0/8</span>
         </div>
     </div>
 
     <script>
-        const adminPassword = "yakup"; // Şifreni buradan değiştir
+        const adminPassword = "yakup"; // Şifren burası
         let isAdmin = false;
 
         const initialPlayers = [
@@ -76,7 +94,7 @@
             { id: 8, name: "Musa Aksu", role: "Forvet", goals: 0, assists: 0, value: 3800000, scout: "Kıvrak bilekleri ile dosta korku düşmana güven.", lastTrend: 0 }
         ];
 
-        let players = JSON.parse(localStorage.getItem('badBoysFC_V6')) || initialPlayers;
+        let players = JSON.parse(localStorage.getItem('badBoysFC_VFinal')) || initialPlayers;
 
         function checkAdmin() {
             if(!isAdmin) {
@@ -85,7 +103,7 @@
                     isAdmin = true;
                     document.body.classList.add('admin-active');
                     document.getElementById('lockBtn').innerText = "🔓";
-                    document.getElementById('adminStatus').innerText = "Yönetici Modu Aktif";
+                    document.getElementById('adminStatus').innerText = "Yönetici Modu Açık";
                     document.getElementById('adminStatus').style.color = "#ff6600";
                     render();
                 } else { alert("Hatalı şifre!"); }
@@ -100,7 +118,7 @@
         }
 
         function save() {
-            localStorage.setItem('badBoysFC_V6', JSON.stringify(players));
+            localStorage.setItem('badBoysFC_VFinal', JSON.stringify(players));
             render();
         }
 
@@ -109,12 +127,12 @@
             const p = players.find(x => x.id === id);
             p[field] = Math.max(0, p[field] + amount);
             p.value += (field === 'goals' ? 500000 : 250000) * amount;
-            p.lastTrend = amount; // Son işlem yönünü kaydet
+            p.lastTrend = amount; 
             save();
         }
 
         function resetAllData() {
-            if(confirm("Tüm istatistikler sıfırlanacak. Emin misin Kaptan?")) {
+            if(confirm("Tüm istatistikler sıfırlanacak. Yeni sezona temiz başlansın mı Kaptan?")) {
                 players = initialPlayers.map(p => ({...p}));
                 save();
             }
@@ -127,28 +145,27 @@
             mvpContainer.innerHTML = "";
             let tGoals = 0, tValue = 0;
 
-            // Sıralama ve Veri Hesaplama
             const sortedPlayers = [...players].sort((a,b) => b.value - a.value);
-            const topPlayers = sortedPlayers.slice(0, 2); // En değerli ilk 2 kişi MVP
+            const topPlayers = sortedPlayers.slice(0, 2); 
 
-            // MVP Bölümü
+            // MVP Bölümü (Deplasman Teması)
             topPlayers.forEach(p => {
                 mvpContainer.innerHTML += `
                     <div class="mvp-card p-4 rounded-2xl flex justify-between items-center relative overflow-hidden">
-                        <div class="absolute -right-2 -top-2 text-4xl opacity-10 font-black italic">MVP</div>
+                        <div class="absolute -right-2 -top-2 text-4xl opacity-10 font-black italic mvp-yazı">YILDIZ</div>
                         <div>
-                            <div class="text-[8px] bg-white text-black px-2 py-0.5 rounded-full font-black w-fit mb-1 uppercase tracking-tighter">🔥 Formda</div>
-                            <div class="font-black text-xl italic orange-text uppercase">${p.name}</div>
-                            <div class="text-[10px] font-bold text-zinc-400 italic">€${(p.value/1000000).toFixed(1)}M Market Value</div>
+                            <div class="text-[8px] bg-white text-black px-2 py-0.5 rounded-full font-black w-fit mb-1.5 uppercase tracking-tighter">🔥 Formda</div>
+                            <div class="font-black text-xl italic deplasman-yazı uppercase mvp-yazı">${p.name}</div>
+                            <div class="text-[10px] font-bold text-zinc-300 italic">€${(p.value/1000000).toFixed(1)}M Değer</div>
                         </div>
-                        <div class="text-right">
-                            <div class="text-2xl font-black text-white italic">#${sortedPlayers.indexOf(p)+1}</div>
+                        <div class="text-right ml-4">
+                            <div class="text-2xl font-black text-white italic deplasman-yazı mvp-yazı">#${sortedPlayers.indexOf(p)+1}</div>
                         </div>
                     </div>
                 `;
             });
 
-            // Genel Liste
+            // Genel Liste (Ev Sahibi Teması)
             sortedPlayers.forEach(p => {
                 tGoals += p.goals; tValue += p.value;
                 const trendIcon = p.lastTrend > 0 ? '<span class="trend-up">📈</span>' : (p.lastTrend < 0 ? '<span class="trend-down">📉</span>' : '<span class="text-zinc-700">➖</span>');
@@ -162,28 +179,28 @@
                                     ${p.isCaptain ? '<span class="orange-bg text-black text-[8px] px-1.5 rounded font-black tracking-widest">CPT</span>' : ''}
                                     ${trendIcon}
                                 </div>
-                                <div class="text-[9px] text-zinc-500 font-bold uppercase tracking-[0.2em] mb-2">${p.role}</div>
+                                <div class="text-[9px] text-zinc-500 font-bold uppercase tracking-[0.2em] mb-2"><span class="deplasman-mevki">${p.role}</span></div>
                                 <div class="flex gap-4 text-xs font-bold items-center">
                                     <div class="flex items-center gap-1.5">
-                                        <span>⚽ ${p.goals}</span>
+                                        <span>⚽ Gol: ${p.goals}</span>
                                         <div class="admin-only flex gap-1">
-                                            <button onclick="updateStat(${p.id}, 'goals', 1)" class="w-5 h-5 bg-zinc-800 rounded border border-zinc-700 text-[10px] font-black">+</button>
-                                            <button onclick="updateStat(${p.id}, 'goals', -1)" class="w-5 h-5 bg-zinc-800 rounded border border-zinc-700 text-[10px] font-black text-red-500">-</button>
+                                            <button onclick="updateStat(${p.id}, 'goals', 1)" class="w-5 h-5 bg-zinc-800 rounded border border-zinc-700 text-[10px] font-black hover:orange-bg hover:text-black Transition">+</button>
+                                            <button onclick="updateStat(${p.id}, 'goals', -1)" class="w-5 h-5 bg-zinc-800 rounded border border-zinc-700 text-[10px] font-black text-red-500 hover:bg-red-900 transition">-</button>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-1.5">
-                                        <span>🎯 ${p.assists}</span>
+                                    <div class="flex items-center gap-1.5 border-l border-zinc-800 pl-4">
+                                        <span>🎯 Asist: ${p.assists}</span>
                                         <div class="admin-only flex gap-1">
-                                            <button onclick="updateStat(${p.id}, 'assists', 1)" class="w-5 h-5 bg-zinc-800 rounded border border-zinc-700 text-[10px] font-black">+</button>
-                                            <button onclick="updateStat(${p.id}, 'assists', -1)" class="w-5 h-5 bg-zinc-800 rounded border border-zinc-700 text-[10px] font-black text-red-500">-</button>
+                                            <button onclick="updateStat(${p.id}, 'assists', 1)" class="w-5 h-5 bg-zinc-800 rounded border border-zinc-700 text-[10px] font-black hover:orange-bg hover:text-black Transition">+</button>
+                                            <button onclick="updateStat(${p.id}, 'assists', -1)" class="w-5 h-5 bg-zinc-800 rounded border border-zinc-700 text-[10px] font-black text-red-500 hover:bg-red-900 transition">-</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-[10px] text-zinc-400 mt-2 italic border-t border-zinc-800 pt-1 leading-tight">"${p.scout}"</div>
+                                <div class="text-[10px] text-zinc-400 mt-2.5 italic border-t border-zinc-800 pt-1.5 leading-tight">"${p.scout}"</div>
                             </div>
-                            <div class="text-right ml-4">
-                                <div class="text-[10px] font-mono text-zinc-500 italic uppercase">Value</div>
-                                <div class="text-sm font-black orange-text">€${(p.value/1000000).toFixed(1)}M</div>
+                            <div class="text-right ml-6 pl-4 border-l border-zinc-800">
+                                <div class="text-[10px] font-mono text-zinc-500 italic uppercase">Piyasa Değeri</div>
+                                <div class="text-base font-black orange-text">€${(p.value/1000000).toFixed(1)}M</div>
                             </div>
                         </div>
                     </div>
