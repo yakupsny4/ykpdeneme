@@ -1,279 +1,123 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>Halı Saha Ligi</title>
-
-<style>
-
-body{
-font-family:Arial;
-background:#0b0b0b;
-color:white;
-margin:0;
-}
-
-header{
-background:black;
-padding:20px;
-text-align:center;
-border-bottom:3px solid #ffd000;
-}
-
-header h1{
-color:#ffd000;
-}
-
-nav{
-text-align:center;
-padding:10px;
-background:#111;
-}
-
-nav a{
-color:white;
-margin:10px;
-text-decoration:none;
-font-weight:bold;
-}
-
-nav a:hover{
-color:#00ff88;
-}
-
-section{
-padding:20px;
-max-width:1000px;
-margin:auto;
-}
-
-h2{
-color:#ffd000;
-border-bottom:2px solid #00ff88;
-padding-bottom:5px;
-}
-
-/* Lig tablosu */
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-}
-
-th{
-background:#ffd000;
-color:black;
-padding:10px;
-}
-
-td{
-background:#1a1a1a;
-padding:10px;
-text-align:center;
-border-bottom:1px solid #333;
-}
-
-/* Oyuncu kartları */
-
-.players{
-display:flex;
-flex-wrap:wrap;
-gap:20px;
-}
-
-.card{
-background:#111;
-padding:15px;
-border-radius:10px;
-width:200px;
-text-align:center;
-border:2px solid #00ff88;
-}
-
-.card img{
-width:100%;
-border-radius:10px;
-}
-
-.card h3{
-color:#ffd000;
-}
-
-/* Fikstür */
-
-.match{
-background:#111;
-padding:10px;
-margin:10px 0;
-border-left:4px solid #00ff88;
-}
-
-/* Footer */
-
-footer{
-text-align:center;
-padding:20px;
-background:black;
-margin-top:30px;
-border-top:3px solid #ffd000;
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAD BOYS FC | İstatistik Paneli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .orange-border { border-color: #ff6600; }
+        .orange-bg { background-color: #ff6600; }
+        .orange-text { color: #ff6600; }
+        .card { background: #1a1a1a; border-left: 4px solid #ff6600; }
+    </style>
 </head>
+<body class="p-4 pb-24">
 
-<body>
+    <header class="text-center mb-8">
+        <h1 class="text-3xl font-extrabold orange-text uppercase tracking-widest">BAD BOYS FC</h1>
+        <p class="text-gray-400 text-sm">Halı Saha İstatistik Takip Sistemi</p>
+    </header>
 
-<header>
-<h1>⚽ Halı Saha Ligi</h1>
-<p>Arkadaş Grubu Futbol Ligi</p>
-</header>
+    <section class="mb-8 p-4 border orange-border rounded-lg bg-zinc-900">
+        <h2 class="text-lg font-bold mb-4 orange-text">Yeni Oyuncu Ekle</h2>
+        <div class="grid grid-cols-2 gap-3">
+            <input id="pName" type="text" placeholder="İsim Soyisim" class="bg-black border border-zinc-700 p-2 rounded text-sm">
+            <select id="pRole" class="bg-black border border-zinc-700 p-2 rounded text-sm">
+                <option value="Forvet">Forvet</option>
+                <option value="Orta Saha">Orta Saha</option>
+                <option value="Defans">Defans</option>
+                <option value="Kaleci">Kaleci</option>
+            </select>
+            <button onclick="addPlayer()" class="col-span-2 orange-bg text-black font-bold p-2 rounded hover:bg-orange-500 transition">KADROYA EKLE</button>
+        </div>
+    </section>
 
-<nav>
-<a href="#lig">Lig Tablosu</a>
-<a href="#oyuncular">Oyuncular</a>
-<a href="#gol">Gol Krallığı</a>
-<a href="#fikstur">Fikstür</a>
-</nav>
+    <div id="playerContainer" class="space-y-4">
+        </div>
 
-<section id="lig">
+    <div class="fixed bottom-0 left-0 w-full bg-zinc-900 border-t orange-border p-4 flex justify-around text-xs font-bold uppercase">
+        <div>Toplam Oyuncu: <span id="totalPlayers" class="orange-text">0</span></div>
+        <div>Toplam Gol: <span id="totalGoals" class="orange-text">0</span></div>
+    </div>
 
-<h2>🏆 Lig Tablosu</h2>
+    <script>
+        let players = JSON.parse(localStorage.getItem('badBoysFC')) || [];
 
-<table>
-<tr>
-<th>Takım</th>
-<th>O</th>
-<th>G</th>
-<th>B</th>
-<th>M</th>
-<th>P</th>
-</tr>
+        function save() {
+            localStorage.setItem('badBoysFC', JSON.stringify(players));
+            render();
+        }
 
-<tr>
-<td>Kartallar</td>
-<td>5</td>
-<td>4</td>
-<td>0</td>
-<td>1</td>
-<td>12</td>
-</tr>
+        function addPlayer() {
+            const name = document.getElementById('pName').value;
+            const role = document.getElementById('pRole').value;
+            if(!name) return alert("İsim yazmalısın!");
 
-<tr>
-<td>Aslanlar</td>
-<td>5</td>
-<td>3</td>
-<td>1</td>
-<td>1</td>
-<td>10</td>
-</tr>
+            players.push({
+                id: Date.now(),
+                name: name,
+                role: role,
+                goals: 0,
+                assists: 0,
+                isCaptain: name.toLowerCase().includes("yakup")
+            });
+            
+            document.getElementById('pName').value = "";
+            save();
+        }
 
-<tr>
-<td>Yıldızlar</td>
-<td>5</td>
-<td>2</td>
-<td>1</td>
-<td>2</td>
-<td>7</td>
-</tr>
+        function deletePlayer(id) {
+            if(confirm("Oyuncuyu silmek istediğine emin misin?")) {
+                players = players.filter(p => p.id !== id);
+                save();
+            }
+        }
 
-<tr>
-<td>Şimşekler</td>
-<td>5</td>
-<td>1</td>
-<td>0</td>
-<td>4</td>
-<td>3</td>
-</tr>
+        function updateStat(id, field, amount) {
+            const player = players.find(p => p.id === id);
+            player[field] = Math.max(0, player[field] + amount);
+            save();
+        }
 
-</table>
+        function render() {
+            const container = document.getElementById('playerContainer');
+            container.innerHTML = "";
+            let tGoals = 0;
 
-</section>
+            players.forEach(p => {
+                tGoals += p.goals;
+                container.innerHTML += `
+                    <div class="card p-4 rounded shadow-lg flex justify-between items-center">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-lg">${p.name}</span>
+                                ${p.isCaptain ? '<span class="bg-orange-600 text-black text-[10px] px-1 rounded font-black">C</span>' : ''}
+                            </div>
+                            <div class="text-xs text-gray-500 uppercase">${p.role}</div>
+                            <div class="mt-2 flex gap-4 text-sm">
+                                <span>⚽ Gol: <b class="orange-text">${p.goals}</b></span>
+                                <span>🎯 Asist: <b class="orange-text">${p.assists}</b></span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex gap-1">
+                                <button onclick="updateStat(${p.id}, 'goals', 1)" class="bg-zinc-800 border border-zinc-700 px-2 rounded hover:bg-orange-900">+G</button>
+                                <button onclick="updateStat(${p.id}, 'assists', 1)" class="bg-zinc-800 border border-zinc-700 px-2 rounded hover:bg-orange-900">+A</button>
+                                <button onclick="deletePlayer(${p.id})" class="bg-red-900 px-2 rounded ml-2">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
 
-<section id="oyuncular">
+            document.getElementById('totalPlayers').innerText = players.length;
+            document.getElementById('totalGoals').innerText = tGoals;
+        }
 
-<h2>👤 Oyuncular</h2>
-
-<div class="players">
-
-<div class="card">
-<img src="https://i.imgur.com/1X6bX.jpg">
-<h3>Ahmet</h3>
-<p>Forvet</p>
-<p>Gol: 6</p>
-</div>
-
-<div class="card">
-<img src="https://i.imgur.com/1X6bX.jpg">
-<h3>Mehmet</h3>
-<p>Orta Saha</p>
-<p>Gol: 4</p>
-</div>
-
-<div class="card">
-<img src="https://i.imgur.com/1X6bX.jpg">
-<h3>Ali</h3>
-<p>Defans</p>
-<p>Gol: 2</p>
-</div>
-
-</div>
-
-</section>
-
-<section id="gol">
-
-<h2>⚽ Gol Krallığı</h2>
-
-<table>
-
-<tr>
-<th>Oyuncu</th>
-<th>Gol</th>
-</tr>
-
-<tr>
-<td>Ahmet</td>
-<td>6</td>
-</tr>
-
-<tr>
-<td>Mehmet</td>
-<td>4</td>
-</tr>
-
-<tr>
-<td>Ali</td>
-<td>2</td>
-</tr>
-
-</table>
-
-</section>
-
-<section id="fikstur">
-
-<h2>📅 Fikstür</h2>
-
-<div class="match">
-Kartallar 5 - 3 Aslanlar
-</div>
-
-<div class="match">
-Yıldızlar 2 - 2 Şimşekler
-</div>
-
-<div class="match">
-Kartallar 4 - 1 Şimşekler
-</div>
-
-</section>
-
-<footer>
-
-<p>Halı Saha Ligi Sitesi</p>
-
-</footer>
-
+        // İlk açılışta verileri yükle
+        render();
+    </script>
 </body>
-  </html>
+</html>
