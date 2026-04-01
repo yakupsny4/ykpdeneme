@@ -11,7 +11,6 @@
         .orange-text { color: #ff4500; }
         .orange-bg { background-color: #ff4500; }
         
-        /* GÜNCELLENMİŞ YÜKLEME EKRANI (LOADER) */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #2a1100 0%, #000000 70%);
@@ -20,21 +19,8 @@
         }
 
         .loader-container { display: flex; align-items: center; gap: 15px; margin-top: 20px; }
-        
-        .bouncing-ball {
-            font-size: 2.5rem;
-            animation: bounce 0.6s infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-25px); }
-        }
-
-        .splash-img {
-            max-width: 180px;
-            filter: drop-shadow(0 0 20px rgba(255, 69, 0, 0.4));
-        }
+        .bouncing-ball { font-size: 2.5rem; animation: bounce 0.6s infinite alternate; }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-25px); } }
 
         .enter-btn {
             font-family: 'Orbitron', sans-serif; background: #ff4500; color: black;
@@ -48,7 +34,6 @@
         .show-content { opacity: 1 !important; transform: translateY(0) !important; visibility: visible !important;}
 
         .card { background: #0a0a0a; border: 1px solid #1a1a1a; transition: all 0.3s; }
-        .card:hover { border-color: #ff4500; }
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
         
         .admin-only { display: none; }
@@ -58,135 +43,86 @@
         .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; letter-spacing: 1px; }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        /* TAKTİK SAHASI STİLLERİ */
+        /* TAKTİK SAHASI VE SÜRÜKLEME */
         .pitch {
             background: #061806; border: 2px solid #1a4a1a; position: relative;
-            height: 300px; border-radius: 10px; margin: 20px 0;
+            height: 380px; border-radius: 10px; margin: 20px 0; overflow: hidden;
             background-image: linear-gradient(#1a4a1a 1px, transparent 1px), linear-gradient(90deg, #1a4a1a 1px, transparent 1px);
             background-size: 50% 100%; background-position: center;
         }
         .pitch-center-circle {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 60px; height: 60px; border: 2px solid #1a4a1a; border-radius: 50%;
+            width: 70px; height: 70px; border: 2px solid #1a4a1a; border-radius: 50%;
         }
         .player-dot {
-            position: absolute; width: 30px; height: 30px; background: #ff4500;
-            color: black; font-size: 8px; font-weight: 900; border-radius: 50%;
+            position: absolute; width: 34px; height: 34px; background: #ff4500;
+            color: black; font-size: 9px; font-weight: 900; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            touch-action: none; user-select: none; z-index: 10;
         }
+        .admin-active .player-dot { cursor: move; }
 
-        .player-note { color: #ff4500; font-style: italic; font-size: 11px; margin-top: 2px; display: block; opacity: 0.9; }
-        .stat-bar { height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; margin-top: 4px; }
-        .stat-fill { height: 100%; background: #ff4500; transition: width 0.5s ease-out; }
-        .quote-card { border-left: 3px solid #ff4500; background: #080808; position: relative; }
-        .img-frame { border: 4px solid #1a1a1a; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .quote-card { border-left: 3px solid #ff4500; background: #080808; }
     </style>
 </head>
 <body>
 
-    <!-- GİRİŞ EKRANI (SPLASH) -->
     <div id="splash-screen">
-        <img src="badboysfc.jpg" alt="BAD BOYS Logo" class="splash-img">
+        <img src="badboysfc.jpg" alt="BAD BOYS Logo" class="max-w-[150px] mb-4">
         <div class="loader-container">
             <div class="bouncing-ball">⚽</div>
-            <h1 class="text-2xl font-black italic orange-text font-orbitron uppercase">BAD BOYS FC HAZIRLANIYOR...</h1>
+            <h1 class="text-xl font-black italic orange-text font-orbitron uppercase">BAD BOYS FC HAZIRLANIYOR...</h1>
         </div>
-        <button class="enter-btn" id="enterBtn" onclick="sahayaCik()">Sahaya Çık</button>
+        <button class="enter-btn" onclick="sahayaCik()">Sahaya Çık</button>
     </div>
 
-    <!-- KAYAN YAZI BANDI -->
-    <div class="marquee-container sticky top-0 z-50 shadow-xl">
-        <div class="marquee-text">
-            BAD BOYS FC • ORİJİNAL BAD BOYS FC RESMİ HESABI • İLETİŞİM İÇİN KAPTANA ULAŞIN • BAD BOYS FC • ORİJİNAL BAD BOYS FC RESMİ HESABI • İLETİŞİM İÇİN KAPTANA ULAŞIN
+    <div class="marquee-container sticky top-0 z-50">
+        <div class="marquee-text italic">
+            BAD BOYS FC • RESMİ WEB SİTESİ • KAPTAN YAKUP SUNAY • ASLA YALNIZ KOŞMAZSIN • BAD BOYS FC • RESMİ WEB SİTESİ • 
         </div>
     </div>
 
     <div id="main-content" class="container mx-auto max-w-md p-4 pb-24 relative">
-        <!-- ADMIN GİRİŞ İKONU -->
-        <button onclick="checkAdmin()" class="absolute right-4 top-4 text-zinc-800 hover:text-orange-600">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <button onclick="checkAdmin()" class="absolute right-4 top-4 text-zinc-800">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         </button>
 
         <header class="mb-8 mt-6 text-center">
-            <h1 class="text-5xl font-black italic orange-text tracking-tighter font-orbitron uppercase">BAD BOYS FC</h1>
-            <p class="text-zinc-500 text-[10px] font-bold tracking-[0.3em] uppercase mt-2">SAHADA TER, SİTEDE GURUR: ASLA YALNIZ KOŞMAZSIN</p>
+            <h1 class="text-4xl font-black italic orange-text font-orbitron uppercase">BAD BOYS FC</h1>
+            <p class="text-zinc-500 text-[9px] font-bold tracking-[0.3em] uppercase">Taktik - Skor - Racon</p>
         </header>
 
-        <!-- MAÇ YORUMCUSU BÖLÜMÜ -->
-        <div class="card p-4 rounded-xl mb-8 border-orange-900/30">
-            <h2 class="text-[10px] font-black text-zinc-500 uppercase mb-3 tracking-widest">🎙️ Yorumcu Koltuğu</h2>
-            <p id="matchComment" class="text-xs italic text-zinc-300 leading-relaxed">Skorları girin, yorumumu yapayım kaptan!</p>
-            <div class="flex gap-2 mt-4">
-                <input type="number" id="hScore" placeholder="BB" class="bg-zinc-900 border border-zinc-800 text-white text-xs p-2 rounded w-full outline-none focus:border-orange-600">
-                <input type="number" id="aScore" placeholder="RAKİP" class="bg-zinc-900 border border-zinc-800 text-white text-xs p-2 rounded w-full outline-none focus:border-orange-600">
-                <button onclick="generateComment()" class="orange-bg text-black font-black text-[10px] px-4 rounded hover:bg-orange-500 transition">YORUMLA</button>
-            </div>
-        </div>
-
-        <!-- MAÇ ARŞİVİ BÖLÜMÜ -->
+        <!-- MAÇ ARŞİVİ -->
         <div class="mb-10">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xs font-black text-zinc-400 uppercase tracking-widest pl-1">📜 Maç Arşivi</h2>
-                <button onclick="addMatchRecord()" class="admin-only text-[10px] orange-text font-bold border border-orange-900 px-2 py-1 rounded">+ SKOR EKLE</button>
+                <button onclick="addMatchRecord()" class="admin-only text-[10px] orange-text font-bold border border-orange-900 px-2 py-1 rounded">+ EKLE</button>
             </div>
-            <div id="matchHistoryContainer" class="space-y-2">
-                <!-- Maçlar buraya dolacak -->
-            </div>
+            <div id="matchHistoryContainer" class="space-y-2"></div>
         </div>
 
-        <!-- TAKTİK SAHASI -->
-        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">📋 Taktik Tahtası</h2>
-        <div class="pitch">
+        <!-- TAKTİK TAHTASI (8 OYUNCU) -->
+        <h2 class="text-xs font-black mb-2 text-zinc-400 uppercase tracking-widest pl-1">📋 Taktik Tahtası</h2>
+        <p class="text-[9px] text-zinc-600 mb-3 admin-only uppercase">💡 Admin Modu: Oyuncuları sürükle-bırak!</p>
+        <div class="pitch" id="tacticalPitch">
             <div class="pitch-center-circle"></div>
-            <div class="player-dot" style="bottom: 10px; left: 45%;">HCN</div>
-            <div class="player-dot" style="bottom: 80px; left: 20%;">SLY</div>
-            <div class="player-dot" style="bottom: 80px; left: 70%;">YKP</div>
-            <div class="player-dot" style="top: 130px; left: 45%;">ERL</div>
-            <div class="player-dot" style="top: 50px; left: 20%;">MRT</div>
-            <div class="player-dot" style="top: 50px; left: 70%;">ERN</div>
         </div>
-        <p class="text-[8px] text-zinc-500 text-center mb-10 italic uppercase">Taktik diziliş: 2-1-2 (Maç öncesi yerleşim)</p>
 
-        <!-- KATILIM LİSTESİ -->
+        <!-- YOKLAMA LİSTESİ -->
         <div class="card p-4 rounded-xl mb-10">
-            <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest">✅ Maç Yoklaması</h2>
-            <div id="attendanceList" class="space-y-2"></div>
+            <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest text-center">✅ Haftalık Yoklama</h2>
+            <div id="attendanceList" class="space-y-3"></div>
         </div>
 
-        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest text-center">Haftanın İfşası</h2>
-        <div class="img-frame mb-10 bg-zinc-900 aspect-video flex items-center justify-center relative">
-            <img id="weeklyImg" src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=500" class="w-full h-full object-cover opacity-60">
-            <div class="absolute inset-0 flex items-center justify-center">
-                <span class="text-[10px] font-black bg-black/80 px-4 py-2 rounded-full border border-orange-600 admin-only cursor-pointer" onclick="changeImg()">FOTOĞRAFI DEĞİŞTİR</span>
-            </div>
-        </div>
+        <!-- OYUNCU VERİLERİ -->
+        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest">👥 Oyuncu Verileri</h2>
+        <div id="playerContainer" class="space-y-3"></div>
 
-        <!-- ÖZET KARTLAR -->
-        <div class="grid grid-cols-3 gap-3 mb-8">
-            <div class="card p-4 rounded-xl text-center">
-                <div class="text-[9px] text-zinc-500 uppercase font-black">Kadro</div>
-                <div class="text-2xl font-black italic font-orbitron">8/8</div>
-            </div>
-            <div class="card p-4 rounded-xl text-center border-b-4 border-b-orange-600">
-                <div class="text-[9px] text-zinc-500 uppercase font-black">Toplam Skor</div>
-                <div id="totalPoints" class="text-2xl font-black italic orange-text font-orbitron">0</div>
-            </div>
-            <div class="card p-4 rounded-xl text-center">
-                <div class="text-[9px] text-zinc-500 uppercase font-black">Sezon</div>
-                <div class="text-2xl font-black italic font-orbitron">2026</div>
-            </div>
-        </div>
-
-        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">Haftanın Raporu</h2>
-        <div id="weeklyReport" class="grid grid-cols-2 gap-3 mb-10 text-center"></div>
-
-        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">Tüm Oyuncular</h2>
-        <div id="playerContainer" class="space-y-4"></div>
-
+        <!-- RACON -->
         <div class="flex justify-between items-center mb-4 mt-12">
             <h2 class="text-xs font-black text-zinc-400 uppercase tracking-widest pl-1">Halı Saha Raconu</h2>
-            <button onclick="addQuote()" class="admin-only text-[10px] orange-text font-bold border border-orange-900 px-2 py-1 rounded">+ SÖZ EKLE</button>
+            <button onclick="addQuote()" class="admin-only text-[10px] orange-text font-bold border border-orange-900 px-2 py-1 rounded">+ SÖZ</button>
         </div>
         <div id="quoteContainer" class="space-y-3 mb-20"></div>
 
@@ -199,176 +135,158 @@
         const adminPassword = "badboys123";
         let isAdmin = false;
 
+        // Taktik sahasında 8 kişi için varsayılan koordinatlar
+        const initialPlayers = [
+            { id: 1, name: "HÜSEYİNCAN YÜKSEKDAĞ", short: "HCN", goals: 0, assists: 0, attending: true, pos: { x: 45, y: 88 } },
+            { id: 2, name: "SÜLEYMAN TUNÇELİK", short: "SLY", goals: 0, assists: 0, attending: true, pos: { x: 20, y: 70 } },
+            { id: 3, name: "YAKUP SUNAY", short: "YKP", goals: 0, assists: 0, attending: true, pos: { x: 70, y: 70 } },
+            { id: 4, name: "MEHMET UZUN", short: "MHT", goals: 0, assists: 0, attending: true, pos: { x: 45, y: 65 } },
+            { id: 5, name: "EROL GÖNÜL", short: "ERL", goals: 0, assists: 0, attending: true, pos: { x: 45, y: 40 } },
+            { id: 6, name: "MURAT ÇAYLI", short: "MRT", goals: 0, assists: 0, attending: true, pos: { x: 20, y: 20 } },
+            { id: 7, name: "EREN YILMAZ", short: "ERN", goals: 0, assists: 0, attending: true, pos: { x: 70, y: 20 } },
+            { id: 8, name: "MUSA AKSU", short: "MSA", goals: 0, assists: 0, attending: true, pos: { x: 45, y: 12 } }
+        ];
+
+        let players = JSON.parse(localStorage.getItem('badBoysData')) || initialPlayers;
+        let matchRecords = JSON.parse(localStorage.getItem('badBoysMatches')) || [];
+        let quotes = JSON.parse(localStorage.getItem('badBoysQuotes')) || [];
+
         function sahayaCik() {
             document.getElementById('splash-screen').style.opacity = '0';
             document.getElementById('splash-screen').style.visibility = 'hidden';
             setTimeout(() => { document.getElementById('main-content').classList.add('show-content'); }, 300);
         }
 
-        function generateComment() {
-            const h = parseInt(document.getElementById('hScore').value);
-            const a = parseInt(document.getElementById('aScore').value);
-            const box = document.getElementById('matchComment');
-            if(isNaN(h) || isNaN(a)) return;
-            let comments = [];
-            if(h > a + 3) comments = ["Rakip takıma navigasyon lazım, sahada kayboldular!", "Bad Boys bugün gol olup yağdı!", "Bu skorun ardından rakip takımı emekliliğe davet ediyoruz."];
-            else if(h > a) comments = ["Zor oldu ama Bad Boys ruhu kazandı!", "Bileğimizin hakkıyla aldık, tebrikler beyler!", "Bad Boys affetmez, son dakikaya kadar savaşır!"];
-            else if(h === a) comments = ["Dostluk kazandı ama rövanşta affetmeyiz!", "Direkler rakipten daha çok korudu kaleyi.", "Güzel maçtı, puanlar paylaşıldı."];
-            else comments = ["Şans yanımızda değildi, haftaya telafi ederiz.", "Nazar değdi diyelim, biz önümüzdeki maçlara bakıyoruz.", "Düştüğümüz yerden kalkmasını biliriz, Bad Boys ölmez!"];
-            box.innerHTML = comments[Math.floor(Math.random() * comments.length)];
-            box.classList.add('orange-text');
-        }
-
         function checkAdmin() {
-            if(prompt("Yönetici şifresi:") === adminPassword) {
+            if(prompt("Admin Şifresi:") === adminPassword) {
                 isAdmin = true;
                 document.body.classList.add('admin-active');
                 render();
             }
         }
 
-        const initialPlayers = [
-            { id: 1, name: "HÜSEYİNCAN YÜKSEKDAĞ", role: "KALECİ", goals: 0, assists: 0, value: "1 Koli Soğuk Su", note: "Kalede adeta kocaman bir fil gibi", stats: {kondisyon: 90, vefa: 100, sertlik: 85}, attending: true },
-            { id: 2, name: "SÜLEYMAN TUNÇELİK", role: "DEFANS", goals: 0, assists: 0, value: "2 Tepsi Baklava", note: "Defansın bel kemiği", stats: {kondisyon: 90, vefa: 100, sertlik: 75}, attending: true },
-            { id: 3, name: "YAKUP SUNAY", role: "DEFANS", goals: 0, assists: 0, value: "Sınırsız Adana Dürüm", note: "Koca yürekli kaptan", isCaptain: true, stats: {kondisyon: 90, vefa: 100, sertlik: 75}, attending: true },
-            { id: 4, name: "MEHMET UZUN", role: "DEFANS", goals: 0, assists: 0, value: "5 Şişe Enerji İçeceği", note: "Takımın sert adamı", stats: {kondisyon: 90, vefa: 100, sertlik: 80}, attending: true },
-            { id: 5, name: "EROL GÖNÜL", role: "ORTA SAHA", goals: 0, assists: 0, value: "1 Porsiyon Künefe", note: "Şut çekmeyi sever", stats: {kondisyon: 90, vefa: 100, sertlik: 80}, attending: true },
-            { id: 6, name: "MURAT ÇAYLI", role: "FORVET", goals: 0, assists: 0, value: "Yarım Kilo Fıstık", note: "Çalım denemeyi sever", stats: {kondisyon: 90, vefa: 100, sertlik: 75}, attending: true },
-            { id: 7, name: "EREN YILMAZ", role: "FORVET", goals: 0, assists: 0, value: "3 Lahmacun + Ayran", note: "Eşi geldiyse tehlikelidir", stats: {kondisyon: 90, vefa: 100, sertlik: 70}, attending: true },
-            { id: 8, name: "MUSA AKSU", role: "FORVET", goals: 0, assists: 0, value: "1 Karışık Pizza", note: "Kıvrak bilekler", stats: {kondisyon: 80, vefa: 100, sertlik: 70}, attending: true }
-        ];
+        let activePlayer = null;
+        function setupDraggable() {
+            const pitch = document.getElementById('tacticalPitch');
+            document.querySelectorAll('.player-dot').forEach(dot => {
+                dot.onmousedown = (e) => {
+                    if(!isAdmin) return;
+                    activePlayer = dot;
+                    dot.style.zIndex = 1000;
+                };
+                // Mobil destek
+                dot.ontouchstart = (e) => {
+                    if(!isAdmin) return;
+                    activePlayer = dot;
+                };
+            });
 
-        let players = JSON.parse(localStorage.getItem('badBoysData')) || initialPlayers;
-        let quotes = JSON.parse(localStorage.getItem('badBoysQuotes')) || [
-            { id: 1, text: "Yakup Sunay abi ayağım kötü...", date: "02.04.2026" },
-            { id: 2, text: "Ulan yerden sekti yoksa goldü!", date: "02.04.2026" }
-        ];
-        let matchRecords = JSON.parse(localStorage.getItem('badBoysMatches')) || [
-            { id: 1, score: "10 - 7", opponent: "ÖRNEK RAKİP", date: "02.04.2026", result: "W" }
-        ];
+            document.onmousemove = (e) => handleMove(e.clientX, e.clientY);
+            document.ontouchmove = (e) => handleMove(e.touches[0].clientX, e.touches[0].clientY);
 
-        function toggleAttendance(id) {
+            function handleMove(clientX, clientY) {
+                if(!activePlayer || !isAdmin) return;
+                const rect = pitch.getBoundingClientRect();
+                let x = ((clientX - rect.left) / rect.width) * 100;
+                let y = ((clientY - rect.top) / rect.height) * 100;
+                x = Math.max(5, Math.min(90, x));
+                y = Math.max(5, Math.min(95, y));
+                activePlayer.style.left = x + '%';
+                activePlayer.style.top = y + '%';
+                const p = players.find(p => p.id == activePlayer.getAttribute('data-id'));
+                p.pos = { x, y };
+            }
+
+            document.onmouseup = document.ontouchend = () => {
+                if(activePlayer) {
+                    localStorage.setItem('badBoysData', JSON.stringify(players));
+                    activePlayer.style.zIndex = 10;
+                    activePlayer = null;
+                }
+            };
+        }
+
+        function toggleAttendance(id, status) {
             const p = players.find(x => x.id === id);
-            p.attending = !p.attending;
+            p.attending = status;
+            localStorage.setItem('badBoysData', JSON.stringify(players));
+            render();
+        }
+
+        function render() {
+            // Taktik Tahtası
+            const pitch = document.getElementById('tacticalPitch');
+            pitch.innerHTML = '<div class="pitch-center-circle"></div>';
+            players.forEach(p => {
+                pitch.innerHTML += `<div class="player-dot" data-id="${p.id}" style="left:${p.pos.x}%; top:${p.pos.y}%">${p.short}</div>`;
+            });
+
+            // Yoklama Listesi
+            const attendanceList = document.getElementById('attendanceList');
+            attendanceList.innerHTML = players.map(p => `
+                <div class="flex justify-between items-center bg-[#050505] p-3 rounded-lg border border-zinc-900">
+                    <span class="text-[11px] font-bold ${p.attending ? 'text-white' : 'text-zinc-600'} uppercase">${p.name}</span>
+                    <div class="flex gap-2">
+                        <button onclick="toggleAttendance(${p.id}, true)" class="text-[8px] px-3 py-1 rounded font-black border ${p.attending ? 'bg-green-600 border-green-500 text-black' : 'border-green-900 text-green-900'}">GELİYOR</button>
+                        <button onclick="toggleAttendance(${p.id}, false)" class="text-[8px] px-3 py-1 rounded font-black border ${!p.attending ? 'bg-red-600 border-red-500 text-white' : 'border-red-900 text-red-900'}">GELMİYOR</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Maç Arşivi
+            const historyContainer = document.getElementById('matchHistoryContainer');
+            historyContainer.innerHTML = matchRecords.map(m => `
+                <div class="card p-3 rounded-lg flex justify-between items-center border-l-4 ${m.result === 'W' ? 'border-l-green-500' : 'border-l-red-500'}">
+                    <div class="flex flex-col"><span class="text-[8px] text-zinc-500 font-bold">${m.date}</span><span class="text-[10px] font-black uppercase">VS ${m.opponent}</span></div>
+                    <div class="text-lg font-black italic font-orbitron ${m.result === 'W' ? 'orange-text' : 'text-white'}">${m.score}</div>
+                </div>
+            `).join('');
+
+            // Oyuncu Kartları
+            const playerContainer = document.getElementById('playerContainer');
+            playerContainer.innerHTML = players.map(p => `
+                <div class="card p-4 rounded-xl border-zinc-900 flex justify-between items-center">
+                    <span class="font-bold text-[11px] uppercase">${p.name}</span>
+                    <div class="flex gap-4 text-[10px] font-black">
+                        <div class="flex items-center gap-1">⚽ ${p.goals} <button onclick="updateStat(${p.id},'goals',1)" class="admin-only bg-zinc-800 px-1 rounded ml-1">+</button></div>
+                        <div class="flex items-center gap-1">🎯 ${p.assists} <button onclick="updateStat(${p.id},'assists',1)" class="admin-only bg-zinc-800 px-1 rounded ml-1">+</button></div>
+                    </div>
+                </div>
+            `).join('');
+
+            const quoteContainer = document.getElementById('quoteContainer');
+            quoteContainer.innerHTML = quotes.map(q => `<div class="quote-card p-4 rounded-r-xl italic text-xs">"${q.text}"</div>`).join('');
+            setupDraggable();
+        }
+
+        function updateStat(id, field, amount) {
+            const p = players.find(x => x.id === id);
+            p[field] += amount;
             localStorage.setItem('badBoysData', JSON.stringify(players));
             render();
         }
 
         function addMatchRecord() {
-            const opponent = prompt("Rakip Takım Adı:");
-            const score = prompt("Skor (Örn: 10-7):");
-            const date = new Date().toLocaleDateString('tr-TR');
-            if(opponent && score) {
-                const scores = score.split('-').map(s => parseInt(s.trim()));
-                let result = "D";
-                if(scores[0] > scores[1]) result = "W";
-                if(scores[0] < scores[1]) result = "L";
-                matchRecords.unshift({ id: Date.now(), opponent, score, date, result });
+            const opp = prompt("Rakip?"); const scr = prompt("Skor (10-5)?");
+            if(opp && scr) {
+                const res = parseInt(scr.split('-')[0]) > parseInt(scr.split('-')[1]) ? 'W' : 'L';
+                matchRecords.unshift({ opponent: opp, score: scr, date: new Date().toLocaleDateString('tr-TR'), result: res });
                 localStorage.setItem('badBoysMatches', JSON.stringify(matchRecords));
                 render();
             }
         }
 
-        function render() {
-            const container = document.getElementById('playerContainer');
-            const quoteContainer = document.getElementById('quoteContainer');
-            const weeklyReport = document.getElementById('weeklyReport');
-            const attendanceList = document.getElementById('attendanceList');
-            const historyContainer = document.getElementById('matchHistoryContainer');
-            const savedImg = localStorage.getItem('badBoysImg');
-            if(savedImg) document.getElementById('weeklyImg').src = savedImg;
-            
-            container.innerHTML = ""; quoteContainer.innerHTML = ""; attendanceList.innerHTML = "";
-            let tScore = 0;
-
-            // Maç Arşivi Render
-            historyContainer.innerHTML = matchRecords.map(m => `
-                <div class="card p-3 rounded-lg flex justify-between items-center border-l-4 ${m.result === 'W' ? 'border-l-green-500' : (m.result === 'L' ? 'border-l-red-500' : 'border-l-zinc-500')}">
-                    <div class="flex flex-col">
-                        <span class="text-[8px] text-zinc-500 font-bold uppercase">${m.date}</span>
-                        <span class="text-[10px] font-black uppercase tracking-tight">VS ${m.opponent}</span>
-                    </div>
-                    <div class="text-lg font-black italic font-orbitron ${m.result === 'W' ? 'orange-text' : 'text-white'}">
-                        ${m.score}
-                    </div>
-                </div>
-            `).join('');
-
-            weeklyReport.innerHTML = `
-                <div class="card p-3 rounded-xl border-l-4 border-l-green-600 text-left">
-                    <div class="text-[8px] text-green-500 font-black tracking-widest uppercase">MAÇIN ADAMI</div>
-                    <div class="text-xs font-black mt-1 uppercase italic font-orbitron">${players[2].name.split(' ')[0]}</div>
-                </div>
-                <div class="card p-3 rounded-xl border-l-4 border-l-red-600 text-left">
-                    <div class="text-[8px] text-red-500 font-black tracking-widest uppercase">MAÇIN BİDONU</div>
-                    <div class="text-xs font-black mt-1 uppercase italic font-orbitron text-zinc-500">HÜSEYİN</div>
-                </div>
-            `;
-
-            players.forEach(p => {
-                tScore += (p.goals + p.assists);
-                attendanceList.innerHTML += `
-                    <div class="flex justify-between items-center bg-zinc-950 p-2 rounded border border-zinc-900">
-                        <span class="text-[10px] font-bold ${p.attending ? 'text-white' : 'text-zinc-600 line-through'}">${p.name}</span>
-                        <button onclick="toggleAttendance(${p.id})" class="text-[10px] px-2 py-1 rounded font-black ${p.attending ? 'bg-green-900 text-green-400' : 'bg-red-900 text-red-400'}">
-                            ${p.attending ? 'GELİYOR' : 'GELMİYOR'}
-                        </button>
-                    </div>
-                `;
-                container.innerHTML += `
-                    <div class="card p-5 rounded-xl border-zinc-900">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-sm italic uppercase tracking-tight">${p.name}</span>
-                                    ${p.isCaptain ? '<span class="orange-bg text-black text-[8px] px-1.5 py-0.5 rounded font-black">CPT</span>' : ''}
-                                </div>
-                                <span class="player-note">"${p.note}"</span>
-                                <div class="grid grid-cols-3 gap-3 mt-4 mb-4">
-                                    <div><div class="text-[7px] opacity-40 uppercase font-black">Knd</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.kondisyon}%"></div></div></div>
-                                    <div><div class="text-[7px] opacity-40 uppercase font-black text-orange-400">Vefa</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.vefa}%"></div></div></div>
-                                    <div><div class="text-[7px] opacity-40 uppercase font-black">Srt</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.sertlik}%"></div></div></div>
-                                </div>
-                                <div class="flex gap-4 text-xs font-bold items-center">
-                                    <div class="flex items-center gap-2">⚽ ${p.goals} <div class="admin-only gap-1 ml-1"><button onclick="updateStat(${p.id},'goals',-1)" class="w-4 h-4 bg-zinc-900 border border-zinc-800 rounded">-</button><button onclick="updateStat(${p.id},'goals',1)" class="w-4 h-4 bg-zinc-800 rounded">+</button></div></div>
-                                    <div class="flex items-center gap-2 border-l border-zinc-800 pl-4">🎯 ${p.assists} <div class="admin-only gap-1 ml-1"><button onclick="updateStat(${p.id},'assists',-1)" class="w-4 h-4 bg-zinc-900 border border-zinc-800 rounded">-</button><button onclick="updateStat(${p.id},'assists',1)" class="w-4 h-4 bg-zinc-800 rounded">+</button></div></div>
-                                </div>
-                            </div>
-                            <div class="text-right flex flex-col items-end">
-                                <div class="text-[7px] font-black text-zinc-500 uppercase tracking-tighter mb-1">Transfer Bedeli</div>
-                                <div class="text-[9px] font-bold orange-text italic leading-tight text-right">${p.value}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            quoteContainer.innerHTML = quotes.map(q => `
-                <div class="quote-card p-4 rounded-r-xl"><p class="text-xs italic font-medium">"${q.text}"</p><span class="text-[8px] text-zinc-600 mt-2 block font-black uppercase">${q.date}</span></div>
-            `).join('');
-            document.getElementById('totalPoints').innerText = tScore;
-        }
-
-        function changeImg() {
-            const url = prompt("Haftanın fotoğrafı için link yapıştır:");
-            if(url) { localStorage.setItem('badBoysImg', url); render(); }
-        }
-        function updateStat(id, field, amount) {
-            const p = players.find(x => x.id === id);
-            p[field] = Math.max(0, p[field] + amount);
-            localStorage.setItem('badBoysData', JSON.stringify(players));
-            render();
-        }
         function addQuote() {
-            const text = prompt("Yeni racon sözü:");
-            if(text) {
-                quotes.unshift({ id: Date.now(), text, date: new Date().toLocaleDateString('tr-TR') });
+            const t = prompt("Söz?");
+            if(t) {
+                quotes.unshift({ text: t });
                 localStorage.setItem('badBoysQuotes', JSON.stringify(quotes));
                 render();
             }
         }
-        function resetAllData() {
-            if(confirm("Tüm veriler sıfırlanacak!")) { localStorage.clear(); location.reload(); }
-        }
+
+        function resetAllData() { if(confirm("Tüm veriler silinsin mi?")) { localStorage.clear(); location.reload(); } }
+
         render();
     </script>
 </body>
