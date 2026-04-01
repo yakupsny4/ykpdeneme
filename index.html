@@ -36,16 +36,12 @@
         .admin-only { display: none; }
         .admin-active .admin-only { display: flex; }
 
-        /* Alt yazı stili */
         .scout-note { color: #888; font-style: italic; font-size: 11px; margin-top: 4px; line-height: 1.2; }
     </style>
 </head>
 <body>
 
-    <!-- SES DOSYALARI (Online kütüphaneden çekiliyor) -->
-    <audio id="stadiumAmbience" src="https://www.soundjay.com/misc/sounds/stadium-crowd-1.mp3" loop></audio>
-    <audio id="goalSound" src="https://www.myinstants.com/media/sounds/siu.mp3"></audio>
-    <audio id="whistleSound" src="https://www.soundjay.com/human/sounds/referee-whistle-01.mp3"></audio>
+    <audio id="goalCelebration" src="https://www.soundjay.com/misc/sounds/stadium-cheer-1.mp3" loop></audio>
 
     <div id="splash-screen">
         <h1 class="text-6xl font-black italic orange-text text-center font-orbitron mb-12">BAD BOYS<br>FC</h1>
@@ -89,11 +85,12 @@
     </div>
 
     <script>
-        const adminPassword = "YakupS15";
+        const adminPassword = "badboys123";
         let isAdmin = false;
 
         function sahayaCik() {
-            document.getElementById('stadiumAmbience').play();
+            // SADECE BURADA SES ÇALACAK
+            document.getElementById('goalCelebration').play();
             const splash = document.getElementById('splash-screen');
             const main = document.getElementById('main-content');
             splash.style.opacity = '0';
@@ -102,7 +99,7 @@
         }
 
         function checkAdmin() {
-            const pass = prompt("Şifre:");
+            const pass = prompt("Yönetici şifresi:");
             if(pass === adminPassword) {
                 isAdmin = true;
                 document.body.classList.add('admin-active');
@@ -124,10 +121,6 @@
         let players = JSON.parse(localStorage.getItem('badBoysData')) || initialPlayers;
 
         function updateStat(id, field, amount) {
-            if(amount > 0) {
-                document.getElementById('whistleSound').play();
-                setTimeout(() => document.getElementById('goalSound').play(), 400);
-            }
             const p = players.find(x => x.id === id);
             p[field] = Math.max(0, p[field] + amount);
             p.value += (field === 'goals' ? 500000 : 250000) * amount;
@@ -137,9 +130,9 @@
         }
 
         function resetAllData() {
-            if(confirm("Sıfırlansın mı?")) {
+            if(confirm("Tüm istatistikler sıfırlanacak! Emin misin Kaptan?")) {
                 players = initialPlayers.map(p => ({...p}));
-                localStorage.clear();
+                localStorage.removeItem('badBoysData');
                 render();
             }
         }
@@ -192,25 +185,4 @@
                                     <div class="flex items-center gap-2 border-l border-zinc-800 pl-4">
                                         <span class="opacity-70">🎯</span> <span>${p.assists}</span>
                                         <div class="admin-only gap-1">
-                                            <button onclick="updateStat(${p.id}, 'assists', -1)" class="w-5 h-5 bg-zinc-900 border border-zinc-800 rounded text-red-500">-</button>
-                                            <button onclick="updateStat(${p.id}, 'assists', 1)" class="w-5 h-5 bg-zinc-800 rounded hover:bg-orange-600">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-lg font-black orange-text font-orbitron">€${(p.value/1000000).toFixed(1)}M</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            document.getElementById('totalValue').innerText = `€${(tValue/1000000).toFixed(1)}M`;
-            document.getElementById('totalPoints').innerText = tScore;
-            document.getElementById('playerCount').innerText = `${players.length}/8`;
-        }
-        render();
-    </script>
-</body>
-</html>
+                                            <button onclick="updateStat(${p.id},
