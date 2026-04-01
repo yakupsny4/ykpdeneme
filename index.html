@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | Secure Panel</title>
+    <title>BAD BOYS FC | Management & Reset</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
@@ -12,27 +12,32 @@
         .orange-text { color: #ff6600; }
         .orange-bg { background-color: #ff6600; }
         .card { background: #111; border-left: 4px solid #ff6600; transition: 0.3s; }
-        /* Admin paneli kapalıyken butonları gizle */
         .admin-only { display: none; }
         .admin-active .admin-only { display: inline-flex; }
         #wheel { transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); }
     </style>
 </head>
-<body class="p-4 pb-32 max-w-md mx-auto">
+<body class="p-4 pb-36 max-w-md mx-auto">
 
     <div class="flex justify-between items-center mb-6">
-        <div class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Kaptan Paneli</div>
+        <div class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest italic">BAD BOYS HQ</div>
         <button onclick="checkAdmin()" id="lockBtn" class="text-xl">🔒</button>
     </div>
 
     <header class="text-center mb-8 border-b border-zinc-800 pb-4">
-        <h1 class="badboys-font text-3xl font-black orange-text">BAD BOYS FC</h1>
-        <p id="adminStatus" class="text-[9px] text-zinc-500 uppercase mt-1 italic">İzleyici Modu</p>
+        <h1 class="badboys-font text-3xl font-black orange-text uppercase">BAD BOYS FC</h1>
+        <p id="adminStatus" class="text-[9px] text-zinc-500 uppercase mt-1 italic tracking-widest">İzleyici Modu</p>
     </header>
 
-    <section class="mb-8 p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-center">
-        <div class="relative w-20 h-20 mx-auto border-2 border-[#ff6600] rounded-full flex items-center justify-center overflow-hidden mb-3">
-            <div id="wheel" class="text-[7px] font-bold uppercase">Taktik</div>
+    <div class="admin-only w-full mb-6">
+        <button onclick="resetAllData()" class="w-full py-2 bg-red-900/20 border border-red-900 text-red-500 text-[10px] font-black rounded-lg uppercase tracking-tighter">
+            ⚠️ Tüm Sezon Verilerini Sıfırla
+        </button>
+    </div>
+
+    <section class="mb-8 p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-center shadow-xl">
+        <div class="relative w-16 h-16 mx-auto border-2 border-[#ff6600] rounded-full flex items-center justify-center overflow-hidden mb-3">
+            <div id="wheel" class="text-[6px] font-bold uppercase">Maç Day</div>
             <div class="absolute top-0 w-1 h-3 bg-white"></div>
         </div>
         <button onclick="spinWheel()" class="admin-only text-[10px] bg-white text-black font-black px-6 py-1 rounded-full mb-2">ÇARKI ÇEVİR</button>
@@ -43,12 +48,12 @@
 
     <div class="fixed bottom-0 left-0 w-full bg-black/95 border-t-2 border-[#ff6600] p-5 flex justify-around items-center z-50">
         <div class="text-center">
-            <p class="text-[8px] text-zinc-500 uppercase font-black">Piyasa Değeri</p>
+            <p class="text-[8px] text-zinc-500 uppercase font-black">Takım Değeri</p>
             <span id="totalValue" class="text-sm font-black orange-text">€0M</span>
         </div>
         <div class="text-center">
-            <p class="text-[8px] text-zinc-500 uppercase font-black">Gol</p>
-            <span id="totalGoals" class="text-sm font-black text-white">0</span>
+            <p class="text-[8px] text-zinc-500 uppercase font-black">Toplam Gol</p>
+            <span id="totalGoals" class="text-sm font-black text-white italic">0</span>
         </div>
         <div class="text-center">
             <p class="text-[8px] text-zinc-500 uppercase font-black">Kadro</p>
@@ -57,7 +62,7 @@
     </div>
 
     <script>
-        const adminPassword = "Yy++1661."; // ŞİFREN BURASI! İstediğinle değiştir.
+        const adminPassword = "YakupS15"; // Şifreni buradan değiştirebilirsin
         let isAdmin = false;
 
         const initialPlayers = [
@@ -71,7 +76,7 @@
             { id: 8, name: "Musa Aksu", role: "Forvet", goals: 0, assists: 0, value: 3800000, scout: "Kıvrak bilekleri ile dosta korku düşmana güven." }
         ];
 
-        let players = JSON.parse(localStorage.getItem('badBoysFC_V4')) || initialPlayers;
+        let players = JSON.parse(localStorage.getItem('badBoysFC_V5')) || initialPlayers;
 
         function checkAdmin() {
             if(!isAdmin) {
@@ -81,23 +86,21 @@
                     document.body.classList.add('admin-active');
                     document.getElementById('lockBtn').innerText = "🔓";
                     document.getElementById('adminStatus').innerText = "Yönetici Modu Açık";
-                    document.getElementById('adminStatus').classList.replace('text-zinc-500', 'text-orange-500');
+                    document.getElementById('adminStatus').style.color = "#ff6600";
                     render();
-                } else {
-                    alert("Hatalı şifre!");
-                }
+                } else { alert("Hatalı şifre!"); }
             } else {
                 isAdmin = false;
                 document.body.classList.remove('admin-active');
                 document.getElementById('lockBtn').innerText = "🔒";
                 document.getElementById('adminStatus').innerText = "İzleyici Modu";
-                document.getElementById('adminStatus').classList.replace('text-orange-500', 'text-zinc-500');
+                document.getElementById('adminStatus').style.color = "#52525b";
                 render();
             }
         }
 
         function save() {
-            localStorage.setItem('badBoysFC_V4', JSON.stringify(players));
+            localStorage.setItem('badBoysFC_V5', JSON.stringify(players));
             render();
         }
 
@@ -105,15 +108,24 @@
             if(!isAdmin) return;
             const p = players.find(x => x.id === id);
             p[field] = Math.max(0, p[field] + amount);
+            // Değer güncelleme: + değer artırır, - değer azaltır
             p.value += (field === 'goals' ? 500000 : 250000) * amount;
             save();
+        }
+
+        function resetAllData() {
+            if(confirm("DİKKAT! Tüm gol ve asist verileri sıfırlanacak. Emin misin Kaptan?")) {
+                players = initialPlayers.map(p => ({...p})); // Başlangıç ayarlarına dön
+                save();
+                alert("Saha temizlendi, yeni sezon başlasın!");
+            }
         }
 
         function spinWheel() {
             const wheel = document.getElementById('wheel');
             const rand = Math.floor(Math.random() * 360) + 1440;
             wheel.style.transform = `rotate(${rand}deg)`;
-            setTimeout(() => { document.getElementById('wheelResult').innerText = "Sonuç Belirlendi!"; }, 4000);
+            setTimeout(() => { document.getElementById('wheelResult').innerText = "Taktik Belirlendi!"; }, 4000);
         }
 
         function render() {
@@ -125,23 +137,31 @@
                 tGoals += p.goals; tValue += p.value;
                 container.innerHTML += `
                     <div class="card p-4 rounded-xl shadow-lg">
-                        <div class="flex justify-between items-center">
-                            <div>
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
                                 <div class="flex items-center gap-2">
                                     <span class="font-bold text-base tracking-tight">${p.name}</span>
                                     ${p.isCaptain ? '<span class="bg-[#ff6600] text-black text-[8px] px-1.5 rounded font-black">CPT</span>' : ''}
                                 </div>
                                 <div class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">${p.role}</div>
-                                <div class="mt-2 flex gap-4 text-xs font-bold">
-                                    <span>⚽ ${p.goals}</span>
-                                    <span>🎯 ${p.assists}</span>
-                                    <span class="text-zinc-600 font-mono italic">€${(p.value/1000000).toFixed(1)}M</span>
+                                <div class="mt-2 flex gap-4 text-xs font-bold items-center">
+                                    <div class="flex items-center gap-1.5">
+                                        <span>⚽ ${p.goals}</span>
+                                        <div class="admin-only flex gap-0.5">
+                                            <button onclick="updateStat(${p.id}, 'goals', 1)" class="w-5 h-5 bg-zinc-800 rounded text-[10px] font-black">+</button>
+                                            <button onclick="updateStat(${p.id}, 'goals', -1)" class="w-5 h-5 bg-zinc-800 rounded text-[10px] font-black text-red-500">-</button>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span>🎯 ${p.assists}</span>
+                                        <div class="admin-only flex gap-0.5">
+                                            <button onclick="updateStat(${p.id}, 'assists', 1)" class="w-5 h-5 bg-zinc-800 rounded text-[10px] font-black">+</button>
+                                            <button onclick="updateStat(${p.id}, 'assists', -1)" class="w-5 h-5 bg-zinc-800 rounded text-[10px] font-black text-red-500">-</button>
+                                        </div>
+                                    </div>
+                                    <span class="text-zinc-600 font-mono text-[10px]">€${(p.value/1000000).toFixed(1)}M</span>
                                 </div>
                                 <div class="text-[10px] text-zinc-400 mt-2 italic border-t border-zinc-800 pt-1">"${p.scout}"</div>
-                            </div>
-                            <div class="admin-only flex gap-1">
-                                <button onclick="updateStat(${p.id}, 'goals', 1)" class="w-7 h-7 bg-zinc-800 rounded text-[10px] font-black hover:orange-bg transition hover:text-black">+G</button>
-                                <button onclick="updateStat(${p.id}, 'assists', 1)" class="w-7 h-7 bg-zinc-800 rounded text-[10px] font-black hover:orange-bg transition hover:text-black">+A</button>
                             </div>
                         </div>
                     </div>
