@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | İstatistik Paneli</title>
+    <title>BAD BOYS FC | Pro Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -18,16 +18,6 @@
             transition: opacity 0.8s ease-out, visibility 0.8s;
         }
 
-        .splash-logo {
-            width: 280px; filter: drop-shadow(0 0 25px rgba(255, 69, 0, 0.7));
-            margin-bottom: 3rem; animation: logoPulse 2s infinite ease-in-out;
-        }
-
-        @keyframes logoPulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255, 69, 0, 0.6)); }
-            50% { transform: scale(1.03); filter: drop-shadow(0 0 35px rgba(255, 69, 0, 0.9)); }
-        }
-
         .enter-btn {
             font-family: 'Orbitron', sans-serif; background: #ff4500; color: black;
             padding: 15px 50px; font-weight: 900; letter-spacing: 3px;
@@ -35,25 +25,38 @@
             box-shadow: 0 0 15px rgba(255, 69, 0, 0.5); transition: all 0.3s ease;
         }
 
-        .enter-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 30px rgba(255, 69, 0, 0.8); }
-
         #main-content { opacity: 0; transform: translateY(30px); transition: 1s ease-out; visibility: hidden;}
         .show-content { opacity: 1 !important; transform: translateY(0) !important; visibility: visible !important;}
 
-        .card { background: #0a0a0a; border: 1px solid #1a1a1a; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-2px); border-color: #333; }
+        .card { background: #0a0a0a; border: 1px solid #1a1a1a; transition: all 0.3s; }
+        .card:hover { border-color: #ff4500; transform: scale(1.01); }
         .mvp-card { background: linear-gradient(135deg, #ff4500 0%, #b33000 100%); border: none; }
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        .admin-only { display: none; }
+        .admin-active .admin-only { display: flex; }
+
+        /* Alt yazı stili */
+        .scout-note { color: #888; font-style: italic; font-size: 11px; margin-top: 4px; line-height: 1.2; }
     </style>
 </head>
 <body>
 
+    <!-- SES DOSYALARI (Online kütüphaneden çekiliyor) -->
+    <audio id="stadiumAmbience" src="https://www.soundjay.com/misc/sounds/stadium-crowd-1.mp3" loop></audio>
+    <audio id="goalSound" src="https://www.myinstants.com/media/sounds/siu.mp3"></audio>
+    <audio id="whistleSound" src="https://www.soundjay.com/human/sounds/referee-whistle-01.mp3"></audio>
+
     <div id="splash-screen">
-        <h1 class="splash-logo text-6xl font-black italic orange-text text-center font-orbitron">BAD BOYS<br>FC</h1>
+        <h1 class="text-6xl font-black italic orange-text text-center font-orbitron mb-12">BAD BOYS<br>FC</h1>
         <button class="enter-btn" onclick="sahayaCik()">Sahaya Çık</button>
     </div>
 
-    <div id="main-content" class="container mx-auto max-w-md p-4 pb-24">
+    <div id="main-content" class="container mx-auto max-w-md p-4 pb-24 relative">
+        <button onclick="checkAdmin()" class="absolute right-4 top-4 text-zinc-800 hover:text-orange-600">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </button>
+
         <header class="mb-8 mt-4 text-center">
             <h1 class="text-5xl font-black italic orange-text tracking-tighter font-orbitron">BAD BOYS FC</h1>
             <p class="text-zinc-500 text-[11px] font-bold tracking-[0.4em] uppercase mt-1">Resmi İstatistik Portalı</p>
@@ -61,15 +64,15 @@
 
         <div class="grid grid-cols-3 gap-3 mb-8">
             <div class="card p-4 rounded-xl text-center">
-                <div class="text-[9px] text-zinc-500 uppercase font-black tracking-widest">Kadro</div>
+                <div class="text-[9px] text-zinc-500 uppercase font-black">Kadro</div>
                 <div id="playerCount" class="text-2xl font-black italic font-orbitron">0/8</div>
             </div>
             <div class="card p-4 rounded-xl text-center border-b-4 border-b-orange-600">
-                <div class="text-[9px] text-zinc-500 uppercase font-black tracking-widest">Toplam Gol</div>
-                <div id="totalGoals" class="text-2xl font-black italic orange-text font-orbitron">0</div>
+                <div class="text-[9px] text-zinc-500 uppercase font-black">Toplam Skor</div>
+                <div id="totalPoints" class="text-2xl font-black italic orange-text font-orbitron">0</div>
             </div>
             <div class="card p-4 rounded-xl text-center">
-                <div class="text-[9px] text-zinc-500 uppercase font-black tracking-widest">Değer</div>
+                <div class="text-[9px] text-zinc-500 uppercase font-black">Değer</div>
                 <div id="totalValue" class="text-2xl font-black italic font-orbitron">€0M</div>
             </div>
         </div>
@@ -80,13 +83,17 @@
         <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">Tüm Oyuncular</h2>
         <div id="playerContainer" class="space-y-4"></div>
 
-        <div class="mt-12 text-center">
+        <div class="mt-12 text-center admin-only justify-center">
             <button onclick="resetAllData()" class="text-[10px] text-zinc-700 font-bold hover:text-red-500 transition uppercase tracking-widest">Sezonu Sıfırla (Kaptan)</button>
         </div>
     </div>
 
     <script>
+        const adminPassword = "YakupS15";
+        let isAdmin = false;
+
         function sahayaCik() {
+            document.getElementById('stadiumAmbience').play();
             const splash = document.getElementById('splash-screen');
             const main = document.getElementById('main-content');
             splash.style.opacity = '0';
@@ -94,36 +101,45 @@
             setTimeout(() => { main.classList.add('show-content'); }, 300);
         }
 
+        function checkAdmin() {
+            const pass = prompt("Şifre:");
+            if(pass === adminPassword) {
+                isAdmin = true;
+                document.body.classList.add('admin-active');
+                render();
+            }
+        }
+
         const initialPlayers = [
-            { id: 1, name: "HÜSEYİN", role: "KALECİ", goals: 0, assists: 0, value: 5000000, isCaptain: false, lastTrend: 0 },
-            { id: 2, name: "SÜLEYMAN", role: "DEFANS", goals: 0, assists: 0, value: 6500000, isCaptain: false, lastTrend: 0 },
-            { id: 3, name: "YAKUP", role: "DEFANS", goals: 0, assists: 0, value: 8000000, isCaptain: true, lastTrend: 0 },
-            { id: 4, name: "MEHMET", role: "DEFANS", goals: 0, assists: 0, value: 6000000, isCaptain: false, lastTrend: 0 },
-            { id: 5, name: "EROL", role: "ORTA SAHA", goals: 0, assists: 0, value: 9000000, isCaptain: false, lastTrend: 0 },
-            { id: 6, name: "EREN", role: "FORVET", goals: 0, assists: 0, value: 12000000, isCaptain: false, lastTrend: 0 },
-            { id: 7, name: "MURAT", role: "FORVET", goals: 0, assists: 0, value: 11000000, isCaptain: false, lastTrend: 0 },
-            { id: 8, name: "MUSA", role: "FORVET", goals: 0, assists: 0, value: 10500000, isCaptain: false, lastTrend: 0 }
+            { id: 1, name: "HÜSEYİNCAN YÜKSEKDAĞ", role: "KALECİ", goals: 0, assists: 0, value: 5000000, note: "Kalede adeta kocaman bir fil gibi", isCaptain: false, lastTrend: 0 },
+            { id: 2, name: "SÜLEYMAN TUNÇELİK", role: "DEFANS", goals: 0, assists: 0, value: 6500000, note: "Defansın bel kemiği", isCaptain: false, lastTrend: 0 },
+            { id: 3, name: "YAKUP SUNAY", role: "DEFANS", goals: 0, assists: 0, value: 8500000, note: "Her yerde olan koca yürekli kaptan", isCaptain: true, lastTrend: 0 },
+            { id: 4, name: "MEHMET UZUN", role: "DEFANS", goals: 0, assists: 0, value: 6000000, note: "Takımın sert adamı", isCaptain: false, lastTrend: 0 },
+            { id: 5, name: "EROL GÖNÜL", role: "ORTA SAHA", goals: 0, assists: 0, value: 9000000, note: "Her yerden şut atmayı sever", isCaptain: false, lastTrend: 0 },
+            { id: 6, name: "MURAT ÇAYLI", role: "FORVET", goals: 0, assists: 0, value: 11000000, note: "Her alanda çalım deneyebiliyo", isCaptain: false, lastTrend: 0 },
+            { id: 7, name: "EREN YILMAZ", role: "FORVET", goals: 0, assists: 0, value: 12000000, note: "Eşi geldiyse geçmiş olsun diyoruz rakibe", isCaptain: false, lastTrend: 0 },
+            { id: 8, name: "MUSA AKSU", role: "FORVET", goals: 0, assists: 0, value: 10500000, note: "Kıvrak bilekleri ile dosta korku düşmana güven tarzı var", isCaptain: false, lastTrend: 0 }
         ];
 
         let players = JSON.parse(localStorage.getItem('badBoysData')) || initialPlayers;
 
-        function save() {
-            localStorage.setItem('badBoysData', JSON.stringify(players));
-            render();
-        }
-
         function updateStat(id, field, amount) {
+            if(amount > 0) {
+                document.getElementById('whistleSound').play();
+                setTimeout(() => document.getElementById('goalSound').play(), 400);
+            }
             const p = players.find(x => x.id === id);
             p[field] = Math.max(0, p[field] + amount);
             p.value += (field === 'goals' ? 500000 : 250000) * amount;
             p.lastTrend = amount; 
-            save();
+            localStorage.setItem('badBoysData', JSON.stringify(players));
+            render();
         }
 
         function resetAllData() {
-            if(confirm("Tüm istatistikler sıfırlanacak. Yeni sezona hazır mısın Kaptan?")) {
+            if(confirm("Sıfırlansın mı?")) {
                 players = initialPlayers.map(p => ({...p}));
-                localStorage.removeItem('badBoysData');
+                localStorage.clear();
                 render();
             }
         }
@@ -131,48 +147,54 @@
         function render() {
             const container = document.getElementById('playerContainer');
             const mvpContainer = document.getElementById('mvpContainer');
-            container.innerHTML = "";
-            mvpContainer.innerHTML = "";
-            let tGoals = 0, tValue = 0;
+            container.innerHTML = ""; mvpContainer.innerHTML = "";
+            let tScore = 0, tValue = 0;
 
-            const sortedPlayers = [...players].sort((a,b) => b.value - a.value);
-            const topPlayers = sortedPlayers.slice(0, 2); 
-
-            topPlayers.forEach(p => {
+            const sorted = [...players].sort((a,b) => b.value - a.value);
+            
+            sorted.slice(0, 2).forEach(p => {
                 mvpContainer.innerHTML += `
                     <div class="mvp-card p-5 rounded-2xl flex justify-between items-center relative overflow-hidden">
-                        <div class="absolute -right-4 -top-4 text-5xl opacity-10 font-black italic font-orbitron">STAR</div>
                         <div>
-                            <div class="text-[9px] bg-white text-black px-2.5 py-1 rounded-full font-black w-fit mb-2 uppercase tracking-tighter">🔥 Formda</div>
-                            <div class="font-black text-2xl italic uppercase font-orbitron">${p.name}</div>
-                            <div class="text-[11px] font-bold text-zinc-100 italic">€${(p.value/1000000).toFixed(1)}M Değer</div>
+                            <div class="text-[9px] bg-white text-black px-2.5 py-1 rounded-full font-black w-fit mb-2 uppercase">🔥 Formda</div>
+                            <div class="font-black text-2xl italic uppercase font-orbitron">${p.name.split(' ')[0]}</div>
+                            <div class="text-[10px] font-bold text-zinc-100 opacity-80">${p.note}</div>
                         </div>
+                        <div class="text-right"><div class="text-lg font-black text-white">€${(p.value/1000000).toFixed(1)}M</div></div>
                     </div>
                 `;
             });
 
-            sortedPlayers.forEach(p => {
-                tGoals += p.goals; tValue += p.value;
-                const trendIcon = p.lastTrend > 0 ? '<span class="text-green-500 text-xs">▲</span>' : (p.lastTrend < 0 ? '<span class="text-red-500 text-xs">▼</span>' : '<span class="text-zinc-800 text-xs">●</span>');
+            sorted.forEach(p => {
+                tScore += (p.goals + p.assists); tValue += p.value;
+                const trend = p.lastTrend > 0 ? '<span class="text-green-500 text-[10px]">▲</span>' : (p.lastTrend < 0 ? '<span class="text-red-500 text-[10px]">▼</span>' : '');
                 
                 container.innerHTML += `
                     <div class="card p-5 rounded-xl">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-start">
                             <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-bold text-lg italic uppercase">${p.name}</span>
-                                    ${p.isCaptain ? '<span class="orange-bg text-black text-[9px] px-1.5 py-0.5 rounded font-black">CPT</span>' : ''}
-                                    ${trendIcon}
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-base italic uppercase">${p.name}</span>
+                                    ${p.isCaptain ? '<span class="orange-bg text-black text-[8px] px-1 py-0.5 rounded font-black">CPT</span>' : ''}
+                                    ${trend}
                                 </div>
-                                <div class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-3">${p.role}</div>
+                                <div class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">${p.role}</div>
+                                <div class="scout-note mb-4">"${p.note}"</div>
+                                
                                 <div class="flex gap-4 text-xs font-bold items-center">
                                     <div class="flex items-center gap-2">
-                                        <span>⚽ ${p.goals}</span>
-                                        <button onclick="updateStat(${p.id}, 'goals', 1)" class="w-6 h-6 bg-zinc-800 rounded text-[10px] hover:bg-orange-600 transition">+</button>
+                                        <span class="opacity-70">⚽</span> <span>${p.goals}</span>
+                                        <div class="admin-only gap-1">
+                                            <button onclick="updateStat(${p.id}, 'goals', -1)" class="w-5 h-5 bg-zinc-900 border border-zinc-800 rounded text-red-500">-</button>
+                                            <button onclick="updateStat(${p.id}, 'goals', 1)" class="w-5 h-5 bg-zinc-800 rounded hover:bg-orange-600">+</button>
+                                        </div>
                                     </div>
                                     <div class="flex items-center gap-2 border-l border-zinc-800 pl-4">
-                                        <span>🎯 ${p.assists}</span>
-                                        <button onclick="updateStat(${p.id}, 'assists', 1)" class="w-6 h-6 bg-zinc-800 rounded text-[10px] hover:bg-orange-600 transition">+</button>
+                                        <span class="opacity-70">🎯</span> <span>${p.assists}</span>
+                                        <div class="admin-only gap-1">
+                                            <button onclick="updateStat(${p.id}, 'assists', -1)" class="w-5 h-5 bg-zinc-900 border border-zinc-800 rounded text-red-500">-</button>
+                                            <button onclick="updateStat(${p.id}, 'assists', 1)" class="w-5 h-5 bg-zinc-800 rounded hover:bg-orange-600">+</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -185,7 +207,7 @@
             });
 
             document.getElementById('totalValue').innerText = `€${(tValue/1000000).toFixed(1)}M`;
-            document.getElementById('totalGoals').innerText = tGoals;
+            document.getElementById('totalPoints').innerText = tScore;
             document.getElementById('playerCount').innerText = `${players.length}/8`;
         }
         render();
