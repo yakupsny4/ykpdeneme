@@ -36,17 +36,15 @@
         .admin-only { display: none; }
         .admin-active .admin-only { display: flex; }
 
-        /* Yeni: Kaptan Anonsu (Marquee) */
-        .marquee-container { background: #ff4500; color: black; padding: 5px 0; font-weight: 900; font-size: 12px; text-transform: uppercase; overflow: hidden; white-space: nowrap; }
-        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 15s linear infinite; }
+        /* GÜNCELLENMİŞ KAYAN YAZI */
+        .marquee-container { background: #ff4500; color: black; padding: 6px 0; font-weight: 900; font-size: 11px; text-transform: uppercase; overflow: hidden; white-space: nowrap; border-bottom: 2px solid rgba(0,0,0,0.1); }
+        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; letter-spacing: 1px; }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
         .player-note { color: #ff4500; font-style: italic; font-size: 11px; margin-top: 2px; display: block; opacity: 0.9; }
         .stat-bar { height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; margin-top: 4px; }
         .stat-fill { height: 100%; background: #ff4500; transition: width 0.5s ease-out; }
         .quote-card { border-left: 3px solid #ff4500; background: #080808; position: relative; }
-        
-        /* Haftanın Fotosu Çerçevesi */
         .img-frame { border: 4px solid #1a1a1a; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     </style>
 </head>
@@ -57,9 +55,11 @@
         <button class="enter-btn" onclick="sahayaCik()">Sahaya Çık</button>
     </div>
 
-    <!-- 3. Kaptan Anonsu -->
-    <div class="marquee-container sticky top-0 z-50 shadow-lg">
-        <div class="marquee-text" id="kaptanAnons">BAD BOYS FC • BAD BOYS FC • BAD BOYS FC • BAD BOYS FC</div>
+    <!-- YENİ KAYAN YAZI BANDI -->
+    <div class="marquee-container sticky top-0 z-50 shadow-xl">
+        <div class="marquee-text" id="kaptanAnons">
+            BAD BOYS FC • ORİJİNAL BAD BOYS FC RESMİ HESABI • İLETİŞİM İÇİN KAPTANA ULAŞIN • BAD BOYS FC • ORİJİNAL BAD BOYS FC RESMİ HESABI • İLETİŞİM İÇİN KAPTANA ULAŞIN
+        </div>
     </div>
 
     <div id="main-content" class="container mx-auto max-w-md p-4 pb-24 relative">
@@ -68,12 +68,12 @@
         </button>
 
         <header class="mb-8 mt-6 text-center">
-            <h1 class="text-5xl font-black italic orange-text tracking-tighter font-orbitron">BAD BOYS FC</h1>
-            <p class="text-zinc-500 text-[11px] font-bold tracking-[0.4em] uppercase mt-1">Resmi İstatistik Portalı</p>
+            <h1 class="text-5xl font-black italic orange-text tracking-tighter font-orbitron uppercase">BAD BOYS FC</h1>
+            <!-- YENİ ETKİLEYİCİ SLOGAN -->
+            <p class="text-zinc-500 text-[10px] font-bold tracking-[0.3em] uppercase mt-2">SAHADA TER, SİTEDE GURUR: ASLA YALNIZ KOŞMAZSIN</p>
         </header>
 
-        <!-- 1. Haftanın Fotoğrafı (İfşa) -->
-        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">Haftanın İfşası</h2>
+        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1 text-center">Haftanın İfşası</h2>
         <div class="img-frame mb-10 bg-zinc-900 aspect-video flex items-center justify-center relative">
             <img id="weeklyImg" src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=500" class="w-full h-full object-cover opacity-60">
             <div class="absolute inset-0 flex items-center justify-center">
@@ -115,7 +115,7 @@
 
     <script>
         const adminPassword = "badboys123";
-        const DATA_VERSION = "4.0"; 
+        const DATA_VERSION = "5.0"; 
         let isAdmin = false;
 
         function sahayaCik() {
@@ -132,7 +132,6 @@
             }
         }
 
-        // 2. Transfer Tahtası (Geyik Birimler)
         const initialPlayers = [
             { id: 1, name: "HÜSEYİNCAN YÜKSEKDAĞ", role: "KALECİ", goals: 0, assists: 0, value: "1 Koli Soğuk Su", note: "Kalede adeta kocaman bir fil gibi", isCaptain: false, stats: {kondisyon: 90, vefa: 100, sertlik: 85} },
             { id: 2, name: "SÜLEYMAN TUNÇELİK", role: "DEFANS", goals: 0, assists: 0, value: "2 Tepsi Baklava", note: "Defansın bel kemiği", isCaptain: false, stats: {kondisyon: 90, vefa: 100, sertlik: 75} },
@@ -151,7 +150,7 @@
         ];
 
         function changeImg() {
-            const url = prompt("Yeni fotoğraf linkini (URL) yapıştır:");
+            const url = prompt("Yeni fotoğraf linkini yapıştır:");
             if(url) {
                 localStorage.setItem('badBoysImg', url);
                 document.getElementById('weeklyImg').src = url;
@@ -190,41 +189,41 @@
 
             weeklyReport.innerHTML = `
                 <div class="card p-3 rounded-xl border-l-4 border-l-green-600">
-                    <div class="text-[8px] text-green-500 font-black">MAÇIN ADAMI</div>
-                    <div class="text-xs font-bold mt-1 uppercase italic">${players[2].name.split(' ')[0]}</div>
+                    <div class="text-[8px] text-green-500 font-black tracking-widest">MAÇIN ADAMI</div>
+                    <div class="text-xs font-black mt-1 uppercase italic font-orbitron">${players[2].name.split(' ')[0]}</div>
                 </div>
                 <div class="card p-3 rounded-xl border-l-4 border-l-red-600">
-                    <div class="text-[8px] text-red-500 font-black">MAÇIN BİDONU</div>
-                    <div class="text-xs font-bold mt-1 uppercase italic text-zinc-500">HÜSEYİN</div>
+                    <div class="text-[8px] text-red-500 font-black tracking-widest">MAÇIN BİDONU</div>
+                    <div class="text-xs font-black mt-1 uppercase italic font-orbitron text-zinc-500">HÜSEYİN</div>
                 </div>
             `;
 
             players.forEach(p => {
                 tScore += (p.goals + p.assists);
                 container.innerHTML += `
-                    <div class="card p-5 rounded-xl">
+                    <div class="card p-5 rounded-xl border-zinc-900">
                         <div class="flex justify-between items-start">
                             <div class="flex-1">
                                 <div class="flex items-center gap-2">
-                                    <span class="font-bold text-sm italic uppercase">${p.name}</span>
+                                    <span class="font-bold text-sm italic uppercase tracking-tight">${p.name}</span>
                                     ${p.isCaptain ? '<span class="orange-bg text-black text-[8px] px-1.5 py-0.5 rounded font-black">CPT</span>' : ''}
                                 </div>
                                 <span class="player-note">"${p.note}"</span>
                                 
                                 <div class="grid grid-cols-3 gap-3 mt-4 mb-4">
-                                    <div><div class="text-[7px] opacity-40 uppercase">Knd</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.kondisyon}%"></div></div></div>
-                                    <div><div class="text-[7px] opacity-40 uppercase text-orange-400">Vefa</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.vefa}%"></div></div></div>
-                                    <div><div class="text-[7px] opacity-40 uppercase">Srt</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.sertlik}%"></div></div></div>
+                                    <div><div class="text-[7px] opacity-40 uppercase font-black">Knd</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.kondisyon}%"></div></div></div>
+                                    <div><div class="text-[7px] opacity-40 uppercase font-black text-orange-400">Vefa</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.vefa}%"></div></div></div>
+                                    <div><div class="text-[7px] opacity-40 uppercase font-black">Srt</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.sertlik}%"></div></div></div>
                                 </div>
 
                                 <div class="flex gap-4 text-xs font-bold items-center">
-                                    <div class="flex items-center gap-2">⚽ ${p.goals} <div class="admin-only gap-1"><button onclick="updateStat(${p.id},'goals',-1)" class="w-4 h-4 bg-zinc-900 border border-zinc-800 rounded">-</button><button onclick="updateStat(${p.id},'goals',1)" class="w-4 h-4 bg-zinc-800 rounded">+</button></div></div>
-                                    <div class="flex items-center gap-2 border-l border-zinc-800 pl-4">🎯 ${p.assists} <div class="admin-only gap-1"><button onclick="updateStat(${p.id},'assists',-1)" class="w-4 h-4 bg-zinc-900 border border-zinc-800 rounded">-</button><button onclick="updateStat(${p.id},'assists',1)" class="w-4 h-4 bg-zinc-800 rounded">+</button></div></div>
+                                    <div class="flex items-center gap-2">⚽ ${p.goals} <div class="admin-only gap-1 ml-1"><button onclick="updateStat(${p.id},'goals',-1)" class="w-4 h-4 bg-zinc-900 border border-zinc-800 rounded">-</button><button onclick="updateStat(${p.id},'goals',1)" class="w-4 h-4 bg-zinc-800 rounded">+</button></div></div>
+                                    <div class="flex items-center gap-2 border-l border-zinc-800 pl-4">🎯 ${p.assists} <div class="admin-only gap-1 ml-1"><button onclick="updateStat(${p.id},'assists',-1)" class="w-4 h-4 bg-zinc-900 border border-zinc-800 rounded">-</button><button onclick="updateStat(${p.id},'assists',1)" class="w-4 h-4 bg-zinc-800 rounded">+</button></div></div>
                                 </div>
                             </div>
                             <div class="text-right flex flex-col items-end">
                                 <div class="text-[7px] font-black text-zinc-500 uppercase tracking-tighter mb-1">Transfer Bedeli</div>
-                                <div class="text-[10px] font-bold orange-text italic leading-tight">${p.value}</div>
+                                <div class="text-[9px] font-bold orange-text italic leading-tight text-right">${p.value}</div>
                             </div>
                         </div>
                     </div>
@@ -232,7 +231,7 @@
             });
 
             quoteContainer.innerHTML = quotes.map(q => `
-                <div class="quote-card p-4 rounded-r-xl"><p class="text-xs italic font-medium">"${q.text}"</p><span class="text-[8px] text-zinc-600 mt-2 block font-black">${q.date}</span></div>
+                <div class="quote-card p-4 rounded-r-xl"><p class="text-xs italic font-medium">"${q.text}"</p><span class="text-[8px] text-zinc-600 mt-2 block font-black uppercase">${q.date}</span></div>
             `).join('');
 
             document.getElementById('totalPoints').innerText = tScore;
@@ -240,5 +239,4 @@
         render();
     </script>
 </body>
-    </html>
-            
+</html>
