@@ -3,140 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | Official Club Panel</title>
+    <title>BAD BOYS FC | Secure Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
-        
         body { background: #080808; color: #eee; font-family: 'Segoe UI', sans-serif; }
         .badboys-font { font-family: 'Orbitron', sans-serif; }
         .orange-text { color: #ff6600; }
         .orange-bg { background-color: #ff6600; }
-        .orange-border { border-color: #ff6600; }
         .card { background: #111; border-left: 4px solid #ff6600; transition: 0.3s; }
-        .card:hover { transform: translateY(-2px); border-left-color: #fff; }
-        
-        /* Çark Animasyonu */
+        /* Admin paneli kapalıyken butonları gizle */
+        .admin-only { display: none; }
+        .admin-active .admin-only { display: inline-flex; }
         #wheel { transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); }
-        .glow { box-shadow: 0 0 15px rgba(255, 102, 0, 0.2); }
     </style>
 </head>
-<body class="p-4 pb-28 max-w-md mx-auto">
+<body class="p-4 pb-32 max-w-md mx-auto">
 
-    <header class="text-center mb-8">
-        <h1 class="badboys-font text-4xl font-black orange-text tracking-tighter">BAD BOYS FC</h1>
-        <p class="text-[10px] tracking-[0.4em] uppercase text-zinc-500 font-bold">Kaptan: Yakup • İstatistik & Borsa</p>
+    <div class="flex justify-between items-center mb-6">
+        <div class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Kaptan Paneli</div>
+        <button onclick="checkAdmin()" id="lockBtn" class="text-xl">🔒</button>
+    </div>
+
+    <header class="text-center mb-8 border-b border-zinc-800 pb-4">
+        <h1 class="badboys-font text-3xl font-black orange-text">BAD BOYS FC</h1>
+        <p id="adminStatus" class="text-[9px] text-zinc-500 uppercase mt-1 italic">İzleyici Modu</p>
     </header>
 
-    <section class="mb-8 p-4 bg-zinc-900 rounded-2xl glow border border-zinc-800 text-center">
-        <h3 class="text-[10px] font-black mb-3 orange-text uppercase tracking-widest">🎡 Kadro Çarkıfeleği (Adalet)</h3>
-        <div class="relative w-24 h-24 mx-auto border-4 orange-border rounded-full flex items-center justify-center overflow-hidden mb-3">
-            <div id="wheel" class="text-[8px] font-bold">KADRO<br>SEÇİLİYOR</div>
+    <section class="mb-8 p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-center">
+        <div class="relative w-20 h-20 mx-auto border-2 border-[#ff6600] rounded-full flex items-center justify-center overflow-hidden mb-3">
+            <div id="wheel" class="text-[7px] font-bold uppercase">Taktik</div>
             <div class="absolute top-0 w-1 h-3 bg-white"></div>
         </div>
-        <button onclick="spinWheel()" class="text-[10px] bg-white text-black font-black px-6 py-1.5 rounded-full hover:orange-bg transition uppercase">Çevir Bakalım</button>
-        <p id="wheelResult" class="mt-2 text-xs italic text-zinc-400 font-medium"></p>
+        <button onclick="spinWheel()" class="admin-only text-[10px] bg-white text-black font-black px-6 py-1 rounded-full mb-2">ÇARKI ÇEVİR</button>
+        <p id="wheelResult" class="text-[10px] italic text-zinc-400"></p>
     </section>
 
-    <section class="mb-8 p-4 border border-zinc-800 rounded-xl bg-zinc-900/50">
-        <h2 class="text-xs font-black mb-4 orange-text uppercase tracking-widest">Yeni Sözleşme İmzala</h2>
-        <div class="grid grid-cols-2 gap-3">
-            <input id="pName" type="text" placeholder="İsim Soyisim" class="bg-black border border-zinc-800 p-2 rounded text-xs outline-none focus:orange-border">
-            <select id="pRole" class="bg-black border border-zinc-800 p-2 rounded text-xs outline-none">
-                <option value="Forvet">Forvet</option>
-                <option value="Orta Saha">Orta Saha</option>
-                <option value="Defans">Defans</option>
-                <option value="Kaleci">Kaleci</option>
-            </select>
-            <button onclick="addPlayer()" class="col-span-2 orange-bg text-black font-black p-2 rounded text-xs hover:opacity-90 transition">KADROYA DAHİL ET</button>
-        </div>
-    </section>
+    <div id="playerContainer" class="space-y-4"></div>
 
-    <div id="playerContainer" class="space-y-4">
-        </div>
-
-    <section class="mt-10 mb-6">
-        <h3 class="badboys-font text-xs mb-3 text-zinc-500">🎙️ VAR KAYITLARI (MAÇ SONU GIYBET)</h3>
-        <div class="bg-zinc-900 p-3 rounded-lg border-l-4 border-red-600">
-            <textarea id="varComment" placeholder="O gol müydü, faul müydü? Kayda geç..." class="w-full bg-transparent text-xs outline-none h-12 resize-none"></textarea>
-            <button onclick="addComment()" class="text-[9px] bg-red-600 px-4 py-1 rounded font-black uppercase mt-1">Kaydet</button>
-        </div>
-        <div id="commentList" class="mt-4 space-y-2">
-            </div>
-    </section>
-
-    <div class="fixed bottom-0 left-0 w-full bg-black/90 backdrop-blur-md border-t orange-border p-4 flex justify-around items-center z-50">
+    <div class="fixed bottom-0 left-0 w-full bg-black/95 border-t-2 border-[#ff6600] p-5 flex justify-around items-center z-50">
         <div class="text-center">
-            <p class="text-[8px] text-zinc-500 uppercase font-bold">Toplam Değer</p>
-            <span id="totalMarketValue" class="text-sm font-black orange-text">€0M</span>
+            <p class="text-[8px] text-zinc-500 uppercase font-black">Piyasa Değeri</p>
+            <span id="totalValue" class="text-sm font-black orange-text">€0M</span>
         </div>
-        <div class="h-8 w-[1px] bg-zinc-800"></div>
         <div class="text-center">
-            <p class="text-[8px] text-zinc-500 uppercase font-bold">Grup Gol</p>
-            <span id="totalGoals" class="text-sm font-black text-white italic">0</span>
+            <p class="text-[8px] text-zinc-500 uppercase font-black">Gol</p>
+            <span id="totalGoals" class="text-sm font-black text-white">0</span>
         </div>
-        <div class="h-8 w-[1px] bg-zinc-800"></div>
         <div class="text-center">
-            <p class="text-[8px] text-zinc-500 uppercase font-bold">Kadro</p>
+            <p class="text-[8px] text-zinc-500 uppercase font-black">Kadro</p>
             <span id="playerCount" class="text-sm font-black text-white">0/8</span>
         </div>
     </div>
 
     <script>
-        // Veri Yapısı (İki kodun verileri birleşti)
-        let players = JSON.parse(localStorage.getItem('badBoysFC_Global')) || [];
-        let comments = JSON.parse(localStorage.getItem('badBoysFC_VAR')) || [];
+        const adminPassword = "Yy++1661."; // ŞİFREN BURASI! İstediğinle değiştir.
+        let isAdmin = false;
+
+        const initialPlayers = [
+            { id: 1, name: "Yakup Sunay", role: "Orta Saha", goals: 0, assists: 0, value: 5000000, isCaptain: true, scout: "Her yerde olan koca yürekli kaptan." },
+            { id: 2, name: "Hüseyincan Yüksekdağ", role: "Kaleci", goals: 0, assists: 0, value: 3000000, scout: "Kalede adeta kocaman bir fil gibi." },
+            { id: 3, name: "Süleyman Tunçelik", role: "Defans", goals: 0, assists: 0, value: 2500000, scout: "Defansın bel kemiği." },
+            { id: 4, name: "Mehmet Uzun", role: "Defans", goals: 0, assists: 0, value: 2000000, scout: "Takımın sert adamı." },
+            { id: 5, name: "Erol Gönül", role: "Orta Saha", goals: 0, assists: 0, value: 3500000, scout: "Her yerden şut atmayı sever." },
+            { id: 6, name: "Murat Çaylı", role: "Orta Saha", goals: 0, assists: 0, value: 4000000, scout: "Her alanda çalım deneyebiliyor." },
+            { id: 7, name: "Eren Arslan", role: "Forvet", goals: 0, assists: 0, value: 4500000, scout: "Eşi izlemeye geldiyse geçmiş olsun rakibe." },
+            { id: 8, name: "Musa Aksu", role: "Forvet", goals: 0, assists: 0, value: 3800000, scout: "Kıvrak bilekleri ile dosta korku düşmana güven." }
+        ];
+
+        let players = JSON.parse(localStorage.getItem('badBoysFC_V4')) || initialPlayers;
+
+        function checkAdmin() {
+            if(!isAdmin) {
+                const pass = prompt("Kaptan şifresini gir:");
+                if(pass === adminPassword) {
+                    isAdmin = true;
+                    document.body.classList.add('admin-active');
+                    document.getElementById('lockBtn').innerText = "🔓";
+                    document.getElementById('adminStatus').innerText = "Yönetici Modu Açık";
+                    document.getElementById('adminStatus').classList.replace('text-zinc-500', 'text-orange-500');
+                    render();
+                } else {
+                    alert("Hatalı şifre!");
+                }
+            } else {
+                isAdmin = false;
+                document.body.classList.remove('admin-active');
+                document.getElementById('lockBtn').innerText = "🔒";
+                document.getElementById('adminStatus').innerText = "İzleyici Modu";
+                document.getElementById('adminStatus').classList.replace('text-orange-500', 'text-zinc-500');
+                render();
+            }
+        }
 
         function save() {
-            localStorage.setItem('badBoysFC_Global', JSON.stringify(players));
-            localStorage.setItem('badBoysFC_VAR', JSON.stringify(comments));
+            localStorage.setItem('badBoysFC_V4', JSON.stringify(players));
             render();
         }
 
-        function addPlayer() {
-            const name = document.getElementById('pName').value;
-            const role = document.getElementById('pRole').value;
-            if(!name) return alert("İsimsiz topçu olmaz!");
-
-            players.push({
-                id: Date.now(),
-                name: name,
-                role: role,
-                goals: 0,
-                assists: 0,
-                value: 1000000, // 1M € Başlangıç Değeri
-                isCaptain: name.toLowerCase().includes("yakup")
-            });
-            
-            document.getElementById('pName').value = "";
-            save();
-        }
-
         function updateStat(id, field, amount) {
+            if(!isAdmin) return;
             const p = players.find(x => x.id === id);
             p[field] = Math.max(0, p[field] + amount);
-            
-            // Borsa Mantığı: Gol 500k, Asist 250k değer artırır
-            if(amount > 0) {
-                p.value += (field === 'goals' ? 500000 : 250000);
-            } else {
-                p.value = Math.max(1000000, p.value - (field === 'goals' ? 500000 : 250000));
-            }
-            save();
-        }
-
-        function deletePlayer(id) {
-            if(confirm("Bu oyuncuyla yollar ayrılsın mı?")) {
-                players = players.filter(p => p.id !== id);
-                save();
-            }
-        }
-
-        function addComment() {
-            const txt = document.getElementById('varComment').value;
-            if(!txt) return;
-            comments.unshift({ text: txt, id: Date.now() });
-            document.getElementById('varComment').value = "";
+            p.value += (field === 'goals' ? 500000 : 250000) * amount;
             save();
         }
 
@@ -144,63 +113,45 @@
             const wheel = document.getElementById('wheel');
             const rand = Math.floor(Math.random() * 360) + 1440;
             wheel.style.transform = `rotate(${rand}deg)`;
-            
-            const options = ["Eski-Yeni Maçı", "Kaptanlar Karşılıklı", "Rastgele Karma", "Boy Sırasına Göre", "Adaletli Dağılım"];
-            setTimeout(() => {
-                document.getElementById('wheelResult').innerText = "KARAR: " + options[Math.floor(Math.random() * options.length)];
-            }, 4000);
+            setTimeout(() => { document.getElementById('wheelResult').innerText = "Sonuç Belirlendi!"; }, 4000);
         }
 
         function render() {
             const container = document.getElementById('playerContainer');
             container.innerHTML = "";
-            let tGoals = 0;
-            let tValue = 0;
+            let tGoals = 0, tValue = 0;
 
-            // Borsa değerine göre sırala
             players.sort((a,b) => b.value - a.value).forEach(p => {
-                tGoals += p.goals;
-                tValue += p.value;
-
+                tGoals += p.goals; tValue += p.value;
                 container.innerHTML += `
-                    <div class="card p-4 rounded-xl shadow-2xl flex justify-between items-center">
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <span class="font-bold text-base tracking-tight">${p.name}</span>
-                                ${p.isCaptain ? '<span class="bg-[#ff6600] text-black text-[9px] px-1.5 py-0.5 rounded font-black">CPT</span>' : ''}
+                    <div class="card p-4 rounded-xl shadow-lg">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-base tracking-tight">${p.name}</span>
+                                    ${p.isCaptain ? '<span class="bg-[#ff6600] text-black text-[8px] px-1.5 rounded font-black">CPT</span>' : ''}
+                                </div>
+                                <div class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">${p.role}</div>
+                                <div class="mt-2 flex gap-4 text-xs font-bold">
+                                    <span>⚽ ${p.goals}</span>
+                                    <span>🎯 ${p.assists}</span>
+                                    <span class="text-zinc-600 font-mono italic">€${(p.value/1000000).toFixed(1)}M</span>
+                                </div>
+                                <div class="text-[10px] text-zinc-400 mt-2 italic border-t border-zinc-800 pt-1">"${p.scout}"</div>
                             </div>
-                            <div class="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">${p.role}</div>
-                            <div class="mt-3 flex gap-4 text-xs">
-                                <span>⚽ <b class="orange-text">${p.goals}</b></span>
-                                <span>🎯 <b class="orange-text">${p.assists}</b></span>
-                                <span class="text-zinc-400 font-mono">€${(p.value/1000000).toFixed(1)}M</span>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <div class="flex gap-1.5">
-                                <button onclick="updateStat(${p.id}, 'goals', 1)" class="bg-zinc-800 border border-zinc-700 w-8 h-8 rounded-lg font-bold hover:orange-bg hover:text-black transition">+G</button>
-                                <button onclick="updateStat(${p.id}, 'assists', 1)" class="bg-zinc-800 border border-zinc-700 w-8 h-8 rounded-lg font-bold hover:orange-bg hover:text-black transition">+A</button>
-                                <button onclick="deletePlayer(${p.id})" class="bg-red-950/30 text-red-500 w-8 h-8 rounded-lg ml-1 hover:bg-red-600 hover:text-white transition">🗑️</button>
+                            <div class="admin-only flex gap-1">
+                                <button onclick="updateStat(${p.id}, 'goals', 1)" class="w-7 h-7 bg-zinc-800 rounded text-[10px] font-black hover:orange-bg transition hover:text-black">+G</button>
+                                <button onclick="updateStat(${p.id}, 'assists', 1)" class="w-7 h-7 bg-zinc-800 rounded text-[10px] font-black hover:orange-bg transition hover:text-black">+A</button>
                             </div>
                         </div>
                     </div>
                 `;
             });
 
-            // Yorumları Listele
-            const commDiv = document.getElementById('commentList');
-            commDiv.innerHTML = comments.slice(0, 5).map(c => `
-                <div class="bg-zinc-900/80 p-2.5 rounded border border-zinc-800 text-[11px] italic">
-                    <span class="orange-text font-black not-italic mr-2">VAR ></span> "${c.text}"
-                </div>
-            `).join('');
-
-            document.getElementById('totalPlayers').innerText = players.length; // HTML'de ID kalmışsa diye
-            document.getElementById('playerCount').innerText = `${players.length}/8`;
+            document.getElementById('totalValue').innerText = `€${(tValue/1000000).toFixed(1)}M`;
             document.getElementById('totalGoals').innerText = tGoals;
-            document.getElementById('totalMarketValue').innerText = `€${(tValue/1000000).toFixed(1)}M`;
+            document.getElementById('playerCount').innerText = `${players.length}/8`;
         }
-
         render();
     </script>
 </body>
