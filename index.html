@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | Resmi Portal</title>
+    <title>BAD BOYS FC | Pro Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -36,21 +36,16 @@
         .admin-only { display: none; }
         .admin-active .admin-only { display: flex; }
 
-        .player-note { 
-            color: #ff4500; 
-            font-style: italic; 
-            font-size: 11px; 
-            margin-top: 2px;
-            margin-bottom: 10px;
-            display: block;
-            opacity: 0.9;
-        }
+        .player-note { color: #ff4500; font-style: italic; font-size: 11px; margin-top: 2px; margin-bottom: 10px; display: block; opacity: 0.9; }
     </style>
 </head>
 <body>
 
-    <!-- GİRİŞ SESİ -->
-    <audio id="goalCelebration" src="https://www.soundjay.com/misc/sounds/stadium-cheer-1.mp3"></audio>
+    <!-- YENİLENMİŞ GARANTİ SES LİNKİ -->
+    <audio id="goalCelebration" preload="auto">
+        <source src="https://actions.google.com/sounds/v1/crowds/crowd_cheer.ogg" type="audio/ogg">
+        <source src="https://www.soundjay.com/misc/sounds/stadium-cheer-1.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="splash-screen">
         <h1 class="text-6xl font-black italic orange-text text-center font-orbitron mb-12">BAD BOYS<br>FC</h1>
@@ -95,11 +90,13 @@
 
     <script>
         const adminPassword = "badboys123";
-        const DATA_VERSION = "2.1"; // Versiyon değişince tarayıcıyı zorla günceller
+        const DATA_VERSION = "2.5"; 
         let isAdmin = false;
 
         function sahayaCik() {
-            document.getElementById('goalCelebration').play().catch(() => {});
+            const audio = document.getElementById('goalCelebration');
+            audio.play().catch(e => console.log("Ses oynatma hatası:", e));
+            
             document.getElementById('splash-screen').style.opacity = '0';
             document.getElementById('splash-screen').style.visibility = 'hidden';
             setTimeout(() => { document.getElementById('main-content').classList.add('show-content'); }, 300);
@@ -124,7 +121,6 @@
             { id: 8, name: "MUSA AKSU", role: "FORVET", goals: 0, assists: 0, value: 10500000, note: "Kıvrak bilekleri ile dosta korku düşmana güven tarzı var", isCaptain: false, lastTrend: 0 }
         ];
 
-        // VERSİYON KONTROLÜ (Eski verileri silip yenilerini yükler)
         let savedVersion = localStorage.getItem('badBoysVersion');
         let players;
         if (savedVersion !== DATA_VERSION) {
@@ -160,19 +156,20 @@
 
             const sorted = [...players].sort((a,b) => b.value - a.value);
             
+            // YILDIZLAR ALANI: SADECE İSİM SOYİSİM (NOTLAR KALDIRILDI)
             sorted.slice(0, 2).forEach(p => {
                 mvpContainer.innerHTML += `
                     <div class="mvp-card p-5 rounded-2xl flex justify-between items-center relative overflow-hidden">
                         <div>
                             <div class="text-[9px] bg-white text-black px-2.5 py-1 rounded-full font-black w-fit mb-2 uppercase">🔥 Formda</div>
-                            <div class="font-black text-2xl italic uppercase font-orbitron">${p.name.split(' ')[0]}</div>
-                            <div class="text-[10px] font-bold text-zinc-100 opacity-90">${p.note}</div>
+                            <div class="font-black text-2xl italic uppercase font-orbitron leading-tight">${p.name}</div>
                         </div>
                         <div class="text-right text-lg font-black text-white">€${(p.value/1000000).toFixed(1)}M</div>
                     </div>
                 `;
             });
 
+            // ANA LİSTE: TÜM BİLGİLER BURADA DURUYOR
             sorted.forEach(p => {
                 tScore += (p.goals + p.assists); tValue += p.value;
                 const trend = p.lastTrend > 0 ? '<span class="text-green-500">▲</span>' : (p.lastTrend < 0 ? '<span class="text-red-500">▼</span>' : '');
