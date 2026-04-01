@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | Pro Panel</title>
+    <title>BAD BOYS FC | Resmi Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -29,19 +29,28 @@
         .show-content { opacity: 1 !important; transform: translateY(0) !important; visibility: visible !important;}
 
         .card { background: #0a0a0a; border: 1px solid #1a1a1a; transition: all 0.3s; }
-        .card:hover { border-color: #ff4500; transform: scale(1.01); }
+        .card:hover { border-color: #ff4500; }
         .mvp-card { background: linear-gradient(135deg, #ff4500 0%, #b33000 100%); border: none; }
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
         
         .admin-only { display: none; }
         .admin-active .admin-only { display: flex; }
 
-        .scout-note { color: #888; font-style: italic; font-size: 11px; margin-top: 4px; line-height: 1.2; }
+        .player-note { 
+            color: #ff4500; 
+            font-style: italic; 
+            font-size: 11px; 
+            margin-top: 2px;
+            margin-bottom: 10px;
+            display: block;
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
 
-    <audio id="goalCelebration" src="https://www.soundjay.com/misc/sounds/stadium-cheer-1.mp3" loop></audio>
+    <!-- GİRİŞ SESİ -->
+    <audio id="goalCelebration" src="https://www.soundjay.com/misc/sounds/stadium-cheer-1.mp3"></audio>
 
     <div id="splash-screen">
         <h1 class="text-6xl font-black italic orange-text text-center font-orbitron mb-12">BAD BOYS<br>FC</h1>
@@ -61,7 +70,7 @@
         <div class="grid grid-cols-3 gap-3 mb-8">
             <div class="card p-4 rounded-xl text-center">
                 <div class="text-[9px] text-zinc-500 uppercase font-black">Kadro</div>
-                <div id="playerCount" class="text-2xl font-black italic font-orbitron">0/8</div>
+                <div id="playerCount" class="text-2xl font-black italic font-orbitron">8/8</div>
             </div>
             <div class="card p-4 rounded-xl text-center border-b-4 border-b-orange-600">
                 <div class="text-[9px] text-zinc-500 uppercase font-black">Toplam Skor</div>
@@ -86,21 +95,18 @@
 
     <script>
         const adminPassword = "badboys123";
+        const DATA_VERSION = "2.1"; // Versiyon değişince tarayıcıyı zorla günceller
         let isAdmin = false;
 
         function sahayaCik() {
-            // SADECE BURADA SES ÇALACAK
-            document.getElementById('goalCelebration').play();
-            const splash = document.getElementById('splash-screen');
-            const main = document.getElementById('main-content');
-            splash.style.opacity = '0';
-            splash.style.visibility = 'hidden';
-            setTimeout(() => { main.classList.add('show-content'); }, 300);
+            document.getElementById('goalCelebration').play().catch(() => {});
+            document.getElementById('splash-screen').style.opacity = '0';
+            document.getElementById('splash-screen').style.visibility = 'hidden';
+            setTimeout(() => { document.getElementById('main-content').classList.add('show-content'); }, 300);
         }
 
         function checkAdmin() {
-            const pass = prompt("Yönetici şifresi:");
-            if(pass === adminPassword) {
+            if(prompt("Yönetici şifresi:") === adminPassword) {
                 isAdmin = true;
                 document.body.classList.add('admin-active');
                 render();
@@ -118,7 +124,16 @@
             { id: 8, name: "MUSA AKSU", role: "FORVET", goals: 0, assists: 0, value: 10500000, note: "Kıvrak bilekleri ile dosta korku düşmana güven tarzı var", isCaptain: false, lastTrend: 0 }
         ];
 
-        let players = JSON.parse(localStorage.getItem('badBoysData')) || initialPlayers;
+        // VERSİYON KONTROLÜ (Eski verileri silip yenilerini yükler)
+        let savedVersion = localStorage.getItem('badBoysVersion');
+        let players;
+        if (savedVersion !== DATA_VERSION) {
+            players = initialPlayers;
+            localStorage.setItem('badBoysData', JSON.stringify(players));
+            localStorage.setItem('badBoysVersion', DATA_VERSION);
+        } else {
+            players = JSON.parse(localStorage.getItem('badBoysData')) || initialPlayers;
+        }
 
         function updateStat(id, field, amount) {
             const p = players.find(x => x.id === id);
@@ -130,9 +145,9 @@
         }
 
         function resetAllData() {
-            if(confirm("Tüm istatistikler sıfırlanacak! Emin misin Kaptan?")) {
+            if(confirm("Tüm istatistikler sıfırlanacak!")) {
                 players = initialPlayers.map(p => ({...p}));
-                localStorage.removeItem('badBoysData');
+                localStorage.setItem('badBoysData', JSON.stringify(players));
                 render();
             }
         }
@@ -151,16 +166,16 @@
                         <div>
                             <div class="text-[9px] bg-white text-black px-2.5 py-1 rounded-full font-black w-fit mb-2 uppercase">🔥 Formda</div>
                             <div class="font-black text-2xl italic uppercase font-orbitron">${p.name.split(' ')[0]}</div>
-                            <div class="text-[10px] font-bold text-zinc-100 opacity-80">${p.note}</div>
+                            <div class="text-[10px] font-bold text-zinc-100 opacity-90">${p.note}</div>
                         </div>
-                        <div class="text-right"><div class="text-lg font-black text-white">€${(p.value/1000000).toFixed(1)}M</div></div>
+                        <div class="text-right text-lg font-black text-white">€${(p.value/1000000).toFixed(1)}M</div>
                     </div>
                 `;
             });
 
             sorted.forEach(p => {
                 tScore += (p.goals + p.assists); tValue += p.value;
-                const trend = p.lastTrend > 0 ? '<span class="text-green-500 text-[10px]">▲</span>' : (p.lastTrend < 0 ? '<span class="text-red-500 text-[10px]">▼</span>' : '');
+                const trend = p.lastTrend > 0 ? '<span class="text-green-500">▲</span>' : (p.lastTrend < 0 ? '<span class="text-red-500">▼</span>' : '');
                 
                 container.innerHTML += `
                     <div class="card p-5 rounded-xl">
@@ -168,13 +183,12 @@
                             <div class="flex-1">
                                 <div class="flex items-center gap-2">
                                     <span class="font-bold text-base italic uppercase">${p.name}</span>
-                                    ${p.isCaptain ? '<span class="orange-bg text-black text-[8px] px-1 py-0.5 rounded font-black">CPT</span>' : ''}
+                                    ${p.isCaptain ? '<span class="orange-bg text-black text-[8px] px-1.5 py-0.5 rounded font-black">CPT</span>' : ''}
                                     ${trend}
                                 </div>
-                                <div class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">${p.role}</div>
-                                <div class="scout-note mb-4">"${p.note}"</div>
-                                
-                                <div class="flex gap-4 text-xs font-bold items-center">
+                                <div class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-1">${p.role}</div>
+                                <span class="player-note">"${p.note}"</span>
+                                <div class="flex gap-4 text-xs font-bold items-center mt-2">
                                     <div class="flex items-center gap-2">
                                         <span class="opacity-70">⚽</span> <span>${p.goals}</span>
                                         <div class="admin-only gap-1">
@@ -185,4 +199,24 @@
                                     <div class="flex items-center gap-2 border-l border-zinc-800 pl-4">
                                         <span class="opacity-70">🎯</span> <span>${p.assists}</span>
                                         <div class="admin-only gap-1">
-                                            <button onclick="updateStat(${p.id},
+                                            <button onclick="updateStat(${p.id}, 'assists', -1)" class="w-5 h-5 bg-zinc-900 border border-zinc-800 rounded text-red-500">-</button>
+                                            <button onclick="updateStat(${p.id}, 'assists', 1)" class="w-5 h-5 bg-zinc-800 rounded hover:bg-orange-600">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-lg font-black orange-text font-orbitron">€${(p.value/1000000).toFixed(1)}M</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('totalValue').innerText = `€${(tValue/1000000).toFixed(1)}M`;
+            document.getElementById('totalPoints').innerText = tScore;
+        }
+        render();
+    </script>
+</body>
+</html>
