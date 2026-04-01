@@ -11,6 +11,7 @@
         .orange-text { color: #ff4500; }
         .orange-bg { background-color: #ff4500; }
         
+        /* GÜNCELLENMİŞ YÜKLEME EKRANI (LOADER) */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #2a1100 0%, #000000 70%);
@@ -18,24 +19,29 @@
             transition: opacity 0.8s ease-out, visibility 0.8s;
         }
 
-        /* LOGO PARLAMA EFEKTİ */
-        .splash-img {
-            max-width: 200px;
-            filter: drop-shadow(0 0 20px rgba(255, 69, 0, 0.6));
-            animation: pulse 2s infinite ease-in-out;
+        .loader-container { display: flex; align-items: center; gap: 15px; margin-top: 20px; }
+        
+        .bouncing-ball {
+            font-size: 2.5rem;
+            animation: bounce 0.6s infinite alternate;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-25px); }
+        }
+
+        .splash-img {
+            max-width: 180px;
+            filter: drop-shadow(0 0 20px rgba(255, 69, 0, 0.4));
         }
 
         .enter-btn {
             font-family: 'Orbitron', sans-serif; background: #ff4500; color: black;
-            padding: 15px 50px; font-weight: 900; letter-spacing: 3px;
+            padding: 12px 40px; font-weight: 900; letter-spacing: 2px;
             text-transform: uppercase; border-radius: 50px; cursor: pointer;
             box-shadow: 0 0 15px rgba(255, 69, 0, 0.5); transition: all 0.3s ease;
+            margin-top: 30px;
         }
 
         #main-content { opacity: 0; transform: translateY(30px); transition: 1s ease-out; visibility: hidden;}
@@ -52,6 +58,24 @@
         .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; letter-spacing: 1px; }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
+        /* TAKTİK SAHASI STİLLERİ */
+        .pitch {
+            background: #061806; border: 2px solid #1a4a1a; position: relative;
+            height: 300px; border-radius: 10px; margin: 20px 0;
+            background-image: linear-gradient(#1a4a1a 1px, transparent 1px), linear-gradient(90deg, #1a4a1a 1px, transparent 1px);
+            background-size: 50% 100%; background-position: center;
+        }
+        .pitch-center-circle {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 60px; height: 60px; border: 2px solid #1a4a1a; border-radius: 50%;
+        }
+        .player-dot {
+            position: absolute; width: 30px; height: 30px; background: #ff4500;
+            color: black; font-size: 8px; font-weight: 900; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
         .player-note { color: #ff4500; font-style: italic; font-size: 11px; margin-top: 2px; display: block; opacity: 0.9; }
         .stat-bar { height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; margin-top: 4px; }
         .stat-fill { height: 100%; background: #ff4500; transition: width 0.5s ease-out; }
@@ -63,11 +87,12 @@
 
     <!-- GİRİŞ EKRANI (SPLASH) -->
     <div id="splash-screen">
-        <!-- KURT LOGOSU BURADA -->
-        <img src="badboysfc.jpg" alt="BAD BOYS Logo" class="splash-img mb-8">
-        
-        <h1 class="text-5xl font-black italic orange-text text-center font-orbitron mb-10">BAD BOYS FC</h1>
-        <button class="enter-btn" onclick="sahayaCik()">Sahaya Çık</button>
+        <img src="badboysfc.jpg" alt="BAD BOYS Logo" class="splash-img">
+        <div class="loader-container">
+            <div class="bouncing-ball">⚽</div>
+            <h1 class="text-2xl font-black italic orange-text font-orbitron uppercase">BAD BOYS FC HAZIRLANIYOR...</h1>
+        </div>
+        <button class="enter-btn" id="enterBtn" onclick="sahayaCik()">Sahaya Çık</button>
     </div>
 
     <!-- KAYAN YAZI BANDI -->
@@ -87,6 +112,47 @@
             <h1 class="text-5xl font-black italic orange-text tracking-tighter font-orbitron uppercase">BAD BOYS FC</h1>
             <p class="text-zinc-500 text-[10px] font-bold tracking-[0.3em] uppercase mt-2">SAHADA TER, SİTEDE GURUR: ASLA YALNIZ KOŞMAZSIN</p>
         </header>
+
+        <!-- MAÇ YORUMCUSU BÖLÜMÜ -->
+        <div class="card p-4 rounded-xl mb-8 border-orange-900/30">
+            <h2 class="text-[10px] font-black text-zinc-500 uppercase mb-3 tracking-widest">🎙️ Yorumcu Koltuğu</h2>
+            <p id="matchComment" class="text-xs italic text-zinc-300 leading-relaxed">Skorları girin, yorumumu yapayım kaptan!</p>
+            <div class="flex gap-2 mt-4">
+                <input type="number" id="hScore" placeholder="BB" class="bg-zinc-900 border border-zinc-800 text-white text-xs p-2 rounded w-full outline-none focus:border-orange-600">
+                <input type="number" id="aScore" placeholder="RAKİP" class="bg-zinc-900 border border-zinc-800 text-white text-xs p-2 rounded w-full outline-none focus:border-orange-600">
+                <button onclick="generateComment()" class="orange-bg text-black font-black text-[10px] px-4 rounded hover:bg-orange-500 transition">YORUMLA</button>
+            </div>
+        </div>
+
+        <!-- MAÇ ARŞİVİ BÖLÜMÜ -->
+        <div class="mb-10">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xs font-black text-zinc-400 uppercase tracking-widest pl-1">📜 Maç Arşivi</h2>
+                <button onclick="addMatchRecord()" class="admin-only text-[10px] orange-text font-bold border border-orange-900 px-2 py-1 rounded">+ SKOR EKLE</button>
+            </div>
+            <div id="matchHistoryContainer" class="space-y-2">
+                <!-- Maçlar buraya dolacak -->
+            </div>
+        </div>
+
+        <!-- TAKTİK SAHASI -->
+        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">📋 Taktik Tahtası</h2>
+        <div class="pitch">
+            <div class="pitch-center-circle"></div>
+            <div class="player-dot" style="bottom: 10px; left: 45%;">HCN</div>
+            <div class="player-dot" style="bottom: 80px; left: 20%;">SLY</div>
+            <div class="player-dot" style="bottom: 80px; left: 70%;">YKP</div>
+            <div class="player-dot" style="top: 130px; left: 45%;">ERL</div>
+            <div class="player-dot" style="top: 50px; left: 20%;">MRT</div>
+            <div class="player-dot" style="top: 50px; left: 70%;">ERN</div>
+        </div>
+        <p class="text-[8px] text-zinc-500 text-center mb-10 italic uppercase">Taktik diziliş: 2-1-2 (Maç öncesi yerleşim)</p>
+
+        <!-- KATILIM LİSTESİ -->
+        <div class="card p-4 rounded-xl mb-10">
+            <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest">✅ Maç Yoklaması</h2>
+            <div id="attendanceList" class="space-y-2"></div>
+        </div>
 
         <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest text-center">Haftanın İfşası</h2>
         <div class="img-frame mb-10 bg-zinc-900 aspect-video flex items-center justify-center relative">
@@ -139,6 +205,20 @@
             setTimeout(() => { document.getElementById('main-content').classList.add('show-content'); }, 300);
         }
 
+        function generateComment() {
+            const h = parseInt(document.getElementById('hScore').value);
+            const a = parseInt(document.getElementById('aScore').value);
+            const box = document.getElementById('matchComment');
+            if(isNaN(h) || isNaN(a)) return;
+            let comments = [];
+            if(h > a + 3) comments = ["Rakip takıma navigasyon lazım, sahada kayboldular!", "Bad Boys bugün gol olup yağdı!", "Bu skorun ardından rakip takımı emekliliğe davet ediyoruz."];
+            else if(h > a) comments = ["Zor oldu ama Bad Boys ruhu kazandı!", "Bileğimizin hakkıyla aldık, tebrikler beyler!", "Bad Boys affetmez, son dakikaya kadar savaşır!"];
+            else if(h === a) comments = ["Dostluk kazandı ama rövanşta affetmeyiz!", "Direkler rakipten daha çok korudu kaleyi.", "Güzel maçtı, puanlar paylaşıldı."];
+            else comments = ["Şans yanımızda değildi, haftaya telafi ederiz.", "Nazar değdi diyelim, biz önümüzdeki maçlara bakıyoruz.", "Düştüğümüz yerden kalkmasını biliriz, Bad Boys ölmez!"];
+            box.innerHTML = comments[Math.floor(Math.random() * comments.length)];
+            box.classList.add('orange-text');
+        }
+
         function checkAdmin() {
             if(prompt("Yönetici şifresi:") === adminPassword) {
                 isAdmin = true;
@@ -148,14 +228,14 @@
         }
 
         const initialPlayers = [
-            { id: 1, name: "HÜSEYİNCAN YÜKSEKDAĞ", role: "KALECİ", goals: 0, assists: 0, value: "1 Koli Soğuk Su", note: "Kalede adeta kocaman bir fil gibi", stats: {kondisyon: 90, vefa: 100, sertlik: 85} },
-            { id: 2, name: "SÜLEYMAN TUNÇELİK", role: "DEFANS", goals: 0, assists: 0, value: "2 Tepsi Baklava", note: "Defansın bel kemiği", stats: {kondisyon: 90, vefa: 100, sertlik: 75} },
-            { id: 3, name: "YAKUP SUNAY", role: "DEFANS", goals: 0, assists: 0, value: "Sınırsız Adana Dürüm", note: "Koca yürekli kaptan", isCaptain: true, stats: {kondisyon: 90, vefa: 100, sertlik: 75} },
-            { id: 4, name: "MEHMET UZUN", role: "DEFANS", goals: 0, assists: 0, value: "5 Şişe Enerji İçeceği", note: "Takımın sert adamı", stats: {kondisyon: 90, vefa: 100, sertlik: 80} },
-            { id: 5, name: "EROL GÖNÜL", role: "ORTA SAHA", goals: 0, assists: 0, value: "1 Porsiyon Künefe", note: "Şut çekmeyi sever", stats: {kondisyon: 90, vefa: 100, sertlik: 80} },
-            { id: 6, name: "MURAT ÇAYLI", role: "FORVET", goals: 0, assists: 0, value: "Yarım Kilo Fıstık", note: "Çalım denemeyi sever", stats: {kondisyon: 90, vefa: 100, sertlik: 75} },
-            { id: 7, name: "EREN YILMAZ", role: "FORVET", goals: 0, assists: 0, value: "3 Lahmacun + Ayran", note: "Eşi geldiyse tehlikelidir", stats: {kondisyon: 90, vefa: 100, sertlik: 70} },
-            { id: 8, name: "MUSA AKSU", role: "FORVET", goals: 0, assists: 0, value: "1 Karışık Pizza", note: "Kıvrak bilekler", stats: {kondisyon: 80, vefa: 100, sertlik: 70} }
+            { id: 1, name: "HÜSEYİNCAN YÜKSEKDAĞ", role: "KALECİ", goals: 0, assists: 0, value: "1 Koli Soğuk Su", note: "Kalede adeta kocaman bir fil gibi", stats: {kondisyon: 90, vefa: 100, sertlik: 85}, attending: true },
+            { id: 2, name: "SÜLEYMAN TUNÇELİK", role: "DEFANS", goals: 0, assists: 0, value: "2 Tepsi Baklava", note: "Defansın bel kemiği", stats: {kondisyon: 90, vefa: 100, sertlik: 75}, attending: true },
+            { id: 3, name: "YAKUP SUNAY", role: "DEFANS", goals: 0, assists: 0, value: "Sınırsız Adana Dürüm", note: "Koca yürekli kaptan", isCaptain: true, stats: {kondisyon: 90, vefa: 100, sertlik: 75}, attending: true },
+            { id: 4, name: "MEHMET UZUN", role: "DEFANS", goals: 0, assists: 0, value: "5 Şişe Enerji İçeceği", note: "Takımın sert adamı", stats: {kondisyon: 90, vefa: 100, sertlik: 80}, attending: true },
+            { id: 5, name: "EROL GÖNÜL", role: "ORTA SAHA", goals: 0, assists: 0, value: "1 Porsiyon Künefe", note: "Şut çekmeyi sever", stats: {kondisyon: 90, vefa: 100, sertlik: 80}, attending: true },
+            { id: 6, name: "MURAT ÇAYLI", role: "FORVET", goals: 0, assists: 0, value: "Yarım Kilo Fıstık", note: "Çalım denemeyi sever", stats: {kondisyon: 90, vefa: 100, sertlik: 75}, attending: true },
+            { id: 7, name: "EREN YILMAZ", role: "FORVET", goals: 0, assists: 0, value: "3 Lahmacun + Ayran", note: "Eşi geldiyse tehlikelidir", stats: {kondisyon: 90, vefa: 100, sertlik: 70}, attending: true },
+            { id: 8, name: "MUSA AKSU", role: "FORVET", goals: 0, assists: 0, value: "1 Karışık Pizza", note: "Kıvrak bilekler", stats: {kondisyon: 80, vefa: 100, sertlik: 70}, attending: true }
         ];
 
         let players = JSON.parse(localStorage.getItem('badBoysData')) || initialPlayers;
@@ -163,55 +243,78 @@
             { id: 1, text: "Yakup Sunay abi ayağım kötü...", date: "02.04.2026" },
             { id: 2, text: "Ulan yerden sekti yoksa goldü!", date: "02.04.2026" }
         ];
+        let matchRecords = JSON.parse(localStorage.getItem('badBoysMatches')) || [
+            { id: 1, score: "10 - 7", opponent: "ÖRNEK RAKİP", date: "02.04.2026", result: "W" }
+        ];
 
-        function changeImg() {
-            const url = prompt("Haftanın fotoğrafı için link yapıştır:");
-            if(url) { localStorage.setItem('badBoysImg', url); render(); }
-        }
-
-        function updateStat(id, field, amount) {
+        function toggleAttendance(id) {
             const p = players.find(x => x.id === id);
-            p[field] = Math.max(0, p[field] + amount);
+            p.attending = !p.attending;
             localStorage.setItem('badBoysData', JSON.stringify(players));
             render();
         }
 
-        function addQuote() {
-            const text = prompt("Yeni racon sözü:");
-            if(text) {
-                quotes.unshift({ id: Date.now(), text, date: new Date().toLocaleDateString('tr-TR') });
-                localStorage.setItem('badBoysQuotes', JSON.stringify(quotes));
+        function addMatchRecord() {
+            const opponent = prompt("Rakip Takım Adı:");
+            const score = prompt("Skor (Örn: 10-7):");
+            const date = new Date().toLocaleDateString('tr-TR');
+            if(opponent && score) {
+                const scores = score.split('-').map(s => parseInt(s.trim()));
+                let result = "D";
+                if(scores[0] > scores[1]) result = "W";
+                if(scores[0] < scores[1]) result = "L";
+                matchRecords.unshift({ id: Date.now(), opponent, score, date, result });
+                localStorage.setItem('badBoysMatches', JSON.stringify(matchRecords));
                 render();
             }
-        }
-
-        function resetAllData() {
-            if(confirm("Tüm veriler sıfırlanacak!")) { localStorage.clear(); location.reload(); }
         }
 
         function render() {
             const container = document.getElementById('playerContainer');
             const quoteContainer = document.getElementById('quoteContainer');
             const weeklyReport = document.getElementById('weeklyReport');
+            const attendanceList = document.getElementById('attendanceList');
+            const historyContainer = document.getElementById('matchHistoryContainer');
             const savedImg = localStorage.getItem('badBoysImg');
             if(savedImg) document.getElementById('weeklyImg').src = savedImg;
             
-            container.innerHTML = ""; quoteContainer.innerHTML = "";
+            container.innerHTML = ""; quoteContainer.innerHTML = ""; attendanceList.innerHTML = "";
             let tScore = 0;
+
+            // Maç Arşivi Render
+            historyContainer.innerHTML = matchRecords.map(m => `
+                <div class="card p-3 rounded-lg flex justify-between items-center border-l-4 ${m.result === 'W' ? 'border-l-green-500' : (m.result === 'L' ? 'border-l-red-500' : 'border-l-zinc-500')}">
+                    <div class="flex flex-col">
+                        <span class="text-[8px] text-zinc-500 font-bold uppercase">${m.date}</span>
+                        <span class="text-[10px] font-black uppercase tracking-tight">VS ${m.opponent}</span>
+                    </div>
+                    <div class="text-lg font-black italic font-orbitron ${m.result === 'W' ? 'orange-text' : 'text-white'}">
+                        ${m.score}
+                    </div>
+                </div>
+            `).join('');
 
             weeklyReport.innerHTML = `
                 <div class="card p-3 rounded-xl border-l-4 border-l-green-600 text-left">
-                    <div class="text-[8px] text-green-500 font-black tracking-widest">MAÇIN ADAMI</div>
+                    <div class="text-[8px] text-green-500 font-black tracking-widest uppercase">MAÇIN ADAMI</div>
                     <div class="text-xs font-black mt-1 uppercase italic font-orbitron">${players[2].name.split(' ')[0]}</div>
                 </div>
                 <div class="card p-3 rounded-xl border-l-4 border-l-red-600 text-left">
-                    <div class="text-[8px] text-red-500 font-black tracking-widest">MAÇIN BİDONU</div>
+                    <div class="text-[8px] text-red-500 font-black tracking-widest uppercase">MAÇIN BİDONU</div>
                     <div class="text-xs font-black mt-1 uppercase italic font-orbitron text-zinc-500">HÜSEYİN</div>
                 </div>
             `;
 
             players.forEach(p => {
                 tScore += (p.goals + p.assists);
+                attendanceList.innerHTML += `
+                    <div class="flex justify-between items-center bg-zinc-950 p-2 rounded border border-zinc-900">
+                        <span class="text-[10px] font-bold ${p.attending ? 'text-white' : 'text-zinc-600 line-through'}">${p.name}</span>
+                        <button onclick="toggleAttendance(${p.id})" class="text-[10px] px-2 py-1 rounded font-black ${p.attending ? 'bg-green-900 text-green-400' : 'bg-red-900 text-red-400'}">
+                            ${p.attending ? 'GELİYOR' : 'GELMİYOR'}
+                        </button>
+                    </div>
+                `;
                 container.innerHTML += `
                     <div class="card p-5 rounded-xl border-zinc-900">
                         <div class="flex justify-between items-start">
@@ -221,13 +324,11 @@
                                     ${p.isCaptain ? '<span class="orange-bg text-black text-[8px] px-1.5 py-0.5 rounded font-black">CPT</span>' : ''}
                                 </div>
                                 <span class="player-note">"${p.note}"</span>
-                                
                                 <div class="grid grid-cols-3 gap-3 mt-4 mb-4">
                                     <div><div class="text-[7px] opacity-40 uppercase font-black">Knd</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.kondisyon}%"></div></div></div>
                                     <div><div class="text-[7px] opacity-40 uppercase font-black text-orange-400">Vefa</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.vefa}%"></div></div></div>
                                     <div><div class="text-[7px] opacity-40 uppercase font-black">Srt</div><div class="stat-bar"><div class="stat-fill" style="width: ${p.stats.sertlik}%"></div></div></div>
                                 </div>
-
                                 <div class="flex gap-4 text-xs font-bold items-center">
                                     <div class="flex items-center gap-2">⚽ ${p.goals} <div class="admin-only gap-1 ml-1"><button onclick="updateStat(${p.id},'goals',-1)" class="w-4 h-4 bg-zinc-900 border border-zinc-800 rounded">-</button><button onclick="updateStat(${p.id},'goals',1)" class="w-4 h-4 bg-zinc-800 rounded">+</button></div></div>
                                     <div class="flex items-center gap-2 border-l border-zinc-800 pl-4">🎯 ${p.assists} <div class="admin-only gap-1 ml-1"><button onclick="updateStat(${p.id},'assists',-1)" class="w-4 h-4 bg-zinc-900 border border-zinc-800 rounded">-</button><button onclick="updateStat(${p.id},'assists',1)" class="w-4 h-4 bg-zinc-800 rounded">+</button></div></div>
@@ -241,12 +342,32 @@
                     </div>
                 `;
             });
-
             quoteContainer.innerHTML = quotes.map(q => `
                 <div class="quote-card p-4 rounded-r-xl"><p class="text-xs italic font-medium">"${q.text}"</p><span class="text-[8px] text-zinc-600 mt-2 block font-black uppercase">${q.date}</span></div>
             `).join('');
-
             document.getElementById('totalPoints').innerText = tScore;
+        }
+
+        function changeImg() {
+            const url = prompt("Haftanın fotoğrafı için link yapıştır:");
+            if(url) { localStorage.setItem('badBoysImg', url); render(); }
+        }
+        function updateStat(id, field, amount) {
+            const p = players.find(x => x.id === id);
+            p[field] = Math.max(0, p[field] + amount);
+            localStorage.setItem('badBoysData', JSON.stringify(players));
+            render();
+        }
+        function addQuote() {
+            const text = prompt("Yeni racon sözü:");
+            if(text) {
+                quotes.unshift({ id: Date.now(), text, date: new Date().toLocaleDateString('tr-TR') });
+                localStorage.setItem('badBoysQuotes', JSON.stringify(quotes));
+                render();
+            }
+        }
+        function resetAllData() {
+            if(confirm("Tüm veriler sıfırlanacak!")) { localStorage.clear(); location.reload(); }
         }
         render();
     </script>
