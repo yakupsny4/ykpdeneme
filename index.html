@@ -14,32 +14,29 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #2a1100 0%, #000000 70%);
             z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.8s ease-out, visibility 0.8s;
         }
 
         .enter-btn {
             font-family: 'Orbitron', sans-serif; background: #ff4500; color: black;
             padding: 12px 40px; font-weight: 900; letter-spacing: 2px;
             text-transform: uppercase; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 0 15px rgba(255, 69, 0, 0.5); transition: all 0.3s ease;
-            margin-top: 30px;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.5); margin-top: 30px;
         }
 
-        #main-content { opacity: 0; transform: translateY(30px); transition: 1s ease-out; visibility: hidden;}
-        .show-content { opacity: 1 !important; transform: translateY(0) !important; visibility: visible !important;}
+        #main-content { opacity: 0; transition: 1s ease-out; display: none;}
+        .show-content { opacity: 1 !important; display: block !important;}
 
         .card { background: #0a0a0a; border: 1px solid #1a1a1a; transition: all 0.3s; }
-        
         .admin-only { display: none; }
         .admin-active .admin-only { display: flex; }
 
-        /* Kilit Logosu - Belirgin Turuncu Çerçeve */
+        /* Kilit Logosu - Turuncu Kalın Çerçeve */
         .admin-lock-btn {
-            position: absolute; right: 15px; top: 15px;
-            border: 3px solid #ff4500; background: #000;
-            padding: 8px; border-radius: 12px; color: #ff4500;
-            box-shadow: 0 0 15px rgba(255, 69, 0, 0.3);
-            transition: all 0.3s; z-index: 100;
+            position: fixed; right: 20px; top: 70px;
+            border: 4px solid #ff4500; background: #000;
+            padding: 10px; border-radius: 15px; color: #ff4500;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.4);
+            z-index: 1000; cursor: pointer;
         }
         .admin-active .admin-lock-btn { background: #ff4500; color: #000; }
 
@@ -60,59 +57,60 @@
             border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5);
             touch-action: none; user-select: none; z-index: 10; transform: translateX(-50%);
         }
-        .admin-active .player-dot { cursor: move; }
         .market-value { color: #00ff00; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 900; }
-        .reset-btn { background: #330000; color: #ff3333; border: 1px solid #ff3333; width: 100%; padding: 12px; border-radius: 10px; font-size: 10px; font-weight: 900; margin-top: 40px; }
+        .reset-btn { background: #330000; color: #ff3333; border: 2px solid #ff3333; width: 100%; padding: 15px; border-radius: 10px; font-size: 12px; font-weight: 900; margin-top: 40px; }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <img src="badboysfc.jpg" alt="BAD BOYS Logo" class="max-w-[150px] mb-4">
+        <h1 class="text-4xl font-black italic orange-text font-orbitron mb-4">BAD BOYS FC</h1>
         <button class="enter-btn" onclick="sahayaCik()">Sahaya Çık</button>
     </div>
 
-    <div class="marquee-container sticky top-0 z-50">
-        <div class="marquee-text italic">BAD BOYS FC • RESMİ WEB SİTESİ • KAPTAN YAKUP SUNAY • ASLA YALNIZ KOŞMAZSIN • BAD BOYS FC •</div>
-    </div>
+    <div id="main-content">
+        <div class="marquee-container sticky top-0 z-50">
+            <div class="marquee-text italic">BAD BOYS FC • RESMİ WEB SİTESİ • KAPTAN YAKUP SUNAY • ASLA YALNIZ KOŞMAZSIN • BAD BOYS FC •</div>
+        </div>
 
-    <div id="main-content" class="container mx-auto max-w-md p-4 pb-24 relative">
-        <button onclick="checkAdmin()" class="admin-lock-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <button onclick="checkAdmin()" class="admin-lock-btn" id="lockBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         </button>
 
-        <header class="mb-8 mt-6 text-center">
-            <h1 class="text-4xl font-black italic orange-text font-orbitron uppercase">BAD BOYS FC</h1>
-            <p class="text-zinc-500 text-[9px] font-bold tracking-[0.3em] uppercase">Taktik - Skor - Racon</p>
-        </header>
+        <div class="container mx-auto max-w-md p-4 pb-24 relative">
+            <header class="mb-8 mt-6 text-center">
+                <h1 class="text-4xl font-black italic orange-text font-orbitron uppercase">BAD BOYS FC</h1>
+                <p class="text-zinc-500 text-[9px] font-bold tracking-[0.3em] uppercase">Taktik - Skor - Racon</p>
+            </header>
 
-        <h2 class="text-xs font-black mb-2 text-zinc-400 uppercase tracking-widest pl-1">📋 Taktik Tahtası</h2>
-        <div class="pitch" id="tacticalPitch"></div>
+            <h2 class="text-xs font-black mb-2 text-zinc-400 uppercase tracking-widest pl-1">📋 Taktik Tahtası</h2>
+            <div class="pitch" id="tacticalPitch"></div>
 
-        <div class="card p-4 rounded-xl mb-10">
-            <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest">✅ Maç Yoklaması</h2>
-            <div id="attendanceList" class="space-y-3"></div>
-        </div>
-
-        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">👥 Kadro Verileri</h2>
-        <div id="playerContainer" class="space-y-4"></div>
-
-        <div class="mt-12 mb-10">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xs font-black text-zinc-400 uppercase tracking-widest pl-1">📜 Maç Arşivi</h2>
-                <button onclick="addMatchRecord()" class="admin-only text-[10px] orange-text font-bold border border-orange-900 px-2 py-1 rounded">+ MAÇ EKLE</button>
+            <div class="card p-4 rounded-xl mb-10">
+                <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest">✅ Maç Yoklaması</h2>
+                <div id="attendanceList" class="space-y-3"></div>
             </div>
-            <div id="matchHistoryContainer" class="space-y-2"></div>
-        </div>
 
-        <button onclick="resetAllData()" class="admin-only reset-btn">⚠️ TÜM VERİLERİ SIFIRLA</button>
+            <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">👥 Kadro Verileri</h2>
+            <div id="playerContainer" class="space-y-4"></div>
+
+            <div class="mt-12 mb-10">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xs font-black text-zinc-400 uppercase tracking-widest pl-1">📜 Maç Arşivi</h2>
+                    <button onclick="addMatchRecord()" class="admin-only text-[10px] orange-text font-bold border border-orange-900 px-2 py-1 rounded">+ MAÇ EKLE</button>
+                </div>
+                <div id="matchHistoryContainer" class="space-y-2"></div>
+            </div>
+
+            <button onclick="resetAllData()" class="admin-only reset-btn">⚠️ TÜM VERİLERİ SIFIRLA (UNDEFINED DÜZELTİR)</button>
+        </div>
     </div>
 
     <script>
         const adminPassword = "badboys123";
         let isAdmin = false;
 
-        const initialPlayers = [
+        const defaultPlayers = [
             { id: 1, name: "HÜSEYİNCAN YÜKSEKDAĞ", isGK: true, value: "10.0M €", quote: "Kalede adeta kocaman bir fil gibi.", goals: 0, assists: 0, conceded: 0, attending: true, pos: { x: 50, y: 92 } },
             { id: 2, name: "SÜLEYMAN TUNÇELİK", value: "10.0M €", quote: "Defansın bel kemiği.", goals: 0, assists: 0, attending: true, pos: { x: 30, y: 75 } },
             { id: 3, name: "YAKUP SUNAY", value: "10.0M €", quote: "Her yerde olan koca yürekli kaptan.", goals: 0, assists: 0, attending: true, pos: { x: 70, y: 75 } },
@@ -123,119 +121,101 @@
             { id: 8, name: "MUSA AKSU", value: "10.0M €", quote: "Kıvrak bilekleri ile dosta korku düşmana güven tarzı var.", goals: 0, assists: 0, attending: true, pos: { x: 50, y: 10 } }
         ];
 
-        let players = JSON.parse(localStorage.getItem('badBoysData')) || initialPlayers;
+        let players = JSON.parse(localStorage.getItem('badBoysData')) || defaultPlayers;
         let matchRecords = JSON.parse(localStorage.getItem('badBoysMatches')) || [];
 
         function sahayaCik() {
-            document.getElementById('splash-screen').style.opacity = '0';
-            setTimeout(() => { 
-                document.getElementById('splash-screen').style.display = 'none';
-                document.getElementById('main-content').classList.add('show-content'); 
-            }, 800);
+            document.getElementById('splash-screen').style.display = 'none';
+            document.getElementById('main-content').classList.add('show-content');
+            render();
         }
 
         function checkAdmin() {
             if(prompt("Şifre:") === adminPassword) {
                 isAdmin = true;
                 document.body.classList.add('admin-active');
-                alert("Admin Modu Aktif: Artık skor ekleyebilir ve isimleri taşıyabilirsiniz.");
                 render();
             }
         }
 
         function resetAllData() {
-            if(confirm("Tüm veriler (skorlar, goller, diziliş) silinecek. Emin misin?")) {
+            if(confirm("Undefined hataları düzelecek ve tüm veriler sıfırlanacak. Onaylıyor musun?")) {
                 localStorage.clear();
+                players = [...defaultPlayers];
+                matchRecords = [];
                 location.reload();
             }
         }
 
-        function setupDraggable() {
+        function render() {
+            // Taktik Tahtası
             const pitch = document.getElementById('tacticalPitch');
-            document.querySelectorAll('.player-dot').forEach(dot => {
-                const startDrag = (e) => { if(!isAdmin) return; activePlayer = dot; };
-                dot.onmousedown = startDrag; dot.ontouchstart = startDrag;
+            pitch.innerHTML = '';
+            players.forEach(p => {
+                pitch.innerHTML += `<div class="player-dot" data-id="${p.id}" style="left:${p.pos.x}%; top:${p.pos.y}%">${p.name}</div>`;
             });
 
-            const moveHandler = (clientX, clientY) => {
-                if(!activePlayer || !isAdmin) return;
-                const rect = pitch.getBoundingClientRect();
-                let x = ((clientX - rect.left) / rect.width) * 100;
-                let y = ((clientY - rect.top) / rect.height) * 100;
-                x = Math.max(12, Math.min(88, x));
-                y = Math.max(5, Math.min(94, y));
-                activePlayer.style.left = x + '%'; activePlayer.style.top = y + '%';
-                const p = players.find(p => p.id == activePlayer.getAttribute('data-id'));
-                p.pos = { x, y };
-            };
-
-            document.onmousemove = (e) => moveHandler(e.clientX, e.clientY);
-            document.ontouchmove = (e) => moveHandler(e.touches[0].clientX, e.touches[0].clientY);
-            document.onmouseup = document.ontouchend = () => { if(activePlayer) { localStorage.setItem('badBoysData', JSON.stringify(players)); activePlayer = null; } };
-        }
-
-        function toggleAttendance(id, status) {
-            players.find(x => x.id === id).attending = status;
-            localStorage.setItem('badBoysData', JSON.stringify(players));
-            render();
-        }
-
-        function updateStat(id, field, amount) {
-            players.find(x => x.id === id)[field] += amount;
-            localStorage.setItem('badBoysData', JSON.stringify(players));
-            render();
-        }
-
-        function render() {
-            const pitch = document.getElementById('tacticalPitch');
-            pitch.innerHTML = '<div class="absolute top-50 left-50 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 border-2 border-zinc-900 rounded-full"></div>';
-            players.forEach(p => { pitch.innerHTML += `<div class="player-dot" data-id="${p.id}" style="left:${p.pos.x}%; top:${p.pos.y}%">${p.name}</div>`; });
-
+            // Yoklama
             const attendanceList = document.getElementById('attendanceList');
             attendanceList.innerHTML = players.map(p => `
-                <div class="flex flex-col gap-2 bg-[#050505] p-3 rounded-lg border border-zinc-900">
-                    <span class="text-[10px] font-bold ${p.attending ? 'text-white' : 'text-zinc-600'} uppercase">${p.name}</span>
+                <div class="bg-[#050505] p-3 rounded-lg border border-zinc-900 flex flex-col gap-2">
+                    <span class="text-[10px] font-bold ${p.attending ? 'text-white' : 'text-zinc-600'}">${p.name}</span>
                     <div class="flex gap-2">
-                        <button onclick="toggleAttendance(${p.id}, true)" class="flex-1 text-[9px] py-2 rounded font-black border ${p.attending ? 'bg-green-600 border-green-500 text-black' : 'border-green-900 text-green-900'}">GELİYOR</button>
-                        <button onclick="toggleAttendance(${p.id}, false)" class="flex-1 text-[9px] py-2 rounded font-black border ${!p.attending ? 'bg-red-600 border-red-500 text-white' : 'border-red-900 text-red-900'}">GELMİYOR</button>
+                        <button onclick="updateAttendance(${p.id}, true)" class="flex-1 text-[8px] py-1 rounded border ${p.attending ? 'bg-green-600 text-black' : 'border-green-900 text-green-900'}">GELİYOR</button>
+                        <button onclick="updateAttendance(${p.id}, false)" class="flex-1 text-[8px] py-1 rounded border ${!p.attending ? 'bg-red-600 text-white' : 'border-red-900 text-red-900'}">GELMİYOR</button>
                     </div>
                 </div>
             `).join('');
 
+            // Oyuncu Kartları
             const playerContainer = document.getElementById('playerContainer');
             playerContainer.innerHTML = players.map(p => `
-                <div class="card p-4 rounded-xl border-zinc-900">
-                    <div class="flex justify-between items-start mb-2">
-                        <div><h3 class="font-bold text-[11px] uppercase">${p.name} ${p.isGK ? '🧤' : ''}</h3><p class="market-value">${p.value}</p></div>
-                        <div class="flex gap-3 text-[10px] font-black">
-                            ${p.isGK ? `<div class="conceded-tag">YEDİĞİ GOL: ${p.conceded} <button onclick="updateStat(${p.id},'conceded',1)" class="admin-only bg-red-900 px-1 rounded text-white inline ml-1">+</button></div>` : 
-                            `<div>⚽ ${p.goals} <button onclick="updateStat(${p.id},'goals',1)" class="admin-only bg-zinc-800 px-1 rounded inline ml-1">+</button></div>`}
-                            <div>🎯 ${p.assists} <button onclick="updateStat(${p.id},'assists',1)" class="admin-only bg-zinc-800 px-1 rounded inline ml-1">+</button></div>
+                <div class="card p-4 rounded-xl">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-bold text-[11px] uppercase">${p.name || 'İsimsiz'} ${p.isGK ? '🧤' : ''}</h3>
+                            <p class="market-value">${p.value || '10.0M €'}</p>
+                        </div>
+                        <div class="flex gap-2 text-[10px] font-black">
+                            ${p.isGK ? `<span>YEDİĞİ: ${p.conceded || 0} <button onclick="addStat(${p.id},'conceded')" class="admin-only bg-red-900 px-1 rounded">+</button></span>` : 
+                            `<span>⚽ ${p.goals || 0} <button onclick="addStat(${p.id},'goals')" class="admin-only bg-zinc-800 px-1 rounded">+</button></span>`}
+                            <span>🎯 ${p.assists || 0} <button onclick="addStat(${p.id},'assists')" class="admin-only bg-zinc-800 px-1 rounded">+</button></span>
                         </div>
                     </div>
-                    <p class="text-[9px] text-zinc-500 italic mt-1 border-t border-zinc-900 pt-2">"${p.quote}"</p>
+                    <p class="text-[9px] text-zinc-500 italic mt-2 border-t border-zinc-900 pt-2">"${p.quote || 'Racon cümlesi bulunamadı.'}"</p>
                 </div>
             `).join('');
 
+            // Arşiv
             const historyContainer = document.getElementById('matchHistoryContainer');
-            historyContainer.innerHTML = matchRecords.map(m => `
-                <div class="card p-3 rounded-lg flex justify-between items-center border-l-4 ${m.result === 'W' ? 'border-l-green-500' : 'border-l-red-500'}">
-                    <div class="flex flex-col"><span class="text-[8px] text-zinc-500">${m.date}</span><span class="text-[10px] font-black uppercase">VS ${m.opponent}</span></div>
-                    <div class="text-lg font-black italic orange-text font-orbitron">${m.score}</div>
+            historyContainer.innerHTML = matchRecords.length ? matchRecords.map(m => `
+                <div class="card p-3 rounded flex justify-between items-center border-l-4 ${m.result === 'W' ? 'border-l-green-500' : 'border-l-red-500'}">
+                    <span class="text-[10px] font-bold uppercase">${m.opponent}</span>
+                    <span class="orange-text font-black">${m.score}</span>
                 </div>
-            `).join('');
-            setupDraggable();
+            `).join('') : '<p class="text-[10px] text-zinc-600 italic">Henüz maç kaydı yok.</p>';
+        }
+
+        function updateAttendance(id, status) {
+            players.find(x => x.id === id).attending = status;
+            save(); render();
+        }
+
+        function addStat(id, field) {
+            players.find(x => x.id === id)[field]++;
+            save(); render();
         }
 
         function addMatchRecord() {
-            const opp = prompt("Rakip?"); const scr = prompt("Skor (Örn: 10-5)?");
+            const opp = prompt("Rakip?"); const scr = prompt("Skor (10-5)?");
             if(opp && scr) {
                 const res = parseInt(scr.split('-')[0]) > parseInt(scr.split('-')[1]) ? 'W' : 'L';
-                matchRecords.unshift({ opponent: opp, score: scr, date: new Date().toLocaleDateString('tr-TR'), result: res });
+                matchRecords.unshift({ opponent: opp, score: scr, result: res });
                 localStorage.setItem('badBoysMatches', JSON.stringify(matchRecords)); render();
             }
         }
-        render();
+
+        function save() { localStorage.setItem('badBoysData', JSON.stringify(players)); }
     </script>
 </body>
 </html>
