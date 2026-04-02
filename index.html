@@ -3,322 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | Official Portal</title>
+    <title>BAD BOYS FC | ULTIMATE PORTAL</title>
     <style>
         :root {
             --neon-orange: #ff6600;
             --neon-blue: #00d4ff;
-            --dark-bg: #0d0d0d;
-            --card-bg: #161616;
-            --text-gray: #b3b3b3;
+            --deep-black: #050505;
+            --card-bg: rgba(25, 25, 25, 0.9);
+            --gold: #ffd700;
         }
 
         body {
-            background-color: var(--dark-bg);
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--deep-black);
+            color: #eeeeee;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding-bottom: 50px;
+            padding-bottom: 100px;
         }
 
-        /* --- Admin Paneli --- */
-        .admin-panel {
-            background: #1a1a1a;
+        /* --- Kaptan Paneli --- */
+        .admin-bar {
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
             padding: 15px;
             border-bottom: 2px solid var(--neon-orange);
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 2000;
         }
 
-        input[type="password"] {
-            background: #000;
+        .admin-bar input {
+            background: #111;
             border: 1px solid var(--neon-orange);
             color: white;
             padding: 8px;
             border-radius: 5px;
+            outline: none;
         }
 
-        button.admin-btn {
-            background: var(--neon-orange);
-            border: none;
-            color: black;
-            font-weight: bold;
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        /* --- Logo & Header --- */
-        .header {
-            text-align: center;
-            padding: 30px;
-        }
-
+        /* --- Header & Logo --- */
+        header { text-align: center; padding: 40px 20px; }
         .main-logo {
             width: 180px;
-            border: 3px solid var(--neon-orange);
+            filter: drop-shadow(0 0 15px var(--neon-orange));
             border-radius: 20px;
-            box-shadow: 0 0 25px rgba(255, 102, 0, 0.4);
+            border: 3px solid var(--neon-orange);
         }
 
-        /* --- MVP Alanı --- */
-        .mvp-wrapper {
+        /* --- Maç Kayıt Formu (Admin Özel) --- */
+        .match-form {
+            max-width: 600px;
             margin: 20px auto;
-            max-width: 400px;
+            background: #111;
             padding: 20px;
-            background: linear-gradient(145deg, #1a1a1a, #000);
-            border: 2px solid gold;
             border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
-        }
-
-        /* --- Oyuncu Kartları --- */
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid #222;
-            transition: 0.3s;
-        }
-
-        .card:hover { border-color: var(--neon-orange); }
-
-        .player-info h3 { margin: 0; color: var(--neon-orange); text-transform: uppercase; }
-        .player-info p { font-size: 0.85rem; color: var(--text-gray); margin: 5px 0; }
-
-        .stats-display {
-            display: flex;
-            justify-content: space-around;
-            background: #000;
-            padding: 10px;
-            border-radius: 10px;
-            margin: 15px 0;
-            font-weight: bold;
-            border: 1px solid #333;
-        }
-
-        .stat-item span { color: var(--neon-blue); display: block; font-size: 1.2rem; }
-
-        .control-group {
-            display: flex;
+            border: 1px dashed var(--neon-orange);
+            display: none; /* Kaptan girişiyle açılır */
             flex-direction: column;
             gap: 10px;
         }
 
-        .control-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .match-form input {
             background: #222;
-            padding: 5px 10px;
-            border-radius: 8px;
-        }
-
-        .plus-minus-btns {
-            display: none; /* Sadece admin girişiyle açılır */
-            gap: 5px;
-        }
-
-        .btn-sm {
-            width: 30px;
-            height: 30px;
-            border: none;
+            border: 1px solid #444;
+            color: white;
+            padding: 10px;
             border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1.1rem;
         }
 
-        .btn-plus { background: #28a745; color: white; }
-        .btn-minus { background: #dc3545; color: white; }
-
-        /* --- Yoklama --- */
-        .attendance-section {
-            max-width: 500px;
-            margin: 40px auto;
-            background: #111;
+        /* --- Oyuncu Kartları --- */
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
             padding: 20px;
-            border-radius: 15px;
         }
 
-        .att-row {
+        .player-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            border: 1px solid #333;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .smoke-bg {
+            position: absolute;
+            top: -20px; left: -20px;
+            width: 150px; height: 100px;
+            background: radial-gradient(circle, rgba(255,102,0,0.15) 0%, transparent 70%);
+            filter: blur(20px);
+            z-index: 0;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.6);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .stat-box { text-align: center; }
+        .stat-box span { display: block; font-size: 1.5rem; color: var(--neon-blue); font-weight: bold; }
+
+        /* --- Maç Geçmişi --- */
+        .match-history {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .match-card {
+            background: #1a1a1a;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 10px;
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #222;
+            align-items: center;
+            border-left: 5px solid #444;
         }
 
-        .att-btns button {
-            background: #333;
-            border: none;
-            color: #777;
-            padding: 5px 10px;
-            margin-left: 5px;
-            cursor: pointer;
-            border-radius: 4px;
+        .win { border-left-color: #28a745; }
+        .loss { border-left-color: #dc3545; }
+        .draw { border-left-color: #ffc107; }
+
+        /* --- Genel Tasarım Elemanları --- */
+        .btn-circle { width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; color: white; font-weight: bold; }
+        .btn-plus { background: #28a745; }
+        .btn-minus { background: #dc3545; }
+
+        .save-fab {
+            position: fixed; bottom: 30px; right: 30px;
+            background: var(--neon-orange); color: black;
+            border: none; padding: 15px 30px; border-radius: 50px;
+            font-weight: bold; cursor: pointer; box-shadow: 0 0 20px var(--neon-orange);
+            display: none; z-index: 3000;
         }
 
-        .att-btns button.active {
-            opacity: 1;
-            color: white;
-            box-shadow: 0 0 10px currentColor;
-        }
-
-        .active-geliyor { background: #28a745 !important; }
-        .active-yok { background: #dc3545 !important; }
-        .active-belki { background: #ffc107 !important; color: black !important; }
+        .editor-tools { display: none; }
 
     </style>
 </head>
 <body>
 
-<div class="admin-panel">
-    <input type="password" id="passInput" placeholder="Kaptan Şifresi">
-    <button class="admin-btn" onclick="login()">KAPTAN GİRİŞİ</button>
-</div>
+    <div class="admin-bar">
+        <input type="password" id="pass" placeholder="Kaptan Şifresi...">
+        <button onclick="login()" style="background:var(--neon-orange); border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">GİRİŞ</button>
+    </div>
 
-<div class="header">
-    <img src="badboysfc.jpg" alt="BAD BOYS FC" class="main-logo">
-    <h1 style="color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange);">BAD BOYS FC</h1>
-</div>
+    <header>
+        <img src="badboysfc.jpg" alt="Logo" class="main-logo">
+        <h1 style="color:var(--neon-orange); text-shadow: 0 0 15px rgba(255,102,0,0.5);">BAD BOYS FC</h1>
+    </header>
 
-<div class="mvp-wrapper">
-    <h2 style="color: gold; margin: 0;">MVP</h2>
-    <h1 id="mvp-name" style="margin: 10px 0;">YAKUP SUNAY</h1>
-    <p style="color: var(--text-gray); font-style: italic;">"Her bölgeye yetişen koca bir kaptan"</p>
-</div>
+    <!-- Maç Kayıt Alanı (Admin) -->
+    <div class="match-form" id="matchForm">
+        <h3 style="color:var(--neon-orange); margin:0;">Yeni Maç Kaydet</h3>
+        <input type="text" id="oppName" placeholder="Rakip Takım Adı">
+        <div style="display:flex; gap:10px;">
+            <input type="number" id="ourScore" placeholder="Bizim Skor" style="flex:1">
+            <input type="number" id="oppScore" placeholder="Rakip Skor" style="flex:1">
+        </div>
+        <button onclick="addMatch()" style="background:var(--neon-blue); border:none; padding:10px; border-radius:5px; font-weight:bold; cursor:pointer;">MAÇI EKLE</button>
+    </div>
 
-<div class="container" id="playerList"></div>
+    <!-- Oyuncular -->
+    <div class="player-grid" id="playerGrid"></div>
 
-<div class="attendance-section">
-    <h2 style="color: var(--neon-blue); text-align: center;">MAÇ YOKLAMASI</h2>
-    <div id="attList"></div>
-</div>
+    <!-- Maç Geçmişi -->
+    <div class="match-history">
+        <h2 style="color:var(--neon-blue); border-bottom: 1px solid #333; padding-bottom:10px;">MAÇ GEÇMİŞİ</h2>
+        <div id="historyList"></div>
+    </div>
+
+    <button class="save-fab" id="saveFab" onclick="persistData()">VERİLERİ KAYDET</button>
 
 <script>
-    const playersData = [
-        { id: 0, name: "Hüseyin Yüksekdağ", role: "Kaleci", desc: "Kalede o varsa sırtımız sağlam", isGK: true },
-        { id: 1, name: "Süleyman Tunçelik", role: "Defans", desc: "Defansın her alanına geçer" },
-        { id: 2, name: "Mehmet Uzun", role: "Defans", desc: "Takımın sert adamı" },
-        { id: 3, name: "Yakup Sunay", role: "Kaptan", desc: "Koca bir kaptan!" },
-        { id: 4, name: "Murat Çaylı", role: "Forvet", desc: "Akrobatik ve çalımcı" },
-        { id: 5, name: "Erol Gönül", role: "Orta Saha", desc: "Şutu çeker, hesabı sorar" },
-        { id: 6, name: "Eren Yılmaz", role: "Forvet", desc: "Eşi izliyorsa rakibe geçmiş olsun" },
-        { id: 7, name: "Musa Aksu", role: "Forvet", desc: "Kıvrak bilekler, dosta korku!" }
+    const players = [
+        { name: "Hüseyin Yüksekdağ", role: "Kaleci", isGK: true },
+        { name: "Süleyman Tunçelik", role: "Defans" },
+        { name: "Mehmet Uzun", role: "Defans" },
+        { name: "Yakup Sunay", role: "Kaptan" },
+        { name: "Murat Çaylı", role: "Forvet" },
+        { name: "Erol Gönül", role: "Orta Saha" },
+        { name: "Eren Yılmaz", role: "Forvet" },
+        { name: "Musa Aksu", role: "Forvet" }
     ];
 
-    let adminMode = false;
-
-    // Verileri LocalStorage'dan Al veya Sıfırla
-    let stats = JSON.parse(localStorage.getItem('bb_stats')) || playersData.map(p => ({
-        gol: 0, asist: 0, yenen: 0
-    }));
-
-    let attendance = JSON.parse(localStorage.getItem('bb_att')) || Array(8).fill(null);
+    let stats = JSON.parse(localStorage.getItem('bb_stats_v4')) || players.map(() => ({ g: 0, a: 0, y: 0 }));
+    let matches = JSON.parse(localStorage.getItem('bb_matches_v4')) || [];
+    let isAdmin = false;
 
     function login() {
-        if(document.getElementById('passInput').value === "badboysfc1907") {
-            adminMode = true;
-            document.querySelectorAll('.plus-minus-btns').forEach(el => el.style.display = 'flex');
-            alert("Hoş geldin Kaptan!");
-        } else {
-            alert("Şifre yanlış!");
-        }
+        if(document.getElementById('pass').value === "badboysfc1907") {
+            isAdmin = true;
+            document.querySelectorAll('.editor-tools').forEach(e => e.style.display = 'block');
+            document.getElementById('matchForm').style.display = 'flex';
+            document.getElementById('saveFab').style.display = 'block';
+            render();
+            alert("Sistem açıldı Kaptan!");
+        } else { alert("Şifre Yanlış!"); }
     }
 
-    function renderPlayers() {
-        const container = document.getElementById('playerList');
-        container.innerHTML = '';
-        
-        playersData.forEach((p, index) => {
-            container.innerHTML += `
-                <div class="card">
-                    <div class="player-info">
-                        <h3>${p.name}</h3>
-                        <p>${p.role} - <i>${p.desc}</i></p>
+    function render() {
+        const grid = document.getElementById('playerGrid');
+        grid.innerHTML = '';
+        players.forEach((p, i) => {
+            grid.innerHTML += `
+                <div class="player-card">
+                    <div class="smoke-bg"></div>
+                    <h2 style="margin:0; color:var(--neon-orange);">${p.name}</h2>
+                    <small>${p.role}</small>
+                    <div class="stats-row">
+                        <div class="stat-box"><label>GOL</label><span id="g-${i}">${stats[i].g}</span></div>
+                        <div class="stat-box"><label>ASİST</label><span id="a-${i}">${stats[i].a}</span></div>
+                        ${p.isGK ? `<div class="stat-box"><label>YENEN</label><span id="y-${i}">${stats[i].y}</span></div>` : ''}
                     </div>
-                    
-                    <div class="stats-display">
-                        <div class="stat-item">GOL <span id="g-${index}">${stats[index].gol}</span></div>
-                        <div class="stat-item">ASİST <span id="a-${index}">${stats[index].asist}</span></div>
-                        ${p.isGK ? `<div class="stat-item">YENEN <span id="y-${index}">${stats[index].yenen}</span></div>` : ''}
+                    <div class="editor-tools" style="display:${isAdmin ? 'block' : 'none'}">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <small>Gol: </small>
+                            <div>
+                                <button class="btn-circle btn-minus" onclick="upd(${i},'g',-1)">-</button>
+                                <button class="btn-circle btn-plus" onclick="upd(${i},'g',1)">+</button>
+                            </div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <small>Asist: </small>
+                            <div>
+                                <button class="btn-circle btn-minus" onclick="upd(${i},'a',-1)">-</button>
+                                <button class="btn-circle btn-plus" onclick="upd(${i},'a',1)">+</button>
+                            </div>
+                        </div>
                     </div>
+                </div>`;
+        });
 
-                    <div class="control-group">
-                        <div class="control-row">
-                            <small>GOL GÜNCELLE</small>
-                            <div class="plus-minus-btns" style="display: ${adminMode ? 'flex' : 'none'}">
-                                <button class="btn-sm btn-minus" onclick="changeStat(${index}, 'gol', -1)">-</button>
-                                <button class="btn-sm btn-plus" onclick="changeStat(${index}, 'gol', 1)">+</button>
-                            </div>
-                        </div>
-                        <div class="control-row">
-                            <small>ASİST GÜNCELLE</small>
-                            <div class="plus-minus-btns" style="display: ${adminMode ? 'flex' : 'none'}">
-                                <button class="btn-sm btn-minus" onclick="changeStat(${index}, 'asist', -1)">-</button>
-                                <button class="btn-sm btn-plus" onclick="changeStat(${index}, 'asist', 1)">+</button>
-                            </div>
-                        </div>
-                        ${p.isGK ? `
-                        <div class="control-row">
-                            <small>YENEN GOL</small>
-                            <div class="plus-minus-btns" style="display: ${adminMode ? 'flex' : 'none'}">
-                                <button class="btn-sm btn-minus" onclick="changeStat(${index}, 'yenen', -1)">-</button>
-                                <button class="btn-sm btn-plus" onclick="changeStat(${index}, 'yenen', 1)">+</button>
-                            </div>
-                        </div>` : ''}
+        const hList = document.getElementById('historyList');
+        hList.innerHTML = '';
+        matches.slice().reverse().forEach((m, idx) => {
+            let resClass = m.our > m.opp ? 'win' : (m.our < m.opp ? 'loss' : 'draw');
+            hList.innerHTML += `
+                <div class="match-card ${resClass}">
+                    <div>
+                        <strong style="color:var(--neon-orange)">${m.opp}</strong><br>
+                        <small style="color:#666">${m.date}</small>
                     </div>
-                </div>
-            `;
+                    <div style="font-size:1.5rem; font-weight:bold;">
+                        ${m.our} - ${m.oppScore} 
+                    </div>
+                </div>`;
         });
     }
 
-    function changeStat(index, type, val) {
-        stats[index][type] += val;
-        if(stats[index][type] < 0) stats[index][type] = 0;
-        localStorage.setItem('bb_stats', JSON.stringify(stats));
-        renderPlayers();
+    function upd(idx, key, val) {
+        stats[idx][key] += val;
+        if(stats[idx][key] < 0) stats[idx][key] = 0;
+        document.getElementById(`${key}-${idx}`).innerText = stats[idx][key];
     }
 
-    function renderAttendance() {
-        const div = document.getElementById('attList');
-        div.innerHTML = '';
-        playersData.forEach((p, index) => {
-            div.innerHTML += `
-                <div class="att-row">
-                    <span>${p.name}</span>
-                    <div class="att-btns">
-                        <button class="${attendance[index] === 'geliyor' ? 'active active-geliyor' : ''}" onclick="setAtt(${index}, 'geliyor')">Geliyor</button>
-                        <button class="${attendance[index] === 'yok' ? 'active active-yok' : ''}" onclick="setAtt(${index}, 'yok')">Yok</button>
-                        <button class="${attendance[index] === 'belki' ? 'active active-belki' : ''}" onclick="setAtt(${index}, 'belki')">Belki</button>
-                    </div>
-                </div>
-            `;
-        });
+    function addMatch() {
+        const opp = document.getElementById('oppName').value;
+        const our = parseInt(document.getElementById('ourScore').value);
+        const oppS = parseInt(document.getElementById('oppScore').value);
+
+        if(!opp || isNaN(our) || isNaN(oppS)) return alert("Tüm alanları doldur!");
+
+        const newMatch = {
+            opp: opp,
+            our: our,
+            oppScore: oppS,
+            date: new Date().toLocaleDateString('tr-TR')
+        };
+
+        matches.push(newMatch);
+        render();
+        alert("Maç eklendi, kaydetmeyi unutma!");
     }
 
-    function setAtt(index, status) {
-        attendance[index] = status;
-        localStorage.setItem('bb_att', JSON.stringify(attendance));
-        renderAttendance();
+    function persistData() {
+        localStorage.setItem('bb_stats_v4', JSON.stringify(stats));
+        localStorage.setItem('bb_matches_v4', JSON.stringify(matches));
+        alert("Kaptan, tüm veriler hafızaya kazındı!");
     }
 
-    // İlk Çalıştırma
-    renderPlayers();
-    renderAttendance();
+    render();
 </script>
-
 </body>
 </html>
