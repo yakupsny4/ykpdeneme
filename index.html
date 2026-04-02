@@ -3,102 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BAD BOYS FC</title>
+<title>BAD BOYS FC PRO</title>
 
 <style>
 body{
 margin:0;
-background:#0a0a0a;
-color:white;
 font-family:Arial;
+background:#080808;
+color:white;
 }
 
-/* GİRİŞ */
+/* INTRO */
 #intro{
 position:fixed;
 width:100%;
 height:100%;
 background:black;
 display:flex;
-align-items:center;
+flex-direction:column;
 justify-content:center;
+align-items:center;
 z-index:999;
-animation:fadeOut 3s forwards;
-animation-delay:2s;
-}
-#intro img{
-width:200px;
-animation:zoom 2s;
 }
 
-@keyframes zoom{
-0%{transform:scale(0)}
+/* duman efekti */
+.glow{
+position:absolute;
+width:250px;
+height:250px;
+background:radial-gradient(circle, rgba(255,100,0,0.6), transparent);
+filter:blur(40px);
+animation:pulse 3s infinite;
+}
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.3)}
 100%{transform:scale(1)}
 }
-@keyframes fadeOut{
-to{opacity:0;visibility:hidden}
+
+#intro img{
+width:180px;
+z-index:2;
+}
+
+#startBtn{
+margin-top:20px;
+padding:10px 20px;
+background:#ff6a00;
+border:none;
+border-radius:8px;
+font-size:16px;
+color:white;
+box-shadow:0 0 15px #ff6a00;
 }
 
 /* HEADER */
 header{
 text-align:center;
-padding:20px;
-font-size:28px;
+padding:15px;
 background:linear-gradient(90deg,#ff6a00,#000);
-}
-
-/* CARD */
-.card{
-background:#111;
-border:2px solid #ff6a00;
-border-radius:12px;
-padding:12px;
-margin:10px;
-width:260px;
-display:inline-block;
-transition:0.3s;
-}
-.card:hover{
+font-size:24px;
 box-shadow:0 0 15px #ff6a00;
 }
 
-button{
-background:#ff6a00;
+/* NAV */
+nav{
+display:flex;
+background:#111;
+}
+nav button{
+flex:1;
+background:none;
 border:none;
-padding:5px 10px;
-margin:2px;
-border-radius:5px;
-cursor:pointer;
-color:white;
+color:#ff6a00;
+padding:10px;
+font-size:15px;
 }
 
-input{
-width:40px;
+/* PAGE */
+.page{display:none;padding:10px;}
+.active{display:block;}
+
+/* CARD */
+.card{
+background:linear-gradient(145deg,#141414,#1f1f1f);
+border:1px solid #ff6a00;
+border-radius:14px;
+padding:12px;
+margin:10px;
+box-shadow:0 0 12px rgba(255,106,0,0.4);
+transition:0.3s;
+}
+.card:hover{
+transform:scale(1.03);
+box-shadow:0 0 25px #ff6a00;
+}
+
+.card h3{
+color:#ff6a00;
+margin:0;
+}
+
+.desc{
+font-size:13px;
+opacity:0.8;
+margin:5px 0;
 }
 
 /* FIELD */
 .field{
 width:100%;
 height:420px;
-background:#111;
-border:3px solid #ff6a00;
+background:#0f0f0f;
+border:2px solid #ff6a00;
 position:relative;
-margin-top:20px;
 }
 
-/* saha çizgileri */
-.line{
-position:absolute;
-background:white;
-}
-
+/* saha detay */
 .center-line{
+position:absolute;
 width:100%;
 height:2px;
+background:white;
 top:50%;
 }
-
-.center-circle{
+.circle{
+position:absolute;
 width:120px;
 height:120px;
 border:2px solid white;
@@ -106,10 +136,19 @@ border-radius:50%;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-position:absolute;
 }
+.goal{
+position:absolute;
+width:60px;
+height:120px;
+border:2px solid white;
+top:50%;
+transform:translateY(-50%);
+}
+.goal.left{left:0;}
+.goal.right{right:0;}
 
-/* oyuncu */
+/* PLAYER */
 .player{
 position:absolute;
 background:#ff6a00;
@@ -120,185 +159,124 @@ font-size:12px;
 touch-action:none;
 }
 
-/* açıklama */
-.desc{
-font-size:12px;
-opacity:0.7;
-margin-top:5px;
+/* MODAL */
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+display:none;
+justify-content:center;
+align-items:center;
+}
+.modal-content{
+background:#111;
+padding:20px;
+border-radius:10px;
+border:1px solid #ff6a00;
 }
 </style>
 </head>
 
 <body>
 
-<!-- GİRİŞ -->
+<!-- INTRO -->
 <div id="intro">
+<div class="glow"></div>
 <img src="badboysfc.jpg">
+<button id="startBtn" onclick="startSite()">Kadronu Gör</button>
 </div>
 
 <header>🔥 BAD BOYS FC 🔥</header>
 
-<div style="text-align:center;">
-<button onclick="login()">Kaptan Girişi</button>
+<nav>
+<button onclick="showPage('home')">Ana Sayfa</button>
+<button onclick="showPage('tactic')">Taktik</button>
+<button onclick="showPage('matches')">Maçlar</button>
+</nav>
+
+<div id="home" class="page active"></div>
+
+<div id="tactic" class="page">
+<div class="field" id="field">
+<div class="center-line"></div>
+<div class="circle"></div>
+<div class="goal left"></div>
+<div class="goal right"></div>
+</div>
 </div>
 
-<h2 style="text-align:center;">🏆 MVP: <span id="mvp"></span></h2>
+<div id="matches" class="page"></div>
 
-<div id="players"></div>
-
-<h2 style="text-align:center;">⚽ TAKTİK SAHASI</h2>
-<div class="field" id="field">
-<div class="line center-line"></div>
-<div class="center-circle"></div>
+<div class="modal" id="modal">
+<div class="modal-content" id="modalContent"></div>
 </div>
 
 <script>
-let isAdmin=false;
+function startSite(){
+document.getElementById("intro").style.display="none";
+}
 
-let data=JSON.parse(localStorage.getItem("teamData")) || {
+let data=JSON.parse(localStorage.getItem("teamData"))||{
 players:[
-{name:"Hüseyincan",desc:"Kalesinde güven veren bir panter",pos:"Kaleci",gol:0,asist:0,yenilen:0,no:1},
-{name:"Süleyman",desc:"Stoperin vazgeçilmez adamı",pos:"Defans",gol:0,asist:0,yenilen:0,no:2},
-{name:"Mehmet",desc:"Takımın sert adamı",pos:"Defans",gol:0,asist:0,yenilen:0,no:3},
-{name:"Yakup",desc:"Her bölgeye yetişen koca yürekli kaptan",pos:"Kaptan",gol:0,asist:0,yenilen:0,no:4},
-{name:"Erol",desc:"Her bölgeden şut atabilir ansızın",pos:"Orta Saha",gol:0,asist:0,yenilen:0,no:5},
-{name:"Murat",desc:"Çalım ve akrobatik hareketleri sever",pos:"Forvet",gol:0,asist:0,yenilen:0,no:6},
-{name:"Eren",desc:"Eşi maçı izlemeye geldiyse o maç bitmiştir",pos:"Forvet",gol:0,asist:0,yenilen:0,no:7},
-{name:"Musa",desc:"Kıvrak bilekleri ile dosta korku düşmana güven verir",pos:"Forvet",gol:0,asist:0,yenilen:0,no:8}
-],
-positions:{}
+{name:"Hüseyincan",desc:"Kalesinde güven veren bir panter",gol:0,asist:0,no:1},
+{name:"Süleyman",desc:"Stoperin vazgeçilmez adamı",gol:0,asist:0,no:2},
+{name:"Mehmet",desc:"Takımın sert adamı",gol:0,asist:0,no:3},
+{name:"Yakup",desc:"Her bölgeye yetişen koca yürekli kaptan",gol:0,asist:0,no:4},
+{name:"Erol",desc:"Her bölgeden şut atabilir ansızın",gol:0,asist:0,no:5},
+{name:"Murat",desc:"Çalım ve akrobatik hareketleri sever",gol:0,asist:0,no:6},
+{name:"Eren",desc:"Eşi maçı izlemeye geldiyse o maç bitmiştir",gol:0,asist:0,no:7},
+{name:"Musa",desc:"Kıvrak bilekleri ile dosta korku düşmana güven verir",gol:0,asist:0,no:8}
+]
 };
 
-function save(){
-localStorage.setItem("teamData",JSON.stringify(data));
+function showPage(p){
+document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+document.getElementById(p).classList.add("active");
 }
 
-function login(){
-let pass=prompt("Şifre:");
-if(pass==="1234"){
-isAdmin=true;
-alert("Giriş başarılı");
-render();
-}
-}
-
-/* MVP */
-function getMVP(){
-let best=null;
-let score=-1;
-data.players.forEach(p=>{
-let s=p.gol*2+p.asist;
-if(s>score){score=s;best=p.name;}
-});
-return best;
-}
-
-/* PLAYER */
-function render(){
+function renderHome(){
 let html="";
 data.players.forEach((p,i)=>{
+let rating=p.gol*2+p.asist;
+
 html+=`
-<div class="card">
+<div class="card" onclick="openPlayer(${i})">
 <h3>${p.name}</h3>
-<p>${p.pos}</p>
 <p class="desc">${p.desc}</p>
-
-<p>⚽ ${p.gol}
-<button onclick="update(${i},'gol',1)">+</button>
-<button onclick="update(${i},'gol',-1)">-</button>
-</p>
-
-<p>🎯 ${p.asist}
-<button onclick="update(${i},'asist',1)">+</button>
-<button onclick="update(${i},'asist',-1)">-</button>
-</p>
-
-<p>🥅 ${p.yenilen}
-<button onclick="update(${i},'yenilen',1)">+</button>
-<button onclick="update(${i},'yenilen',-1)">-</button>
-</p>
-
-<p>No:
-<input value="${p.no}" onchange="setNo(${i},this.value)">
-</p>
-
-<p>💪100 | ❤️100 | ✔100</p>
+<p>⭐ Reyting: ${rating}</p>
 </div>
 `;
 });
-
-document.getElementById("players").innerHTML=html;
-document.getElementById("mvp").innerText=getMVP();
-renderField();
+document.getElementById("home").innerHTML=html;
 }
 
-/* UPDATE */
-function update(i,type,val){
-if(!isAdmin) return alert("Yetki yok!");
-data.players[i][type]+=val;
-if(data.players[i][type]<0) data.players[i][type]=0;
-save();
-render();
+function openPlayer(i){
+let p=data.players[i];
+
+document.getElementById("modalContent").innerHTML=`
+<h2>${p.name}</h2>
+<p>${p.desc}</p>
+<p>⚽ ${p.gol}</p>
+<p>🎯 ${p.asist}</p>
+<button onclick="update(${i},'gol',1)">Gol +</button>
+<button onclick="update(${i},'asist',1)">Asist +</button>
+`;
+
+document.getElementById("modal").style.display="flex";
 }
 
-/* NUMARA */
-function setNo(i,val){
-if(!isAdmin) return;
-data.players[i].no=val;
-save();
+document.getElementById("modal").onclick=()=>modal.style.display="none";
+
+function update(i,t,v){
+data.players[i][t]+=v;
+localStorage.setItem("teamData",JSON.stringify(data));
+renderHome();
 }
 
-/* SAHA (MOBİL DRAG) */
-function renderField(){
-let field=document.getElementById("field");
-field.querySelectorAll(".player").forEach(e=>e.remove());
-
-data.players.forEach((p,i)=>{
-let div=document.createElement("div");
-div.className="player";
-div.innerText=p.no+" "+p.name;
-
-let pos=data.positions[i] || {x:20+i*30,y:20};
-
-div.style.left=pos.x+"px";
-div.style.top=pos.y+"px";
-
-/* TOUCH + MOUSE */
-let move = (x,y)=>{
-div.style.left=x+"px";
-div.style.top=y+"px";
-};
-
-div.onpointerdown=function(e){
-if(!isAdmin) return;
-
-let shiftX=e.offsetX;
-let shiftY=e.offsetY;
-
-function onMove(ev){
-move(ev.pageX-shiftX,ev.pageY-shiftY);
-}
-
-document.addEventListener("pointermove",onMove);
-
-document.onpointerup=function(){
-document.removeEventListener("pointermove",onMove);
-
-data.positions[i]={
-x:parseInt(div.style.left),
-y:parseInt(div.style.top)
-};
-
-save();
-document.onpointerup=null;
-};
-};
-
-field.appendChild(div);
-});
-}
-
-render();
+renderHome();
 </script>
 
 </body>
