@@ -13,12 +13,105 @@ body { background:#000; color:white; font-family:Arial; }
 .card { background:#0a0a0a; border:1px solid #222; border-radius:15px; padding:15px; }
 .stat-bar { height:4px; background:#222; border-radius:3px; }
 .stat-fill { height:100%; background:#ff4500; }
+
 .admin-only { display:none; }
 .admin-active .admin-only { display:flex; }
+
+/* 🔥 INTRO */
+#logoIntro {
+ position: fixed;
+ width:100%;
+ height:100%;
+ top:0;
+ left:0;
+ z-index:9999;
+ background: radial-gradient(circle at center, #1a0a00, #000);
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ overflow:hidden;
+ transition:1s;
+}
+
+.intro-bg {
+ position:absolute;
+ width:200%;
+ height:200%;
+ background: radial-gradient(circle, rgba(255,69,0,0.2), transparent);
+ animation: moveBg 6s infinite linear;
+}
+
+@keyframes moveBg {
+ 0% { transform: rotate(0deg); }
+ 100% { transform: rotate(360deg); }
+}
+
+.logo-box {
+ position:relative;
+ z-index:2;
+ text-align:center;
+ animation: fadeIn 1.5s ease;
+}
+
+.logo-img {
+ width:150px;
+ margin-bottom:20px;
+ filter: drop-shadow(0 0 20px rgba(255,69,0,0.8));
+ animation: logoPulse 2s infinite;
+}
+
+@keyframes logoPulse {
+ 0% { transform: scale(1); }
+ 50% { transform: scale(1.08); }
+ 100% { transform: scale(1); }
+}
+
+.logo-text {
+ font-size:36px;
+ color:#ff4500;
+ font-weight:900;
+}
+
+.logo-sub {
+ font-size:11px;
+ letter-spacing:3px;
+ margin:10px 0 20px;
+}
+
+.enter-btn {
+ padding:12px 35px;
+ background:#ff4500;
+ color:black;
+ border:none;
+ border-radius:30px;
+ font-weight:bold;
+ cursor:pointer;
+ box-shadow:0 0 15px rgba(255,69,0,0.7);
+}
+
+@keyframes fadeIn {
+ from { opacity:0; transform: translateY(20px); }
+ to { opacity:1; transform: translateY(0); }
+}
 </style>
 </head>
 
 <body>
+
+<!-- 🔥 LOGO INTRO -->
+<div id="logoIntro">
+  <div class="intro-bg"></div>
+
+  <div class="logo-box">
+    <img src="badboysfc.jpg" class="logo-img">
+    <h1 class="logo-text">BAD BOYS FC</h1>
+    <p class="logo-sub">SAHADA TER • SİTEDE GURUR</p>
+
+    <button onclick="enterSite()" class="enter-btn">
+      SAHAYA GİR
+    </button>
+  </div>
+</div>
 
 <h1 class="text-center text-3xl orange mt-4">BAD BOYS FC 🔥</h1>
 
@@ -37,6 +130,16 @@ function checkAdmin(){
    isAdmin = true;
    render();
  }
+}
+
+/* 🔥 INTRO JS */
+function enterSite(){
+ let intro = document.getElementById("logoIntro");
+ intro.style.opacity = "0";
+ intro.style.transform = "scale(1.2)";
+ setTimeout(()=>{
+   intro.style.display = "none";
+ },800);
 }
 
 const initialPlayers = [
@@ -121,7 +224,6 @@ function render(){
  `;
  });
 
- // en iyi oyuncu
  area.innerHTML = `<div class="text-center mb-4 text-orange-500 font-bold">🔥 Haftanın En İyisi: ${best.name}</div>` + area.innerHTML;
 }
 
