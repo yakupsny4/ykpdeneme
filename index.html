@@ -7,36 +7,46 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* GENEL */
-body { font-family:'Poppins',sans-serif; background:#000; color:white; overflow-x:hidden; margin:0; padding:0;}
+body { font-family:'Poppins',sans-serif; background:#000; color:white; overflow-x:hidden; margin:0; padding:0; }
 .orange { color:#ff4500; }
-.blue { color:#1e3a8a; }
 
-/* LOGO INTRO */
-#intro {position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;z-index:9999;flex-direction:column;}
-#intro h1 {font-family:'Orbitron',sans-serif; font-size:4rem; color:#ff4500; animation:flash 1s ease-in-out infinite alternate;}
-@keyframes flash {0%{opacity:0.2;}100%{opacity:1; transform: scale(1.1);}}
+/* Kart ve istatistik */
+.card { background:#0a0a0a; border:1px solid #222; border-radius:15px; padding:15px; transition: all 0.3s; }
+.card:hover { border-color:#ff4500; transform: translateY(-2px); }
+.stat-bar { height:4px; background:#222; border-radius:3px; overflow:hidden; }
+.stat-fill { height:100%; background:#ff4500; transition: width 0.3s ease-out; }
+.kaptan { background:#ff4500; color:#000; padding:0 5px; border-radius:5px; font-size:10px; font-weight:bold; }
 
-#players .card{background:#0a0a0a; border:1px solid #222; border-radius:15px; padding:15px;}
-.stat-bar { height:4px; background:#222; border-radius:3px; }
-.stat-fill { height:100%; background:#ff4500; }
+/* Admin */
 .admin-only { display:none; }
 .admin-active .admin-only { display:flex; }
-.kaptan { background:#ff4500; color:#000; padding:0 5px; border-radius:5px; font-size:10px; font-weight:bold; }
-.tactic-field { width:100%;height:400px;background:#111;border:2px solid #ff4500;position:relative;margin-top:15px;border-radius:10px; }
-.field-line { position:absolute;background:#ff4500; }
-#tactics .tactic-player { position:absolute;background:#222;border-radius:10px;padding:5px;text-align:center;cursor:default;user-select:none; color:#fff; }
-#tactics .tactic-player.dragging { opacity:0.6; border:2px dashed #ff4500; }
 
+/* Intro */
+#intro {position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;}
+#intro h1 {font-family:'Orbitron',sans-serif; font-size:4rem; color:#ff4500; animation:flash 1s ease-in-out infinite alternate;text-align:center;}
+#intro button {margin-top:20px; padding:15px 50px; background:#ff4500; color:black; border-radius:50px; font-weight:900; letter-spacing:2px; cursor:pointer;}
+@keyframes flash {0%{opacity:0.2;}100%{opacity:1; transform: scale(1.1);}}
+
+/* Ana içerik */
+#main-content {opacity:0; transform:translateY(30px); transition:1s ease-out; visibility:hidden;}
+.show-content {opacity:1 !important; transform:translateY(0) !important; visibility:visible !important;}
+
+/* Taktik sahası */
+.tactic-field { width:100%; height:400px; background:#111; border:2px solid #ff4500; border-radius:10px; position:relative; margin-top:20px; }
+.field-line { position:absolute; background:#ff4500; }
+.tactic-player { position:absolute; background:#222; color:#fff; border-radius:10px; padding:5px; text-align:center; cursor:default; user-select:none; }
+.tactic-player.dragging { opacity:0.6; border:2px dashed #ff4500; }
 </style>
 </head>
-<body class="p-4">
+<body>
 
-<!-- LOGO INTRO -->
+<!-- Intro -->
 <div id="intro">
-<h1>BAD BOYS FC</h1>
-<p class="text-gray-400 mt-2">🔥 Takım Yönetimi</p>
+  <h1>BAD BOYS FC</h1>
+  <button onclick="enterField()">Sahaya Çık</button>
 </div>
+
+<div id="main-content" class="container mx-auto max-w-4xl p-4">
 
 <h1 class="text-center text-4xl orange font-orbitron mb-4">BAD BOYS FC 🔥</h1>
 <p class="text-center text-xs text-gray-400 mb-4">Saha ve Kadro Yönetimi</p>
@@ -48,13 +58,8 @@ body { font-family:'Poppins',sans-serif; background:#000; color:white; overflow-
 <div id="players" class="space-y-4 mb-10"></div>
 
 <h2 class="text-xl orange font-bold mb-2">Taktik Sahası (Sadece Admin Oynayabilir)</h2>
-<div class="tactic-field" id="tactics">
-  <!-- Çizgiler -->
-  <div class="field-line" style="top:0;left:0;width:100%;height:2px;"></div> <!-- üst çizgi -->
-  <div class="field-line" style="bottom:0;left:0;width:100%;height:2px;"></div> <!-- alt çizgi -->
-  <div class="field-line" style="top:50%;left:0;width:100%;height:2px;transform:translateY(-50%);"></div> <!-- ortasaha çizgisi -->
-  <div class="field-line" style="top:0;left:0;width:2px;height:100%;"></div> <!-- sol çizgi -->
-  <div class="field-line" style="top:0;right:0;width:2px;height:100%;"></div> <!-- sağ çizgi -->
+<div class="tactic-field" id="tactics"></div>
+
 </div>
 
 <script>
@@ -74,121 +79,121 @@ const initialPlayers=[
 
 let players=JSON.parse(localStorage.getItem("players"))||initialPlayers;
 
+function enterField(){
+  document.getElementById('intro').style.display='none';
+  const main=document.getElementById('main-content');
+  main.classList.add('show-content');
+  render();
+}
+
 function checkAdmin(){
- if(prompt("Şifre:")===adminPassword){
-   isAdmin=true;
-   document.body.classList.add("admin-active");
-   render();
- }
+  if(prompt("Şifre:")===adminPassword){
+    isAdmin=true;
+    document.body.classList.add("admin-active");
+    render();
+  }
 }
 
 function save(){ localStorage.setItem("players",JSON.stringify(players)); }
 
 function updateStat(id,field,amount){
- if(!isAdmin) return;
- let p=players.find(x=>x.id===id);
- p[field]+=amount;
- if(p[field]<0) p[field]=0;
- save();
- render();
+  if(!isAdmin) return;
+  let p=players.find(x=>x.id===id);
+  p[field]+=amount;
+  if(p[field]<0) p[field]=0;
+  save();
+  render();
+}
+
+function changePhoto(id){
+  if(!isAdmin) return;
+  let url=prompt("Fotoğraf linki:");
+  if(url){
+    let p=players.find(x=>x.id===id);
+    p.photo=url;
+    save();
+    render();
+  }
 }
 
 function render(){
-const container=document.getElementById("players");
-container.innerHTML="";
-
-players.forEach(p=>{
-container.innerHTML+=`
-<div class="card">
-  <div class="flex gap-3 items-center mb-2">
-    <img src="${p.photo}" class="w-16 h-16 rounded-xl object-cover">
-    <div class="flex-1">
-      <div class="font-bold text-sm">${p.name} ${p.isCaptain?'<span class="kaptan">(C)</span>':''}</div>
-      <div class="text-xs text-gray-400">${p.role}</div>
-      <div class="text-[10px] mt-1 italic text-orange">${p.note}</div>
+  const container=document.getElementById("players");
+  container.innerHTML="";
+  players.forEach(p=>{
+    container.innerHTML+=`
+    <div class="card">
+      <div class="flex gap-3 items-center mb-2">
+        <img src="${p.photo}" class="w-16 h-16 rounded-xl object-cover">
+        <div class="flex-1">
+          <div class="font-bold text-sm">${p.name} ${p.isCaptain?'<span class="kaptan">(C)</span>':''}</div>
+          <div class="text-xs text-gray-400">${p.role}</div>
+          <div class="text-[10px] mt-1 italic text-orange">${p.note}</div>
+        </div>
+        <button class="admin-only" onclick="changePhoto(${p.id})">📸</button>
+      </div>
+      <div class="grid grid-cols-3 gap-2 mb-2">
+        <div><div class="text-[9px]">KND</div><div class="stat-bar"><div class="stat-fill" style="width:${p.stats.kondisyon}%"></div></div></div>
+        <div><div class="text-[9px]">VEFA</div><div class="stat-bar"><div class="stat-fill" style="width:${p.stats.vefa}%"></div></div></div>
+        <div><div class="text-[9px]">SRT</div><div class="stat-bar"><div class="stat-fill" style="width:${p.stats.sertlik}%"></div></div></div>
+      </div>
+      <div class="flex gap-2 text-sm items-center">
+        ⚽ ${p.goals} <div class="admin-only"><button onclick="updateStat(${p.id},'goals',1)">+</button><button onclick="updateStat(${p.id},'goals',-1)">-</button></div>
+        🎯 ${p.assists} <div class="admin-only"><button onclick="updateStat(${p.id},'assists',1)">+</button><button onclick="updateStat(${p.id},'assists',-1)">-</button></div>
+        🥅 ${p.conceded} <div class="admin-only"><button onclick="updateStat(${p.id},'conceded',1)">+</button><button onclick="updateStat(${p.id},'conceded',-1)">-</button></div>
+      </div>
     </div>
-    <button class="admin-only" onclick="changePhoto(${p.id})">📸</button>
-  </div>
-
-  <div class="grid grid-cols-3 gap-2 mb-2">
-    <div><div class="text-[9px]">KND</div><div class="stat-bar"><div class="stat-fill" style="width:${p.stats.kondisyon}%"></div></div></div>
-    <div><div class="text-[9px]">VEFA</div><div class="stat-bar"><div class="stat-fill" style="width:${p.stats.vefa}%"></div></div></div>
-    <div><div class="text-[9px]">SRT</div><div class="stat-bar"><div class="stat-fill" style="width:${p.stats.sertlik}%"></div></div></div>
-  </div>
-
-  <div class="flex gap-2 text-sm items-center">
-    ⚽ ${p.goals} <div class="admin-only"><button onclick="updateStat(${p.id},'goals',1)">+</button><button onclick="updateStat(${p.id},'goals',-1)">-</button></div>
-    🎯 ${p.assists} <div class="admin-only"><button onclick="updateStat(${p.id},'assists',1)">+</button><button onclick="updateStat(${p.id},'assists',-1)">-</button></div>
-    🥅 ${p.conceded} <div class="admin-only"><button onclick="updateStat(${p.id},'conceded',1)">+</button><button onclick="updateStat(${p.id},'conceded',-1)">-</button></div>
-  </div>
-</div>
-`;});
-
-renderTactics();
-}
-
-// Foto değiştirme
-function changePhoto(id){
- let url=prompt("Fotoğraf linki:");
- if(url){
-  let p=players.find(x=>x.id===id);
-  p.photo=url;
-  save();
-  render();
- }
-}
-
-// Taktik sahası
-function renderTactics(){
- const field=document.getElementById("tactics");
- field.innerHTML=""; // alanı temizle
- // alan çizgilerini tekrar ekle
- const lines=[
-   {top:0,left:0,width:'100%',height:'2px'},
-   {bottom:0,left:0,width:'100%',height:'2px'},
-   {top:'50%',left:0,width:'100%',height:'2px',transform:'translateY(-50%)'},
-   {top:0,left:0,width:'2px',height:'100%'},
-   {top:0,right:0,width:'2px',height:'100%'}
- ];
-   lines.forEach(l=>{
-     const div=document.createElement('div');
-     div.className='field-line';
-     Object.assign(div.style,l);
-     field.appendChild(div);
-   });
- players.forEach((p,i)=>{
-  const div=document.createElement("div");
-  div.className="tactic-player";
-  div.style.top=(50+i*30)+'px';
-  div.style.left=(50+i*50)+'px';
-  div.innerText=p.name.split(' ')[0];
-  div.setAttribute("draggable",isAdmin);
-  div.addEventListener("dragstart",(e)=>{ if(isAdmin){div.classList.add("dragging"); e.dataTransfer.setData('text/plain',p.id); }});
-  div.addEventListener("dragend",(e)=>{ div.classList.remove("dragging");});
-  div.addEventListener("dragover",(e)=>{ e.preventDefault();});
-  div.addEventListener("drop",(e)=>{
-   if(!isAdmin) return;
-   e.preventDefault();
-   const draggedId=parseInt(e.dataTransfer.getData('text/plain'));
-   const targetId=p.id;
-   if(draggedId!==targetId){
-    const idx1=players.findIndex(x=>x.id===draggedId);
-    const idx2=players.findIndex(x=>x.id===targetId);
-    [players[idx1],players[idx2]]=[players[idx2],players[idx1]];
-    save();
-    render();
-   }
+    `;
   });
-  field.appendChild(div);
- });
+  renderTactics();
 }
 
-// Intro animasyonu gizle
-window.addEventListener('load',()=>{
- setTimeout(()=>{ document.getElementById('intro').style.display='none'; },2000);
-});
+function renderTactics(){
+  const field=document.getElementById("tactics");
+  field.innerHTML="";
+  const lines=[
+    {top:0,left:0,width:'100%',height:'2px'},
+    {bottom:0,left:0,width:'100%',height:'2px'},
+    {top:'50%',left:0,width:'100%',height:'2px',transform:'translateY(-50%)'},
+    {top:0,left:0,width:'2px',height:'100%'},
+    {top:0,right:0,width:'2px',height:'100%'}
+  ];
+  lines.forEach(l=>{
+    const div=document.createElement('div');
+    div.className='field-line';
+    Object.assign(div.style,l);
+    field.appendChild(div);
+  });
 
-render();
+  players.forEach((p,i)=>{
+    const div=document.createElement('div');
+    div.className='tactic-player';
+    div.style.top=(50+i*40)+'px';
+    div.style.left=(50+i*80)+'px';
+    div.innerText=p.name.split(' ')[0];
+    if(isAdmin){
+      div.setAttribute("draggable",true);
+      div.addEventListener("dragstart",(e)=>{ div.classList.add("dragging"); e.dataTransfer.setData('text/plain',p.id); });
+      div.addEventListener("dragend",(e)=>{ div.classList.remove("dragging"); });
+      div.addEventListener("dragover",(e)=>{ e.preventDefault(); });
+      div.addEventListener("drop",(e)=>{
+        e.preventDefault();
+        const draggedId=parseInt(e.dataTransfer.getData('text/plain'));
+        if(draggedId!==p.id){
+          const idx1=players.findIndex(x=>x.id===draggedId);
+          const idx2=players.findIndex(x=>x.id===p.id);
+          [players[idx1],players[idx2]]=[players[idx2],players[idx1]];
+          save(); render();
+        }
+      });
+    }
+    field.appendChild(div);
+  });
+}
+
+// Sayfa yüklendiğinde intro sonrası otomatik aç
+window.addEventListener('load',()=>{
+  setTimeout(()=>{ document.getElementById('intro').style.display='none'; enterField(); },2000);
+});
 </script>
 
 </body>
