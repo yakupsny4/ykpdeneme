@@ -3,183 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BAD BOYS FC PRO ULTRA</title>
-
+<title>BAD BOYS FC</title>
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#050505;
-color:white;
-overflow:hidden;
-}
-
+body { margin:0; font-family:Arial; background:#050505; color:white; overflow-x:hidden;}
 /* INTRO */
-#intro{
-position:fixed;
-width:100%;
-height:100%;
-background:black;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:999;
-will-change:transform, opacity;
-}
-
-/* SMOOTH GLOW */
-.glow{
-position:absolute;
-width:320px;
-height:320px;
-background:radial-gradient(circle, rgba(255,120,0,0.8), transparent);
-filter:blur(60px);
-animation:pulse 3s ease-in-out infinite;
-}
-
-@keyframes pulse{
-0%{transform:scale(1);}
-50%{transform:scale(1.5);}
-100%{transform:scale(1);}
-}
-
-#intro img{
-width:180px;
-z-index:2;
-transform:translateZ(0);
-}
-
-/* BUTTON */
-#startBtn{
-margin-top:25px;
-padding:14px 28px;
-background:#ff6a00;
-border:none;
-border-radius:12px;
-font-size:18px;
-color:white;
-box-shadow:0 0 25px #ff6a00;
-cursor:pointer;
-transition:transform 0.2s;
-}
-#startBtn:active{
-transform:scale(0.92);
-}
-
-/* ULTRA SMOOTH EXIT */
-.zoomOut{
-animation:zoomOut 0.7s cubic-bezier(.22,.9,.3,1) forwards;
-}
-@keyframes zoomOut{
-0%{transform:scale(1);opacity:1;}
-100%{transform:scale(1.4);opacity:0;}
-}
+#intro{position:fixed;width:100%;height:100%;background:black;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:999;}
+.glow{position:absolute;width:320px;height:320px;background:radial-gradient(circle, rgba(255,120,0,0.8), transparent);filter:blur(60px);animation:pulse 3s ease-in-out infinite;}
+@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.5);}100%{transform:scale(1);}}
+#intro img{width:180px;z-index:2;}
+#startBtn{margin-top:25px;padding:14px 28px;background:#ff6a00;border:none;border-radius:12px;font-size:18px;color:white;box-shadow:0 0 25px #ff6a00;cursor:pointer;transition:transform 0.2s;}
+#startBtn:active{transform:scale(0.92);}
+.zoomOut{animation:zoomOut 0.7s cubic-bezier(.22,.9,.3,1) forwards;}
+@keyframes zoomOut{0%{transform:scale(1);opacity:1;}100%{transform:scale(1.4);opacity:0;}}
 
 /* HEADER */
-header{
-text-align:center;
-padding:15px;
-background:linear-gradient(90deg,#ff6a00,#000);
-box-shadow:0 0 25px #ff6a00;
-}
+header{text-align:center;padding:15px;background:linear-gradient(90deg,#ff6a00,#000);box-shadow:0 0 25px #ff6a00;}
 
 /* NAV */
-nav{
-display:flex;
-background:#111;
-}
-nav button{
-flex:1;
-background:none;
-border:none;
-color:#ff6a00;
-padding:12px;
-cursor:pointer;
-}
+nav{display:flex;background:#111;}
+nav button{flex:1;background:none;border:none;color:#ff6a00;padding:12px;cursor:pointer;}
 
 /* PAGE */
 .page{display:none;padding:10px;}
 .active{display:block;}
 
 /* CARD */
-.card{
-background:linear-gradient(145deg,#141414,#222);
-border:1px solid #ff6a00;
-border-radius:14px;
-padding:12px;
-margin:10px;
-box-shadow:0 0 20px rgba(255,106,0,0.4);
-transition:all 0.25s ease;
-}
-.card:hover{
-transform:translateY(-5px) scale(1.02);
-box-shadow:0 0 35px #ff6a00;
-}
-
+.card{background:linear-gradient(145deg,#141414,#222);border:1px solid #ff6a00;border-radius:14px;padding:12px;margin:10px;box-shadow:0 0 20px rgba(255,106,0,0.4);transition:all 0.25s ease;}
+.card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 0 35px #ff6a00;}
 .card h3{color:#ff6a00;margin:0;}
-
-.desc{
-font-size:13px;
-opacity:0.85;
-margin-top:6px;
-}
+.desc{font-size:13px;opacity:0.85;margin-top:6px;}
 
 /* FIELD */
-.field{
-width:100%;
-height:420px;
-background:#0f0f0f;
-border:2px solid #ff6a00;
-position:relative;
-overflow:hidden;
-}
-
-.center-line{
-position:absolute;width:100%;height:2px;background:white;top:50%;
-}
-.circle{
-position:absolute;width:120px;height:120px;border:2px solid white;border-radius:50%;
-top:50%;left:50%;transform:translate(-50%,-50%);
-}
-.goal{
-position:absolute;width:60px;height:120px;border:2px solid white;
-top:50%;transform:translateY(-50%);
-}
+.field{width:100%;height:420px;background:#0f0f0f;border:2px solid #ff6a00;position:relative;overflow:hidden;}
+.center-line{position:absolute;width:100%;height:2px;background:white;top:50%;}
+.circle{position:absolute;width:120px;height:120px;border:2px solid white;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);}
+.goal{position:absolute;width:60px;height:120px;border:2px solid white;top:50%;transform:translateY(-50%);}
 .goal.left{left:0;}
 .goal.right{right:0;}
 
 /* PLAYER */
-.player{
-position:absolute;
-background:#ff6a00;
-color:black;
-padding:6px;
-border-radius:8px;
-font-size:12px;
-will-change:transform;
-touch-action:none;
-}
+.player{position:absolute;background:#ff6a00;color:black;padding:6px;border-radius:8px;font-size:12px;touch-action:none;}
 
 /* MODAL */
-.modal{
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,0.8);
-display:none;
-justify-content:center;
-align-items:center;
-}
-.modal-content{
-background:#111;
-padding:20px;
-border-radius:10px;
-border:1px solid #ff6a00;
-}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;}
+.modal-content{background:#111;padding:20px;border-radius:10px;border:1px solid #ff6a00;}
 </style>
 </head>
-
 <body>
 
 <!-- INTRO -->
@@ -190,14 +59,12 @@ border:1px solid #ff6a00;
 </div>
 
 <header>🔥 BAD BOYS FC 🔥</header>
-
 <nav>
 <button onclick="showPage('home')">Ana Sayfa</button>
 <button onclick="showPage('tactic')">Taktik</button>
 </nav>
 
 <div id="home" class="page active"></div>
-
 <div id="tactic" class="page">
 <div class="field" id="field">
 <div class="center-line"></div>
@@ -212,16 +79,11 @@ border:1px solid #ff6a00;
 </div>
 
 <script>
-
 /* INTRO */
 function startSite(){
 let intro=document.getElementById("intro");
 intro.classList.add("zoomOut");
-
-setTimeout(()=>{
-intro.remove();
-document.body.style.overflow="auto";
-},700);
+setTimeout(()=>{intro.remove();document.body.style.overflow="auto";},700);
 }
 
 /* DATA */
@@ -250,14 +112,11 @@ function renderHome(){
 let html="";
 data.players.forEach((p,i)=>{
 let rating=p.gol*2+p.asist;
-
-html+=`
-<div class="card" onclick="openPlayer(${i})">
+html+=`<div class="card" onclick="openPlayer(${i})">
 <h3>${p.name}</h3>
 <p class="desc">${p.desc}</p>
 <p>⭐ ${rating}</p>
-</div>
-`;
+</div>`;
 });
 document.getElementById("home").innerHTML=html;
 }
@@ -265,24 +124,19 @@ document.getElementById("home").innerHTML=html;
 /* MODAL */
 function openPlayer(i){
 let p=data.players[i];
-
-document.getElementById("modalContent").innerHTML=`
-<h2>${p.name}</h2>
+document.getElementById("modalContent").innerHTML=
+`<h2>${p.name}</h2>
 <p>${p.desc}</p>
 <p>⚽ ${p.gol}</p>
 <p>🎯 ${p.asist}</p>
 <button onclick="update(${i},'gol',1)">Gol +</button>
-<button onclick="update(${i},'asist',1)">Asist +</button>
-`;
-
+<button onclick="update(${i},'asist',1)">Asist +</button>`;
 document.getElementById("modal").style.display="flex";
 }
 
 /* MODAL FIX */
 let modalEl=document.getElementById("modal");
-modalEl.onclick=function(){
-modalEl.style.display="none";
-};
+modalEl.onclick=function(){modalEl.style.display="none";}
 
 /* UPDATE */
 function update(i,t,v){
@@ -291,50 +145,28 @@ localStorage.setItem("teamData",JSON.stringify(data));
 renderHome();
 }
 
-/* ULTRA SMOOTH DRAG */
+/* FIELD */
 function renderField(){
 let field=document.getElementById("field");
-
 data.players.forEach((p,i)=>{
 let div=document.createElement("div");
 div.className="player";
 div.innerText=p.no;
-
 let pos=data.positions[i]||{x:20+i*40,y:20};
 let x=pos.x,y=pos.y;
-
 div.style.transform=`translate(${x}px,${y}px)`;
-
 div.onpointerdown=function(e){
-let offsetX=e.offsetX;
-let offsetY=e.offsetY;
-
-function move(ev){
-x=ev.pageX-offsetX;
-y=ev.pageY-offsetY;
-div.style.transform=`translate(${x}px,${y}px)`;
-}
-
+let offsetX=e.offsetX, offsetY=e.offsetY;
+function move(ev){x=ev.pageX-offsetX; y=ev.pageY-offsetY; div.style.transform=`translate(${x}px,${y}px)`;}
 document.addEventListener("pointermove",move);
-
-document.onpointerup=function(){
-document.removeEventListener("pointermove",move);
-
-data.positions[i]={x,y};
-localStorage.setItem("teamData",JSON.stringify(data));
-
-document.onpointerup=null;
+document.onpointerup=function(){document.removeEventListener("pointermove",move);data.positions[i]={x,y};localStorage.setItem("teamData",JSON.stringify(data));document.onpointerup=null;};
 };
-};
-
 field.appendChild(div);
 });
 }
 
 renderHome();
 renderField();
-
 </script>
-
 </body>
 </html>
