@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | PRO KADRO</title>
+    <title>BAD BOYS FC | EKSİKSİZ KADRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -11,7 +11,8 @@
         .orange-text { color: #ff4500; }
         .card { background: #0a0a0a; border: 1px solid #1a1a1a; transition: all 0.3s; }
         .admin-only { display: none; }
-        .admin-active .admin-only { display: flex; }
+        .admin-active .admin-only { display: block; }
+        .admin-active .admin-flex { display: flex; }
 
         /* TURUNCU KİLİT LOGOSU */
         .admin-lock-btn {
@@ -40,13 +41,13 @@
             border: 2px solid white; transform: translateX(-50%); z-index: 10;
         }
         .stat-badge { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; background: #1a1a1a; }
-        .stat-btn { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 900; margin-left: 4px; }
+        .btn-small { font-size: 9px; font-weight: 900; padding: 4px; border-radius: 5px; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="marquee-container sticky top-0 z-50">
-        <div class="marquee-text italic">BAD BOYS FC • KAPTAN YAKUP SUNAY • LİGİN EN SERT TAKIMI • BAD BOYS FC •</div>
+        <div class="marquee-text italic">BAD BOYS FC • KAPTAN YAKUP SUNAY • YOKLAMA VE İSTATİSTİK PANELİ • BAD BOYS FC •</div>
     </div>
 
     <button onclick="checkAdmin()" class="admin-lock-btn">
@@ -56,17 +57,23 @@
     <div class="container mx-auto max-w-md p-4 pb-24">
         <header class="mb-8 mt-4 text-center">
             <h1 class="text-4xl font-black italic orange-text font-orbitron uppercase">BAD BOYS FC</h1>
-            <p class="text-zinc-500 text-[10px] font-bold tracking-[0.3em]">RESMİ OYUNCU PANELİ</p>
+            <p class="text-zinc-500 text-[10px] font-bold tracking-[0.3em]">TAM YETKİLİ KADRO PANELİ</p>
         </header>
 
+        <!-- TAKTİK SAHA -->
         <div class="pitch" id="tacticalPitch"></div>
 
-        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest">👥 OYUNCU İSTATİSTİKLERİ</h2>
+        <!-- YOKLAMA BÖLÜMÜ -->
+        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">✅ MAÇ YOKLAMASI</h2>
+        <div id="attendanceList" class="grid grid-cols-1 gap-2 mb-10"></div>
+
+        <!-- OYUNCU KARTLARI -->
+        <h2 class="text-xs font-black mb-4 text-zinc-400 uppercase tracking-widest pl-1">👥 OYUNCU VERİLERİ</h2>
         <div id="playerList" class="space-y-4"></div>
 
-        <!-- SIFIRLAMA BUTONU -->
+        <!-- SIFIRLAMA -->
         <button onclick="resetData()" class="admin-only w-full mt-10 p-4 border-2 border-red-600 text-red-600 font-black rounded-xl bg-red-900/10">
-            ⚠️ TÜM VERİLERİ VE HATALARI SIFIRLA
+            ⚠️ TÜM VERİLERİ SIFIRLA
         </button>
     </div>
 
@@ -74,18 +81,18 @@
         const adminPassword = "badboys123";
         let isAdmin = false;
 
-        const initialPlayers = [
-            { id: 1, name: "HÜSEYİNCAN YÜKSEKDAĞ", value: "10.0M €", quote: "Kalede adeta kocaman bir fil gibi.", goals: 0, assists: 0, conceded: 0, pos: { x: 50, y: 90 } },
-            { id: 2, name: "SÜLEYMAN TUNÇELİK", value: "10.0M €", quote: "Defansın bel kemiği.", goals: 0, assists: 0, conceded: 0, pos: { x: 25, y: 70 } },
-            { id: 3, name: "YAKUP SUNAY", value: "10.0M €", quote: "Her yerde olan koca yürekli kaptan.", goals: 0, assists: 0, conceded: 0, pos: { x: 75, y: 70 } },
-            { id: 4, name: "MEHMET UZUN", value: "10.0M €", quote: "Takımın sert adamı.", goals: 0, assists: 0, conceded: 0, pos: { x: 50, y: 55 } },
-            { id: 5, name: "EROL GÖNÜL", value: "10.0M €", quote: "Her yerden şut atmayı sever.", goals: 0, assists: 0, conceded: 0, pos: { x: 25, y: 35 } },
-            { id: 6, name: "MURAT ÇAYLI", value: "10.0M €", quote: "Her alanda çalım deneyebiliyor.", goals: 0, assists: 0, conceded: 0, pos: { x: 75, y: 35 } },
-            { id: 7, name: "EREN YILMAZ", value: "10.0M €", quote: "Maçı izlemeye eşi geldiyse geçmiş olsun diyoruz rakibe.", goals: 0, assists: 0, conceded: 0, pos: { x: 50, y: 20 } },
-            { id: 8, name: "MUSA AKSU", value: "10.0M €", quote: "Kıvrak bilekleri ile dosta korku düşmana güven tarzı var.", goals: 0, assists: 0, conceded: 0, pos: { x: 50, y: 5 } }
+        const defaultData = [
+            { id: 1, name: "HÜSEYİNCAN YÜKSEKDAĞ", value: "10.0M €", quote: "Kalede adeta kocaman bir fil gibi.", goals: 0, assists: 0, conceded: 0, attending: true, pos: { x: 50, y: 90 } },
+            { id: 2, name: "SÜLEYMAN TUNÇELİK", value: "10.0M €", quote: "Defansın bel kemiği.", goals: 0, assists: 0, conceded: 0, attending: true, pos: { x: 25, y: 70 } },
+            { id: 3, name: "YAKUP SUNAY", value: "10.0M €", quote: "Her yerde olan koca yürekli kaptan.", goals: 0, assists: 0, conceded: 0, attending: true, pos: { x: 75, y: 70 } },
+            { id: 4, name: "MEHMET UZUN", value: "10.0M €", quote: "Takımın sert adamı.", goals: 0, assists: 0, conceded: 0, attending: true, pos: { x: 50, y: 55 } },
+            { id: 5, name: "EROL GÖNÜL", value: "10.0M €", quote: "Her yerden şut atmayı sever.", goals: 0, assists: 0, conceded: 0, attending: true, pos: { x: 25, y: 35 } },
+            { id: 6, name: "MURAT ÇAYLI", value: "10.0M €", quote: "Her alanda çalım deneyebiliyor.", goals: 0, assists: 0, conceded: 0, attending: true, pos: { x: 75, y: 35 } },
+            { id: 7, name: "EREN YILMAZ", value: "10.0M €", quote: "Maçı izlemeye eşi geldiyse geçmiş olsun diyoruz rakibe.", goals: 0, assists: 0, conceded: 0, attending: true, pos: { x: 50, y: 20 } },
+            { id: 8, name: "MUSA AKSU", value: "10.0M €", quote: "Kıvrak bilekleri ile dosta korku düşmana güven tarzı var.", goals: 0, assists: 0, conceded: 0, attending: true, pos: { x: 50, y: 5 } }
         ];
 
-        let players = JSON.parse(localStorage.getItem('bb_data_v4')) || initialPlayers;
+        let players = JSON.parse(localStorage.getItem('bb_final_v1')) || defaultData;
 
         function checkAdmin() {
             if(prompt("Şifre:") === adminPassword) {
@@ -96,35 +103,51 @@
         }
 
         function resetData() {
-            if(confirm("Tüm istatistikler ve isimler fabrika ayarlarına dönecek. Onay?")) {
-                localStorage.removeItem('bb_data_v4');
-                players = JSON.parse(JSON.stringify(initialPlayers));
+            if(confirm("Tüm istatistikler ve yoklama sıfırlanacak! Emin misin?")) {
+                localStorage.removeItem('bb_final_v1');
+                players = JSON.parse(JSON.stringify(defaultData));
                 location.reload();
             }
         }
 
-        function updateStat(id, field, value) {
-            const player = players.find(p => p.id === id);
-            player[field] = Math.max(0, player[field] + value);
-            localStorage.setItem('bb_data_v4', JSON.stringify(players));
-            render();
+        function updateStat(id, field, val) {
+            const p = players.find(x => x.id === id);
+            p[field] = Math.max(0, p[field] + val);
+            save(); render();
         }
 
+        function updateAttendance(id, status) {
+            players.find(x => x.id === id).attending = status;
+            save(); render();
+        }
+
+        function save() { localStorage.setItem('bb_final_v1', JSON.stringify(players)); }
+
         function render() {
-            // Saha Çizimi
+            // SAHA
             const pitch = document.getElementById('tacticalPitch');
             pitch.innerHTML = '';
-            players.forEach(p => {
-                pitch.innerHTML += `<div class="player-dot" style="left:${p.pos.x}%; top:${p.pos.y}%">${p.name}</div>`;
-            });
+            players.forEach(p => { pitch.innerHTML += `<div class="player-dot" style="left:${p.pos.x}%; top:${p.pos.y}%">${p.name}</div>`; });
 
-            // Oyuncu Kartları ve Butonlar
-            const list = document.getElementById('playerList');
-            list.innerHTML = players.map(p => `
-                <div class="card p-4 rounded-2xl border-zinc-800">
-                    <div class="flex justify-between items-start mb-3">
+            // YOKLAMA LİSTESİ
+            const attList = document.getElementById('attendanceList');
+            attList.innerHTML = players.map(p => `
+                <div class="card p-3 rounded-lg flex items-center justify-between border-zinc-900">
+                    <span class="text-[10px] font-bold ${p.attending ? 'text-white' : 'text-zinc-600'} uppercase">${p.name}</span>
+                    <div class="flex gap-2">
+                        <button onclick="updateAttendance(${p.id}, true)" class="btn-small px-3 border ${p.attending ? 'bg-green-600 text-black border-green-500' : 'border-green-900 text-green-900'}">GELİYOR</button>
+                        <button onclick="updateAttendance(${p.id}, false)" class="btn-small px-3 border ${!p.attending ? 'bg-red-600 text-white border-red-500' : 'border-red-900 text-red-900'}">GELMİYOR</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // OYUNCU KARTLARI
+            const pList = document.getElementById('playerList');
+            pList.innerHTML = players.map(p => `
+                <div class="card p-4 rounded-2xl border-zinc-900">
+                    <div class="flex justify-between items-start mb-2">
                         <div>
-                            <h3 class="font-black text-xs uppercase text-white">${p.name}</h3>
+                            <h3 class="font-black text-[11px] text-white uppercase">${p.name}</h3>
                             <p class="text-[10px] text-green-500 font-black font-orbitron">${p.value}</p>
                         </div>
                         <div class="flex flex-col gap-1 text-right">
@@ -133,17 +156,21 @@
                             <span class="stat-badge text-blue-400">🎯 ASİST: ${p.assists}</span>
                         </div>
                     </div>
+                    <p class="text-[9px] text-zinc-500 italic mb-4 border-t border-zinc-900 pt-2">"${p.quote}"</p>
                     
-                    <p class="text-[9px] text-zinc-500 italic mb-4">"${p.quote}"</p>
-
-                    <div class="admin-only grid grid-cols-3 gap-2 border-t border-zinc-900 pt-3">
-                        <button onclick="updateStat(${p.id}, 'conceded', 1)" class="stat-btn bg-red-900 text-white">YEDİ +1</button>
-                        <button onclick="updateStat(${p.id}, 'goals', 1)" class="stat-btn bg-zinc-800 text-white">GOL +1</button>
-                        <button onclick="updateStat(${p.id}, 'assists', 1)" class="stat-btn bg-zinc-800 text-blue-400">ASİST +1</button>
-                        
-                        <button onclick="updateStat(${p.id}, 'conceded', -1)" class="stat-btn bg-zinc-900 text-zinc-600">SİL -1</button>
-                        <button onclick="updateStat(${p.id}, 'goals', -1)" class="stat-btn bg-zinc-900 text-zinc-600">SİL -1</button>
-                        <button onclick="updateStat(${p.id}, 'assists', -1)" class="stat-btn bg-zinc-900 text-zinc-600">SİL -1</button>
+                    <div class="admin-only grid grid-cols-3 gap-2 pt-2">
+                        <div class="flex flex-col gap-1">
+                            <button onclick="updateStat(${p.id}, 'conceded', 1)" class="btn-small bg-red-900 text-white">YEDİ +1</button>
+                            <button onclick="updateStat(${p.id}, 'conceded', -1)" class="btn-small bg-zinc-900 text-zinc-500">SİL</button>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <button onclick="updateStat(${p.id}, 'goals', 1)" class="btn-small bg-zinc-800 text-white">GOL +1</button>
+                            <button onclick="updateStat(${p.id}, 'goals', -1)" class="btn-small bg-zinc-900 text-zinc-500">SİL</button>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <button onclick="updateStat(${p.id}, 'assists', 1)" class="btn-small bg-zinc-800 text-blue-400">ASİST +1</button>
+                            <button onclick="updateStat(${p.id}, 'assists', -1)" class="btn-small bg-zinc-900 text-zinc-500">SİL</button>
+                        </div>
                     </div>
                 </div>
             `).join('');
