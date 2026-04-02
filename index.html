@@ -3,321 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | Takım Portalı</title>
+    <title>BAD BOYS FC | Official Portal</title>
     <style>
         :root {
             --neon-orange: #ff6600;
             --neon-blue: #00d4ff;
-            --dark-bg: #0a0a0a;
-            --card-bg: #1a1a1a;
-            --text-white: #ffffff;
+            --dark-bg: #0d0d0d;
+            --card-bg: #161616;
+            --text-gray: #b3b3b3;
         }
 
         body {
             background-color: var(--dark-bg);
-            color: var(--text-white);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
-            padding: 0;
-            overflow-x: hidden;
+            padding-bottom: 50px;
         }
 
-        /* --- Header & Logo --- */
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(180deg, #000 0%, var(--dark-bg) 100%);
-        }
-
-        .main-logo {
-            width: 250px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px var(--neon-orange);
-            border: 2px solid var(--neon-orange);
-        }
-
-        h1 {
-            color: var(--neon-orange);
-            text-shadow: 0 0 10px var(--neon-orange);
-            font-size: 3rem;
-            margin-top: 20px;
-        }
-
-        /* --- Admin Girişi --- */
-        .admin-lock {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--card-bg);
-            padding: 10px;
-            border: 1px solid var(--neon-orange);
-            border-radius: 8px;
+        /* --- Admin Paneli --- */
+        .admin-panel {
+            background: #1a1a1a;
+            padding: 15px;
+            border-bottom: 2px solid var(--neon-orange);
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            position: sticky;
+            top: 0;
             z-index: 1000;
         }
 
-        /* --- MVP Alanı --- */
-        .mvp-section {
-            background: radial-gradient(circle, #331a00 0%, #000 100%);
-            padding: 50px 20px;
-            text-align: center;
-            border-top: 3px solid var(--neon-orange);
-            border-bottom: 3px solid var(--neon-orange);
-            margin: 40px 0;
-        }
-
-        .mvp-card {
-            display: inline-block;
-            padding: 20px;
-            border: 4px solid var(--neon-orange);
-            box-shadow: 0 0 30px var(--neon-orange), inset 0 0 15px var(--neon-orange);
-            border-radius: 20px;
-            transform: scale(1.1);
-        }
-
-        /* --- Oyuncu Kartları --- */
-        .player-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 40px;
-        }
-
-        .player-card {
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 15px;
-            padding: 20px;
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .player-card:hover {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        .player-card h3 { color: var(--neon-orange); margin-bottom: 5px; }
-        .player-card p { font-style: italic; font-size: 0.9rem; color: #ccc; }
-
-        .stat-btns {
-            margin-top: 15px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .stat-btns button {
-            flex: 1;
-            padding: 8px 5px;
-            background: transparent;
+        input[type="password"] {
+            background: #000;
+            border: 1px solid var(--neon-orange);
             color: white;
-            border: 1px solid #555;
-            cursor: pointer;
-            font-size: 0.7rem;
+            padding: 8px;
+            border-radius: 5px;
         }
 
-        /* --- Takım Yoklaması --- */
-        .attendance-box {
-            max-width: 600px;
-            margin: 40px auto;
-            background: #111;
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 5px solid var(--neon-blue);
-        }
-
-        .player-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #222;
-        }
-
-        .btn-group button {
-            background: #222;
+        button.admin-btn {
+            background: var(--neon-orange);
             border: none;
-            color: #555;
-            padding: 8px 12px;
-            margin-left: 5px;
+            color: black;
+            font-weight: bold;
+            padding: 8px 15px;
             cursor: pointer;
             border-radius: 5px;
         }
 
-        .btn-group button.active {
-            color: #fff;
+        /* --- Logo & Header --- */
+        .header {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .main-logo {
+            width: 180px;
+            border: 3px solid var(--neon-orange);
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(255, 102, 0, 0.4);
+        }
+
+        /* --- MVP Alanı --- */
+        .mvp-wrapper {
+            margin: 20px auto;
+            max-width: 400px;
+            padding: 20px;
+            background: linear-gradient(145deg, #1a1a1a, #000);
+            border: 2px solid gold;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+
+        /* --- Oyuncu Kartları --- */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #222;
+            transition: 0.3s;
+        }
+
+        .card:hover { border-color: var(--neon-orange); }
+
+        .player-info h3 { margin: 0; color: var(--neon-orange); text-transform: uppercase; }
+        .player-info p { font-size: 0.85rem; color: var(--text-gray); margin: 5px 0; }
+
+        .stats-display {
+            display: flex;
+            justify-content: space-around;
+            background: #000;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+            border: 1px solid #333;
+        }
+
+        .stat-item span { color: var(--neon-blue); display: block; font-size: 1.2rem; }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #222;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .plus-minus-btns {
+            display: none; /* Sadece admin girişiyle açılır */
+            gap: 5px;
+        }
+
+        .btn-sm {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .btn-plus { background: #28a745; color: white; }
+        .btn-minus { background: #dc3545; color: white; }
+
+        /* --- Yoklama --- */
+        .attendance-section {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #111;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .att-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .att-btns button {
+            background: #333;
+            border: none;
+            color: #777;
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .att-btns button.active {
             opacity: 1;
+            color: white;
             box-shadow: 0 0 10px currentColor;
         }
 
-        .geliyor.active { background: #28a745; color: #fff; }
-        .gelmiyor.active { background: #dc3545; color: #fff; }
-        .belki.active { background: #ffc107; color: #000; }
-
-        /* --- Taktik Sahası --- */
-        .tactics-area {
-            text-align: center;
-            padding: 50px 20px;
-        }
-
-        #pitch {
-            width: 340px;
-            height: 500px;
-            background: #004400;
-            margin: 20px auto;
-            position: relative;
-            border: 5px solid white;
-            border-radius: 10px;
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                radial-gradient(circle at 50% 50%, transparent 40px, white 40px, white 42px, transparent 42px);
-        }
-
-        .draggable-player {
-            width: 45px;
-            height: 45px;
-            background: var(--neon-orange);
-            color: black;
-            border-radius: 50%;
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: bold;
-            cursor: move;
-            box-shadow: 0 0 10px #000;
-            touch-action: none;
-        }
+        .active-geliyor { background: #28a745 !important; }
+        .active-yok { background: #dc3545 !important; }
+        .active-belki { background: #ffc107 !important; color: black !important; }
 
     </style>
 </head>
 <body>
 
-    <div class="admin-lock">
-        <input type="password" id="adminPass" placeholder="Kaptan Şifresi">
-        <button onclick="checkAdmin()">Giriş</button>
-    </div>
+<div class="admin-panel">
+    <input type="password" id="passInput" placeholder="Kaptan Şifresi">
+    <button class="admin-btn" onclick="login()">KAPTAN GİRİŞİ</button>
+</div>
 
-    <header>
-        <img src="badboysfc.jpg" alt="BAD BOYS FC" class="main-logo">
-        <h1>BAD BOYS FC</h1>
-    </header>
+<div class="header">
+    <img src="badboysfc.jpg" alt="BAD BOYS FC" class="main-logo">
+    <h1 style="color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange);">BAD BOYS FC</h1>
+</div>
 
-    <section class="mvp-section">
-        <div class="mvp-card">
-            <h2 style="color: gold; text-shadow: 0 0 20px gold;">HAFTANIN MVP'Sİ</h2>
-            <h3 id="mvp-name">YAKUP SUNAY</h3>
-            <p>Kaptan Gemisini Kurtardı!</p>
-        </div>
-    </section>
+<div class="mvp-wrapper">
+    <h2 style="color: gold; margin: 0;">MVP</h2>
+    <h1 id="mvp-name" style="margin: 10px 0;">YAKUP SUNAY</h1>
+    <p style="color: var(--text-gray); font-style: italic;">"Her bölgeye yetişen koca bir kaptan"</p>
+</div>
 
-    <div class="player-grid" id="playerGrid">
-        <!-- Oyuncular JS ile render edilecek -->
-    </div>
+<div class="container" id="playerList"></div>
 
-    <div class="attendance-box">
-        <h2 style="color: var(--neon-blue);">TAKIM YOKLAMASI</h2>
-        <div id="attendanceList"></div>
-    </div>
+<div class="attendance-section">
+    <h2 style="color: var(--neon-blue); text-align: center;">MAÇ YOKLAMASI</h2>
+    <div id="attList"></div>
+</div>
 
-    <div class="tactics-area">
-        <h2 style="color: var(--neon-orange);">TAKTİK TAHTASI (Taşı-Bırak)</h2>
-        <div id="pitch">
-            <!-- Oyuncu pulları buraya gelecek -->
-        </div>
-    </div>
+<script>
+    const playersData = [
+        { id: 0, name: "Hüseyin Yüksekdağ", role: "Kaleci", desc: "Kalede o varsa sırtımız sağlam", isGK: true },
+        { id: 1, name: "Süleyman Tunçelik", role: "Defans", desc: "Defansın her alanına geçer" },
+        { id: 2, name: "Mehmet Uzun", role: "Defans", desc: "Takımın sert adamı" },
+        { id: 3, name: "Yakup Sunay", role: "Kaptan", desc: "Koca bir kaptan!" },
+        { id: 4, name: "Murat Çaylı", role: "Forvet", desc: "Akrobatik ve çalımcı" },
+        { id: 5, name: "Erol Gönül", role: "Orta Saha", desc: "Şutu çeker, hesabı sorar" },
+        { id: 6, name: "Eren Yılmaz", role: "Forvet", desc: "Eşi izliyorsa rakibe geçmiş olsun" },
+        { id: 7, name: "Musa Aksu", role: "Forvet", desc: "Kıvrak bilekler, dosta korku!" }
+    ];
 
-    <script>
-        const players = [
-            { name: "Hüseyin Yüksekdağ", pos: "Kaleci", desc: "Kalede o varsa sırtımız sağlam" },
-            { name: "Süleyman Tunçelik", pos: "Defans", desc: "Defansın her alanına sorgusuzca geçer" },
-            { name: "Mehmet Uzun", pos: "Defans", desc: "Takımın sert adamı" },
-            { name: "Yakup Sunay", pos: "Kaptan/Defans", desc: "Her bölgeye yetişen koca bir kaptan" },
-            { name: "Murat Çaylı", pos: "Forvet", desc: "Akrobatik hareketler ve çalım aşığı" },
-            { name: "Erol Gönül", pos: "Orta Saha", desc: "Her yerden şut çeker!" },
-            { name: "Eren Yılmaz", pos: "Forvet", desc: "Yengemiz izliyorsa rakip yandı" },
-            { name: "Musa Aksu", pos: "Forvet", desc: "Dosta korku, rakibe güven... pardon tersi!" }
-        ];
+    let adminMode = false;
 
-        let isAdmin = false;
+    // Verileri LocalStorage'dan Al veya Sıfırla
+    let stats = JSON.parse(localStorage.getItem('bb_stats')) || playersData.map(p => ({
+        gol: 0, asist: 0, yenen: 0
+    }));
 
-        function checkAdmin() {
-            const pass = document.getElementById('adminPass').value;
-            if(pass === "badboysfc1907") {
-                isAdmin = true;
-                alert("Kaptan girişi başarılı! Veri girebilirsiniz.");
-            } else {
-                alert("Hatalı şifre!");
-            }
+    let attendance = JSON.parse(localStorage.getItem('bb_att')) || Array(8).fill(null);
+
+    function login() {
+        if(document.getElementById('passInput').value === "badboysfc1907") {
+            adminMode = true;
+            document.querySelectorAll('.plus-minus-btns').forEach(el => el.style.display = 'flex');
+            alert("Hoş geldin Kaptan!");
+        } else {
+            alert("Şifre yanlış!");
         }
+    }
 
-        // Oyuncu Kartlarını Oluştur
-        const grid = document.getElementById('playerGrid');
-        players.forEach(p => {
-            grid.innerHTML += `
-                <div class="player-card">
-                    <h3>${p.name}</h3>
-                    <small>${p.pos}</small>
-                    <p>"${p.desc}"</p>
-                    <div class="stat-btns">
-                        <button onclick="updateStat()">GOL EKLE</button>
-                        <button onclick="updateStat()">ASİST EKLE</button>
-                        ${p.pos === 'Kaleci' ? '<button onclick="updateStat()">YEDİĞİ GOL</button>' : ''}
+    function renderPlayers() {
+        const container = document.getElementById('playerList');
+        container.innerHTML = '';
+        
+        playersData.forEach((p, index) => {
+            container.innerHTML += `
+                <div class="card">
+                    <div class="player-info">
+                        <h3>${p.name}</h3>
+                        <p>${p.role} - <i>${p.desc}</i></p>
+                    </div>
+                    
+                    <div class="stats-display">
+                        <div class="stat-item">GOL <span id="g-${index}">${stats[index].gol}</span></div>
+                        <div class="stat-item">ASİST <span id="a-${index}">${stats[index].asist}</span></div>
+                        ${p.isGK ? `<div class="stat-item">YENEN <span id="y-${index}">${stats[index].yenen}</span></div>` : ''}
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-row">
+                            <small>GOL GÜNCELLE</small>
+                            <div class="plus-minus-btns" style="display: ${adminMode ? 'flex' : 'none'}">
+                                <button class="btn-sm btn-minus" onclick="changeStat(${index}, 'gol', -1)">-</button>
+                                <button class="btn-sm btn-plus" onclick="changeStat(${index}, 'gol', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="control-row">
+                            <small>ASİST GÜNCELLE</small>
+                            <div class="plus-minus-btns" style="display: ${adminMode ? 'flex' : 'none'}">
+                                <button class="btn-sm btn-minus" onclick="changeStat(${index}, 'asist', -1)">-</button>
+                                <button class="btn-sm btn-plus" onclick="changeStat(${index}, 'asist', 1)">+</button>
+                            </div>
+                        </div>
+                        ${p.isGK ? `
+                        <div class="control-row">
+                            <small>YENEN GOL</small>
+                            <div class="plus-minus-btns" style="display: ${adminMode ? 'flex' : 'none'}">
+                                <button class="btn-sm btn-minus" onclick="changeStat(${index}, 'yenen', -1)">-</button>
+                                <button class="btn-sm btn-plus" onclick="changeStat(${index}, 'yenen', 1)">+</button>
+                            </div>
+                        </div>` : ''}
                     </div>
                 </div>
             `;
         });
+    }
 
-        function updateStat() {
-            if(!isAdmin) return alert("Bu işlem için Kaptan girişi yapmalısın!");
-            alert("İstatistik güncellendi!");
-        }
+    function changeStat(index, type, val) {
+        stats[index][type] += val;
+        if(stats[index][type] < 0) stats[index][type] = 0;
+        localStorage.setItem('bb_stats', JSON.stringify(stats));
+        renderPlayers();
+    }
 
-        // Yoklama Listesi
-        const attList = document.getElementById('attendanceList');
-        players.forEach(p => {
-            attList.innerHTML += `
-                <div class="player-row">
+    function renderAttendance() {
+        const div = document.getElementById('attList');
+        div.innerHTML = '';
+        playersData.forEach((p, index) => {
+            div.innerHTML += `
+                <div class="att-row">
                     <span>${p.name}</span>
-                    <div class="btn-group">
-                        <button class="geliyor" onclick="toggleAtt(this)">Geliyor</button>
-                        <button class="gelmiyor" onclick="toggleAtt(this)">Yok</button>
-                        <button class="belki" onclick="toggleAtt(this)">Belki</button>
+                    <div class="att-btns">
+                        <button class="${attendance[index] === 'geliyor' ? 'active active-geliyor' : ''}" onclick="setAtt(${index}, 'geliyor')">Geliyor</button>
+                        <button class="${attendance[index] === 'yok' ? 'active active-yok' : ''}" onclick="setAtt(${index}, 'yok')">Yok</button>
+                        <button class="${attendance[index] === 'belki' ? 'active active-belki' : ''}" onclick="setAtt(${index}, 'belki')">Belki</button>
                     </div>
                 </div>
             `;
         });
+    }
 
-        function toggleAtt(btn) {
-            const parent = btn.parentElement;
-            Array.from(parent.children).forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
+    function setAtt(index, status) {
+        attendance[index] = status;
+        localStorage.setItem('bb_att', JSON.stringify(attendance));
+        renderAttendance();
+    }
 
-        // Taktik Sahası Drag & Drop (Basit Versiyon)
-        const pitch = document.getElementById('pitch');
-        players.forEach((p, index) => {
-            const el = document.createElement('div');
-            el.className = 'draggable-player';
-            el.innerText = p.name.split(' ')[0];
-            el.style.left = '10px';
-            el.style.top = (index * 50 + 10) + 'px';
-            
-            // Mouse & Touch Sürükleme Mantığı
-            let isDragging = false;
-            el.onmousedown = (e) => { isDragging = true; };
-            document.onmousemove = (e) => {
-                if (!isDragging) return;
-                let rect = pitch.getBoundingClientRect();
-                let x = e.clientX - rect.left - 22;
-                let y = e.clientY - rect.top - 22;
-                if(x > 0 && x < 300) el.style.left = x + 'px';
-                if(y > 0 && y < 460) el.style.top = y + 'px';
-            };
-            document.onmouseup = () => { isDragging = false; };
-            
-            pitch.appendChild(el);
-        });
-    </script>
+    // İlk Çalıştırma
+    renderPlayers();
+    renderAttendance();
+</script>
+
 </body>
 </html>
