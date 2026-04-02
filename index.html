@@ -3,230 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BAD BOYS FC</title>
-
+<title>BAD BOYS FC | Takım Yönetimi</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body { background:#000; color:white; font-family:Arial; }
+/* GENEL */
+body { font-family:'Poppins',sans-serif; background:#000; color:white; overflow-x:hidden; margin:0; padding:0;}
+.orange { color:#ff4500; }
+.blue { color:#1e3a8a; }
 
-/* INTRO */
-#intro{
- position:fixed;
- width:100%;
- height:100%;
- background:black;
- display:flex;
- justify-content:center;
- align-items:center;
- flex-direction:column;
- z-index:9999;
-}
+/* LOGO INTRO */
+#intro {position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;z-index:9999;flex-direction:column;}
+#intro h1 {font-family:'Orbitron',sans-serif; font-size:4rem; color:#ff4500; animation:flash 1s ease-in-out infinite alternate;}
+@keyframes flash {0%{opacity:0.2;}100%{opacity:1; transform: scale(1.1);}}
 
-/* KİLİT */
-.lock{
- position:fixed;
- top:15px;
- right:15px;
- font-size:26px;
- background:#111;
- padding:12px;
- border-radius:50%;
- cursor:pointer;
-}
+#players .card{background:#0a0a0a; border:1px solid #222; border-radius:15px; padding:15px;}
+.stat-bar { height:4px; background:#222; border-radius:3px; }
+.stat-fill { height:100%; background:#ff4500; }
+.admin-only { display:none; }
+.admin-active .admin-only { display:flex; }
+.kaptan { background:#ff4500; color:#000; padding:0 5px; border-radius:5px; font-size:10px; font-weight:bold; }
+.tactic-field { width:100%;height:400px;background:#111;border:2px solid #ff4500;position:relative;margin-top:15px;border-radius:10px; }
+.field-line { position:absolute;background:#ff4500; }
+#tactics .tactic-player { position:absolute;background:#222;border-radius:10px;padding:5px;text-align:center;cursor:default;user-select:none; color:#fff; }
+#tactics .tactic-player.dragging { opacity:0.6; border:2px dashed #ff4500; }
 
-/* KART */
-.card{
- background:#0a0a0a;
- border-radius:15px;
- padding:15px;
- transition:.3s;
-}
-.card:hover{
- transform:scale(1.03);
- box-shadow:0 0 20px #ff4500;
-}
-
-/* MVP */
-.mvp{
- border:2px solid gold;
- box-shadow:0 0 20px gold;
-}
-
-/* FOTO */
-.player-img{
- width:60px;
- height:60px;
- border-radius:10px;
- object-fit:cover;
-}
-
-/* SAHA */
-.field{
- background:linear-gradient(#0f3d0f,#0a2a0a);
- height:300px;
- margin:20px;
- border-radius:15px;
- position:relative;
-}
-
-/* OYUNCU NOKTA */
-.dot{
- position:absolute;
- background:#ff4500;
- padding:4px 8px;
- border-radius:8px;
- font-size:10px;
-}
-
-/* ADMIN */
-.admin-only{ display:none; }
-.admin-active .admin-only{ display:inline-block; }
-
-/* BUTON */
-.btn{
- background:#ff4500;
- padding:3px 8px;
- border-radius:6px;
- font-size:12px;
- margin:2px;
-}
 </style>
 </head>
+<body class="p-4">
 
-<body>
-
-<!-- INTRO -->
+<!-- LOGO INTRO -->
 <div id="intro">
-<h1 class="text-3xl text-orange-500">BAD BOYS FC</h1>
-<button onclick="start()" class="mt-4 bg-orange-500 px-6 py-2 rounded">GİR</button>
+<h1>BAD BOYS FC</h1>
+<p class="text-gray-400 mt-2">🔥 Takım Yönetimi</p>
 </div>
 
-<!-- KİLİT -->
-<div onclick="adminLogin()" class="lock">🔒</div>
+<h1 class="text-center text-4xl orange font-orbitron mb-4">BAD BOYS FC 🔥</h1>
+<p class="text-center text-xs text-gray-400 mb-4">Saha ve Kadro Yönetimi</p>
 
-<h1 class="text-center text-3xl mt-4 text-orange-500">BAD BOYS FC 🔥</h1>
+<!-- Admin Kilit -->
+<button onclick="checkAdmin()" class="absolute right-4 top-4 text-2xl font-bold orange">🔒</button>
 
-<!-- SAHA HERKESE AÇIK -->
-<div id="field" class="field"></div>
+<!-- Oyuncu Listesi -->
+<div id="players" class="space-y-4 mb-10"></div>
 
-<div id="players" class="p-4 space-y-4"></div>
+<h2 class="text-xl orange font-bold mb-2">Taktik Sahası (Sadece Admin Oynayabilir)</h2>
+<div class="tactic-field" id="tactics">
+  <!-- Çizgiler -->
+  <div class="field-line" style="top:0;left:0;width:100%;height:2px;"></div> <!-- üst çizgi -->
+  <div class="field-line" style="bottom:0;left:0;width:100%;height:2px;"></div> <!-- alt çizgi -->
+  <div class="field-line" style="top:50%;left:0;width:100%;height:2px;transform:translateY(-50%);"></div> <!-- ortasaha çizgisi -->
+  <div class="field-line" style="top:0;left:0;width:2px;height:100%;"></div> <!-- sol çizgi -->
+  <div class="field-line" style="top:0;right:0;width:2px;height:100%;"></div> <!-- sağ çizgi -->
+</div>
 
 <script>
+const adminPassword="badboys123";
+let isAdmin=false;
 
-let admin=false;
-const pass="badboys123";
+const initialPlayers=[
+{id:1,name:"Hüseyincan Yüksekdağ",role:"KALECİ",goals:0,assists:0,conceded:0,note:"Kalede adeta kocaman bir fil gibi",stats:{kondisyon:90,vefa:100,sertlik:85},photo:"https://via.placeholder.com/150"},
+{id:2,name:"Süleyman Tunçelik",role:"DEFANS",goals:0,assists:0,conceded:0,note:"Defansın bel kemiği",stats:{kondisyon:90,vefa:100,sertlik:75},photo:"https://via.placeholder.com/150"},
+{id:3,name:"Yakup Sunay",role:"DEFANS",goals:0,assists:0,conceded:0,isCaptain:true,note:"Her yerde olan koca yürekli kaptan",stats:{kondisyon:90,vefa:100,sertlik:75},photo:"https://via.placeholder.com/150"},
+{id:4,name:"Mehmet Uzun",role:"DEFANS",goals:0,assists:0,conceded:0,note:"Takımın sert adamı",stats:{kondisyon:90,vefa:100,sertlik:80},photo:"https://via.placeholder.com/150"},
+{id:5,name:"Erol Gönül",role:"ORTA SAHA",goals:0,assists:0,conceded:0,note:"Her yerden şut atmayı sever",stats:{kondisyon:90,vefa:100,sertlik:80},photo:"https://via.placeholder.com/150"},
+{id:6,name:"Murat Çaylı",role:"FORVET",goals:0,assists:0,conceded:0,note:"Her alanda çalım deneyebiliyo",stats:{kondisyon:90,vefa:100,sertlik:75},photo:"https://via.placeholder.com/150"},
+{id:7,name:"Eren Yılmaz",role:"FORVET",goals:0,assists:0,conceded:0,note:"Maçı izlemeye eşi geldiyse geçmiş olsun diyoruz rakibe",stats:{kondisyon:90,vefa:100,sertlik:70},photo:"https://via.placeholder.com/150"},
+{id:8,name:"Musa Aksu",role:"FORVET",goals:0,assists:0,conceded:0,note:"Kıvrak bilekleri ile dosta korku düşmana güven tarzı var",stats:{kondisyon:80,vefa:100,sertlik:70},photo:"https://via.placeholder.com/150"}
+];
 
-function start(){
- document.getElementById("intro").style.display="none";
-}
+let players=JSON.parse(localStorage.getItem("players"))||initialPlayers;
 
-function adminLogin(){
- if(prompt("Şifre:")==pass){
-   admin=true;
+function checkAdmin(){
+ if(prompt("Şifre:")===adminPassword){
+   isAdmin=true;
    document.body.classList.add("admin-active");
    render();
  }
 }
 
-/* DATA */
-let players = JSON.parse(localStorage.getItem("team")) || [
-{id:1,name:"HÜSEYİNCAN YÜKSEKDAĞ",role:"KALECİ",quote:"Kalede adeta kocaman bir fil gibi",x:45,y:80,g:0,a:0,yg:0},
-{id:2,name:"SÜLEYMAN TUNÇELİK",role:"DEFANS",quote:"Defansın bel kemiği",x:20,y:60,g:0,a:0,yg:0},
-{id:3,name:"YAKUP SUNAY",role:"DEFANS",captain:true,quote:"Her yerde olan koca yürekli kaptan",x:50,y:60,g:0,a:0,yg:0},
-{id:4,name:"MEHMET UZUN",role:"DEFANS",quote:"Takımın sert adamı",x:80,y:60,g:0,a:0,yg:0},
-{id:5,name:"EROL GÖNÜL",role:"ORTA SAHA",quote:"Her yerden şut atmayı sever",x:30,y:40,g:0,a:0,yg:0},
-{id:6,name:"MURAT ÇAYLI",role:"FORVET",quote:"Her alanda çalım deneyebiliyo",x:70,y:40,g:0,a:0,yg:0},
-{id:7,name:"EREN YILMAZ",role:"FORVET",quote:"Eşi geldiyse geçmiş olsun rakibe",x:30,y:20,g:0,a:0,yg:0},
-{id:8,name:"MUSA AKSU",role:"FORVET",quote:"Kıvrak bilekleri ile tarz sahibi",x:70,y:20,g:0,a:0,yg:0}
-];
+function save(){ localStorage.setItem("players",JSON.stringify(players)); }
 
-function save(){
- localStorage.setItem("team",JSON.stringify(players));
-}
-
-/* STAT */
-function stat(id,type,val){
- let p=players.find(x=>x.id==id);
- p[type]+=val;
- if(p[type]<0)p[type]=0;
+function updateStat(id,field,amount){
+ if(!isAdmin) return;
+ let p=players.find(x=>x.id===id);
+ p[field]+=amount;
+ if(p[field]<0) p[field]=0;
  save();
  render();
 }
 
-/* SAHA */
-function renderField(){
- let f=document.getElementById("field");
- f.innerHTML="";
-
- players.forEach(p=>{
-  f.innerHTML+=`
-  <div class="dot"
-  style="left:${p.x}%; top:${p.y}%"
-  ${admin ? `draggable="true" ondragend="move(event,${p.id})"` : ""}
-  >
-  ${p.name.split(" ")[0]}
-  </div>`;
- });
-}
-
-function move(e,id){
- let rect=e.target.parentElement.getBoundingClientRect();
- let x=(e.clientX-rect.left)/rect.width*100;
- let y=(e.clientY-rect.top)/rect.height*100;
-
- let p=players.find(x=>x.id==id);
- p.x=x; p.y=y;
- save();
- renderField();
-}
-
-/* RENDER */
 function render(){
+const container=document.getElementById("players");
+container.innerHTML="";
 
- let best=[...players].sort((a,b)=> (b.g+b.a)-(a.g+a.a))[0];
+players.forEach(p=>{
+container.innerHTML+=`
+<div class="card">
+  <div class="flex gap-3 items-center mb-2">
+    <img src="${p.photo}" class="w-16 h-16 rounded-xl object-cover">
+    <div class="flex-1">
+      <div class="font-bold text-sm">${p.name} ${p.isCaptain?'<span class="kaptan">(C)</span>':''}</div>
+      <div class="text-xs text-gray-400">${p.role}</div>
+      <div class="text-[10px] mt-1 italic text-orange">${p.note}</div>
+    </div>
+    <button class="admin-only" onclick="changePhoto(${p.id})">📸</button>
+  </div>
 
- let area=document.getElementById("players");
- area.innerHTML="";
+  <div class="grid grid-cols-3 gap-2 mb-2">
+    <div><div class="text-[9px]">KND</div><div class="stat-bar"><div class="stat-fill" style="width:${p.stats.kondisyon}%"></div></div></div>
+    <div><div class="text-[9px]">VEFA</div><div class="stat-bar"><div class="stat-fill" style="width:${p.stats.vefa}%"></div></div></div>
+    <div><div class="text-[9px]">SRT</div><div class="stat-bar"><div class="stat-fill" style="width:${p.stats.sertlik}%"></div></div></div>
+  </div>
 
- players.forEach(p=>{
- area.innerHTML+=`
- <div class="card ${p.id==best.id?"mvp":""}">
-   <div class="flex gap-3 items-center">
-     <div>
-       <div class="font-bold">
-       ${p.name} ${p.captain?"👑 (C)":""}
-       </div>
-       <div class="text-xs text-gray-400">${p.role}</div>
-       <div class="text-xs italic mt-1">${p.quote}</div>
-     </div>
-   </div>
+  <div class="flex gap-2 text-sm items-center">
+    ⚽ ${p.goals} <div class="admin-only"><button onclick="updateStat(${p.id},'goals',1)">+</button><button onclick="updateStat(${p.id},'goals',-1)">-</button></div>
+    🎯 ${p.assists} <div class="admin-only"><button onclick="updateStat(${p.id},'assists',1)">+</button><button onclick="updateStat(${p.id},'assists',-1)">-</button></div>
+    🥅 ${p.conceded} <div class="admin-only"><button onclick="updateStat(${p.id},'conceded',1)">+</button><button onclick="updateStat(${p.id},'conceded',-1)">-</button></div>
+  </div>
+</div>
+`;});
 
-   <div class="mt-2 text-sm">
-     ⚽ ${p.g}
-     🎯 ${p.a}
-     🥅 ${p.yg}
-   </div>
-
-   <div class="admin-only mt-2">
-     <button class="btn" onclick="stat(${p.id},'g',1)">+Gol</button>
-     <button class="btn" onclick="stat(${p.id},'g',-1)">-</button>
-
-     <button class="btn" onclick="stat(${p.id},'a',1)">+Asist</button>
-     <button class="btn" onclick="stat(${p.id},'a',-1)">-</button>
-
-     <button class="btn" onclick="stat(${p.id},'yg',1)">+Y.Gol</button>
-     <button class="btn" onclick="stat(${p.id},'yg',-1)">-</button>
-   </div>
- </div>
- `;
- });
-
- renderField();
+renderTactics();
 }
+
+// Foto değiştirme
+function changePhoto(id){
+ let url=prompt("Fotoğraf linki:");
+ if(url){
+  let p=players.find(x=>x.id===id);
+  p.photo=url;
+  save();
+  render();
+ }
+}
+
+// Taktik sahası
+function renderTactics(){
+ const field=document.getElementById("tactics");
+ field.innerHTML=""; // alanı temizle
+ // alan çizgilerini tekrar ekle
+ const lines=[
+   {top:0,left:0,width:'100%',height:'2px'},
+   {bottom:0,left:0,width:'100%',height:'2px'},
+   {top:'50%',left:0,width:'100%',height:'2px',transform:'translateY(-50%)'},
+   {top:0,left:0,width:'2px',height:'100%'},
+   {top:0,right:0,width:'2px',height:'100%'}
+ ];
+   lines.forEach(l=>{
+     const div=document.createElement('div');
+     div.className='field-line';
+     Object.assign(div.style,l);
+     field.appendChild(div);
+   });
+ players.forEach((p,i)=>{
+  const div=document.createElement("div");
+  div.className="tactic-player";
+  div.style.top=(50+i*30)+'px';
+  div.style.left=(50+i*50)+'px';
+  div.innerText=p.name.split(' ')[0];
+  div.setAttribute("draggable",isAdmin);
+  div.addEventListener("dragstart",(e)=>{ if(isAdmin){div.classList.add("dragging"); e.dataTransfer.setData('text/plain',p.id); }});
+  div.addEventListener("dragend",(e)=>{ div.classList.remove("dragging");});
+  div.addEventListener("dragover",(e)=>{ e.preventDefault();});
+  div.addEventListener("drop",(e)=>{
+   if(!isAdmin) return;
+   e.preventDefault();
+   const draggedId=parseInt(e.dataTransfer.getData('text/plain'));
+   const targetId=p.id;
+   if(draggedId!==targetId){
+    const idx1=players.findIndex(x=>x.id===draggedId);
+    const idx2=players.findIndex(x=>x.id===targetId);
+    [players[idx1],players[idx2]]=[players[idx2],players[idx1]];
+    save();
+    render();
+   }
+  });
+  field.appendChild(div);
+ });
+}
+
+// Intro animasyonu gizle
+window.addEventListener('load',()=>{
+ setTimeout(()=>{ document.getElementById('intro').style.display='none'; },2000);
+});
 
 render();
-
 </script>
 
 </body>
