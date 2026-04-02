@@ -13,18 +13,44 @@ color:white;
 font-family:Arial;
 }
 
+/* GİRİŞ */
+#intro{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:999;
+animation:fadeOut 3s forwards;
+animation-delay:2s;
+}
+#intro img{
+width:200px;
+animation:zoom 2s;
+}
+
+@keyframes zoom{
+0%{transform:scale(0)}
+100%{transform:scale(1)}
+}
+@keyframes fadeOut{
+to{opacity:0;visibility:hidden}
+}
+
+/* HEADER */
 header{
 text-align:center;
 padding:20px;
-font-size:30px;
-background:linear-gradient(90deg,orange,black);
-letter-spacing:2px;
+font-size:28px;
+background:linear-gradient(90deg,#ff6a00,#000);
 }
 
 /* CARD */
 .card{
 background:#111;
-border:2px solid orange;
+border:2px solid #ff6a00;
 border-radius:12px;
 padding:12px;
 margin:10px;
@@ -33,17 +59,17 @@ display:inline-block;
 transition:0.3s;
 }
 .card:hover{
-box-shadow:0 0 15px orange;
-transform:scale(1.03);
+box-shadow:0 0 15px #ff6a00;
 }
 
 button{
-background:orange;
+background:#ff6a00;
 border:none;
-padding:4px 8px;
+padding:5px 10px;
 margin:2px;
 border-radius:5px;
 cursor:pointer;
+color:white;
 }
 
 input{
@@ -54,25 +80,25 @@ width:40px;
 .field{
 width:100%;
 height:420px;
-background:#1a1a1a;
-border:3px solid orange;
+background:#111;
+border:3px solid #ff6a00;
 position:relative;
 margin-top:20px;
 }
 
-/* çizgiler */
-.field:before{
-content:"";
+/* saha çizgileri */
+.line{
 position:absolute;
+background:white;
+}
+
+.center-line{
 width:100%;
 height:2px;
-background:white;
 top:50%;
 }
 
-.field:after{
-content:"";
-position:absolute;
+.center-circle{
 width:120px;
 height:120px;
 border:2px solid white;
@@ -80,38 +106,40 @@ border-radius:50%;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
+position:absolute;
 }
 
-/* player */
+/* oyuncu */
 .player{
 position:absolute;
-background:orange;
+background:#ff6a00;
 color:black;
-padding:5px;
-border-radius:6px;
-cursor:move;
+padding:6px;
+border-radius:8px;
+font-size:12px;
+touch-action:none;
 }
 
-/* MVP */
-.mvp{
-color:gold;
-font-weight:bold;
-}
-
-/* match log */
-#matches{
-padding:10px;
+/* açıklama */
+.desc{
+font-size:12px;
+opacity:0.7;
+margin-top:5px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- GİRİŞ -->
+<div id="intro">
+<img src="badboysfc.jpg">
+</div>
+
 <header>🔥 BAD BOYS FC 🔥</header>
 
 <div style="text-align:center;">
 <button onclick="login()">Kaptan Girişi</button>
-<button onclick="saveMatch()">Maçı Kaydet</button>
 </div>
 
 <h2 style="text-align:center;">🏆 MVP: <span id="mvp"></span></h2>
@@ -119,28 +147,26 @@ padding:10px;
 <div id="players"></div>
 
 <h2 style="text-align:center;">⚽ TAKTİK SAHASI</h2>
-<div class="field" id="field"></div>
-
-<h2 style="text-align:center;">📅 MAÇ GEÇMİŞİ</h2>
-<div id="matches"></div>
+<div class="field" id="field">
+<div class="line center-line"></div>
+<div class="center-circle"></div>
+</div>
 
 <script>
-
 let isAdmin=false;
 
 let data=JSON.parse(localStorage.getItem("teamData")) || {
 players:[
-{name:"Hüseyincan",pos:"Kaleci",gol:0,asist:0,yenilen:0,no:1,katilim:true},
-{name:"Süleyman",pos:"Defans",gol:0,asist:0,yenilen:0,no:2,katilim:true},
-{name:"Mehmet",pos:"Defans",gol:0,asist:0,yenilen:0,no:3,katilim:true},
-{name:"Yakup",pos:"Kaptan",gol:0,asist:0,yenilen:0,no:4,katilim:true},
-{name:"Erol",pos:"Orta Saha",gol:0,asist:0,yenilen:0,no:5,katilim:true},
-{name:"Murat",pos:"Forvet",gol:0,asist:0,yenilen:0,no:6,katilim:true},
-{name:"Eren",pos:"Forvet",gol:0,asist:0,yenilen:0,no:7,katilim:true},
-{name:"Musa",pos:"Forvet",gol:0,asist:0,yenilen:0,no:8,katilim:true}
+{name:"Hüseyincan",desc:"Kalesinde güven veren bir panter",pos:"Kaleci",gol:0,asist:0,yenilen:0,no:1},
+{name:"Süleyman",desc:"Stoperin vazgeçilmez adamı",pos:"Defans",gol:0,asist:0,yenilen:0,no:2},
+{name:"Mehmet",desc:"Takımın sert adamı",pos:"Defans",gol:0,asist:0,yenilen:0,no:3},
+{name:"Yakup",desc:"Her bölgeye yetişen koca yürekli kaptan",pos:"Kaptan",gol:0,asist:0,yenilen:0,no:4},
+{name:"Erol",desc:"Her bölgeden şut atabilir ansızın",pos:"Orta Saha",gol:0,asist:0,yenilen:0,no:5},
+{name:"Murat",desc:"Çalım ve akrobatik hareketleri sever",pos:"Forvet",gol:0,asist:0,yenilen:0,no:6},
+{name:"Eren",desc:"Eşi maçı izlemeye geldiyse o maç bitmiştir",pos:"Forvet",gol:0,asist:0,yenilen:0,no:7},
+{name:"Musa",desc:"Kıvrak bilekleri ile dosta korku düşmana güven verir",pos:"Forvet",gol:0,asist:0,yenilen:0,no:8}
 ],
-positions:{},
-matches:[]
+positions:{}
 };
 
 function save(){
@@ -160,32 +186,22 @@ render();
 function getMVP(){
 let best=null;
 let score=-1;
-
 data.players.forEach(p=>{
-let s=p.gol*2 + p.asist;
-if(s>score){
-score=s;
-best=p.name;
-}
+let s=p.gol*2+p.asist;
+if(s>score){score=s;best=p.name;}
 });
-
 return best;
 }
 
-/* PLAYER RENDER */
+/* PLAYER */
 function render(){
 let html="";
-
 data.players.forEach((p,i)=>{
-
-let rating=(p.gol*2 + p.asist);
-
 html+=`
 <div class="card">
 <h3>${p.name}</h3>
 <p>${p.pos}</p>
-
-<p>⭐ Reyting: ${rating}</p>
+<p class="desc">${p.desc}</p>
 
 <p>⚽ ${p.gol}
 <button onclick="update(${i},'gol',1)">+</button>
@@ -206,24 +222,14 @@ html+=`
 <input value="${p.no}" onchange="setNo(${i},this.value)">
 </p>
 
-<p>
-Katılım:
-<button onclick="toggleKat(${i})">
-${p.katilim ? "Geliyor" : "Yok"}
-</button>
-</p>
-
 <p>💪100 | ❤️100 | ✔100</p>
-
 </div>
 `;
 });
 
 document.getElementById("players").innerHTML=html;
 document.getElementById("mvp").innerText=getMVP();
-
 renderField();
-renderMatches();
 }
 
 /* UPDATE */
@@ -242,72 +248,41 @@ data.players[i].no=val;
 save();
 }
 
-/* KATILIM */
-function toggleKat(i){
-if(!isAdmin) return;
-data.players[i].katilim=!data.players[i].katilim;
-save();
-render();
-}
-
-/* MATCH SAVE */
-function saveMatch(){
-if(!isAdmin) return;
-
-let date=new Date().toLocaleDateString();
-
-data.matches.push({
-date:date,
-players:JSON.parse(JSON.stringify(data.players))
-});
-
-save();
-render();
-}
-
-/* MATCH LIST */
-function renderMatches(){
-let html="";
-data.matches.forEach(m=>{
-html+=`<p>${m.date} - Kayıt alındı</p>`;
-});
-document.getElementById("matches").innerHTML=html;
-}
-
-/* FIELD */
+/* SAHA (MOBİL DRAG) */
 function renderField(){
 let field=document.getElementById("field");
-field.innerHTML="";
+field.querySelectorAll(".player").forEach(e=>e.remove());
 
 data.players.forEach((p,i)=>{
 let div=document.createElement("div");
 div.className="player";
 div.innerText=p.no+" "+p.name;
 
-let pos=data.positions[i] || {x:20+i*40,y:20};
+let pos=data.positions[i] || {x:20+i*30,y:20};
 
 div.style.left=pos.x+"px";
 div.style.top=pos.y+"px";
 
-div.onmousedown=function(e){
+/* TOUCH + MOUSE */
+let move = (x,y)=>{
+div.style.left=x+"px";
+div.style.top=y+"px";
+};
+
+div.onpointerdown=function(e){
 if(!isAdmin) return;
 
-let shiftX=e.clientX-div.getBoundingClientRect().left;
-let shiftY=e.clientY-div.getBoundingClientRect().top;
+let shiftX=e.offsetX;
+let shiftY=e.offsetY;
 
-function moveAt(x,y){
-div.style.left=x-shiftX+"px";
-div.style.top=y-shiftY+"px";
+function onMove(ev){
+move(ev.pageX-shiftX,ev.pageY-shiftY);
 }
 
-function move(e){
-moveAt(e.pageX,e.pageY);
-}
+document.addEventListener("pointermove",onMove);
 
-document.addEventListener("mousemove",move);
-
-document.onmouseup=function(){
-document.removeEventListener("mousemove",move);
+document.onpointerup=function(){
+document.removeEventListener("pointermove",onMove);
 
 data.positions[i]={
 x:parseInt(div.style.left),
@@ -315,7 +290,7 @@ y:parseInt(div.style.top)
 };
 
 save();
-document.onmouseup=null;
+document.onpointerup=null;
 };
 };
 
@@ -324,7 +299,6 @@ field.appendChild(div);
 }
 
 render();
-
 </script>
 
 </body>
