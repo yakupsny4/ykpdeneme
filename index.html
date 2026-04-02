@@ -11,6 +11,7 @@ margin:0;
 font-family:Arial;
 background:#080808;
 color:white;
+overflow-x:hidden;
 }
 
 /* INTRO */
@@ -24,20 +25,21 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 z-index:999;
+transition:0.5s;
 }
 
-/* duman efekti */
 .glow{
 position:absolute;
-width:250px;
-height:250px;
-background:radial-gradient(circle, rgba(255,100,0,0.6), transparent);
-filter:blur(40px);
+width:300px;
+height:300px;
+background:radial-gradient(circle, rgba(255,100,0,0.7), transparent);
+filter:blur(50px);
 animation:pulse 3s infinite;
 }
+
 @keyframes pulse{
 0%{transform:scale(1)}
-50%{transform:scale(1.3)}
+50%{transform:scale(1.4)}
 100%{transform:scale(1)}
 }
 
@@ -48,13 +50,23 @@ z-index:2;
 
 #startBtn{
 margin-top:20px;
-padding:10px 20px;
+padding:12px 25px;
 background:#ff6a00;
 border:none;
-border-radius:8px;
-font-size:16px;
+border-radius:10px;
+font-size:18px;
 color:white;
-box-shadow:0 0 15px #ff6a00;
+box-shadow:0 0 20px #ff6a00;
+cursor:pointer;
+}
+
+/* ZOOM */
+.zoomOut{
+animation:zoomOut 0.8s forwards;
+}
+@keyframes zoomOut{
+0%{transform:scale(1);opacity:1;}
+100%{transform:scale(1.5);opacity:0;}
 }
 
 /* HEADER */
@@ -63,7 +75,7 @@ text-align:center;
 padding:15px;
 background:linear-gradient(90deg,#ff6a00,#000);
 font-size:24px;
-box-shadow:0 0 15px #ff6a00;
+box-shadow:0 0 20px #ff6a00;
 }
 
 /* NAV */
@@ -78,6 +90,7 @@ border:none;
 color:#ff6a00;
 padding:10px;
 font-size:15px;
+cursor:pointer;
 }
 
 /* PAGE */
@@ -91,12 +104,12 @@ border:1px solid #ff6a00;
 border-radius:14px;
 padding:12px;
 margin:10px;
-box-shadow:0 0 12px rgba(255,106,0,0.4);
+box-shadow:0 0 15px rgba(255,106,0,0.4);
 transition:0.3s;
 }
 .card:hover{
-transform:scale(1.03);
-box-shadow:0 0 25px #ff6a00;
+transform:scale(1.04);
+box-shadow:0 0 30px #ff6a00;
 }
 
 .card h3{
@@ -106,8 +119,8 @@ margin:0;
 
 .desc{
 font-size:13px;
-opacity:0.8;
-margin:5px 0;
+opacity:0.85;
+margin:6px 0;
 }
 
 /* FIELD */
@@ -119,7 +132,7 @@ border:2px solid #ff6a00;
 position:relative;
 }
 
-/* saha detay */
+/* saha */
 .center-line{
 position:absolute;
 width:100%;
@@ -215,10 +228,15 @@ border:1px solid #ff6a00;
 </div>
 
 <script>
+
+/* INTRO */
 function startSite(){
-document.getElementById("intro").style.display="none";
+let intro=document.getElementById("intro");
+intro.classList.add("zoomOut");
+setTimeout(()=>{intro.style.display="none";},800);
 }
 
+/* DATA */
 let data=JSON.parse(localStorage.getItem("teamData"))||{
 players:[
 {name:"Hüseyincan",desc:"Kalesinde güven veren bir panter",gol:0,asist:0,no:1},
@@ -229,14 +247,17 @@ players:[
 {name:"Murat",desc:"Çalım ve akrobatik hareketleri sever",gol:0,asist:0,no:6},
 {name:"Eren",desc:"Eşi maçı izlemeye geldiyse o maç bitmiştir",gol:0,asist:0,no:7},
 {name:"Musa",desc:"Kıvrak bilekleri ile dosta korku düşmana güven verir",gol:0,asist:0,no:8}
-]
+],
+positions:{}
 };
 
+/* NAV */
 function showPage(p){
 document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
 document.getElementById(p).classList.add("active");
 }
 
+/* HOME */
 function renderHome(){
 let html="";
 data.players.forEach((p,i)=>{
@@ -253,6 +274,7 @@ html+=`
 document.getElementById("home").innerHTML=html;
 }
 
+/* MODAL */
 function openPlayer(i){
 let p=data.players[i];
 
@@ -268,15 +290,64 @@ document.getElementById("modalContent").innerHTML=`
 document.getElementById("modal").style.display="flex";
 }
 
-document.getElementById("modal").onclick=()=>modal.style.display="none";
+/* MODAL FIX */
+let modalEl=document.getElementById("modal");
+modalEl.onclick=function(){
+modalEl.style.display="none";
+};
 
+/* UPDATE */
 function update(i,t,v){
 data.players[i][t]+=v;
 localStorage.setItem("teamData",JSON.stringify(data));
 renderHome();
 }
 
+/* FIELD */
+function renderField(){
+let field=document.getElementById("field");
+
+data.players.forEach((p,i)=>{
+let div=document.createElement("div");
+div.className="player";
+div.innerText=p.no;
+
+let pos=data.positions[i]||{x:20+i*40,y:20};
+
+div.style.left=pos.x+"px";
+div.style.top=pos.y+"px";
+
+div.onpointerdown=function(e){
+let shiftX=e.offsetX;
+let shiftY=e.offsetY;
+
+function move(ev){
+div.style.left=ev.pageX-shiftX+"px";
+div.style.top=ev.pageY-shiftY+"px";
+}
+
+document.addEventListener("pointermove",move);
+
+document.onpointerup=function(){
+document.removeEventListener("pointermove",move);
+
+data.positions[i]={
+x:parseInt(div.style.left),
+y:parseInt(div.style.top)
+};
+
+localStorage.setItem("teamData",JSON.stringify(data));
+document.onpointerup=null;
+};
+};
+
+field.appendChild(div);
+});
+}
+
 renderHome();
+renderField();
+
 </script>
 
 </body>
