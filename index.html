@@ -2,8 +2,8 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAD BOYS FC | ULTIMATE V7</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BAD BOYS FC | ULTIMATE V8</title>
     <style>
         :root {
             --neon-orange: #ff6600;
@@ -11,6 +11,7 @@
             --deep-black: #050505;
             --card-bg: rgba(20, 20, 20, 0.95);
             --gold: #ffd700;
+            --pitch-green: #1a3a1a;
         }
 
         body {
@@ -19,6 +20,7 @@
             font-family: 'Segoe UI', sans-serif;
             margin: 0;
             padding-bottom: 120px;
+            touch-action: manipulation;
         }
 
         /* --- Admin --- */
@@ -31,48 +33,58 @@
         }
         .admin-bar input { background: #111; border: 1px solid var(--neon-orange); color: white; padding: 8px; border-radius: 5px; outline: none; }
 
-        /* --- Header --- */
-        header { text-align: center; padding: 30px; }
-        .main-logo { width: 160px; border: 3px solid var(--neon-orange); border-radius: 15px; box-shadow: 0 0 20px rgba(255,102,0,0.4); }
+        header { text-align: center; padding: 20px; }
+        .main-logo { width: 120px; border: 2px solid var(--neon-orange); border-radius: 15px; }
 
-        /* --- Master Panel --- */
-        .master-controls {
-            max-width: 800px; margin: 20px auto; background: #111; padding: 25px;
-            border-radius: 20px; border: 2px dashed #444; display: none; flex-direction: column; gap: 20px;
+        /* --- Taktik Sahası (Mobil Öncelikli) --- */
+        .pitch-container {
+            width: 95%; max-width: 500px; aspect-ratio: 2/3;
+            background: var(--pitch-green);
+            margin: 20px auto;
+            border: 3px solid #fff;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20% 20%;
         }
-        .input-group { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-        .input-group input, .input-group select { background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; }
+        .pitch-line {
+            position: absolute; border: 2px solid rgba(255,255,255,0.5);
+            pointer-events: none;
+        }
+        .center-circle { width: 80px; height: 80px; border: 2px solid #fff; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); position: absolute; }
+        .penalty-area { width: 60%; height: 15%; border: 2px solid #fff; position: absolute; left: 20%; }
+        .top-box { top: 0; border-top: none; }
+        .bottom-box { bottom: 0; border-bottom: none; }
 
-        /* --- Oyuncu Kartları --- */
-        .player-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 20px; }
-        .player-card { background: var(--card-bg); border-radius: 20px; padding: 25px; position: relative; border: 1px solid #333; transition: 0.3s; overflow: hidden; }
-        .player-card:hover { border-color: var(--neon-orange); transform: translateY(-5px); }
-        .smoke-effect { position: absolute; top: -20px; left: -20px; width: 140px; height: 100px; background: radial-gradient(circle, rgba(255,102,0,0.2) 0%, transparent 70%); z-index: 0; filter: blur(15px); }
-        .player-header h3 { margin: 0; color: var(--neon-orange); text-transform: uppercase; z-index: 1; position: relative; }
-        .player-header p { font-style: italic; color: #888; font-size: 0.85rem; margin: 10px 0; }
+        .draggable-player {
+            position: absolute;
+            background: var(--neon-orange);
+            color: #000;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: move;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            white-space: nowrap;
+            touch-action: none; /* Önemli: Sürükleme için */
+        }
 
-        /* --- Statlar & Edit --- */
-        .stats-container { display: flex; justify-content: space-around; background: #000; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
-        .stat-box span { font-size: 1.5rem; font-weight: bold; color: var(--neon-blue); display: block; text-align: center;}
-        .stat-box label { font-size: 0.65rem; color: #666; display: block; text-align: center;}
-        .edit-row { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 5px 10px; border-radius: 8px; margin-bottom: 5px; display: none; }
-        .btn-control { width: 30px; height: 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; }
-        .plus { background: #28a745; } .minus { background: #dc3545; }
+        /* --- Standart Tasarım --- */
+        .player-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; padding: 15px; }
+        .player-card { background: var(--card-bg); border-radius: 15px; padding: 20px; border: 1px solid #333; }
+        .stats-container { display: flex; justify-content: space-around; background: #000; padding: 10px; border-radius: 10px; margin: 10px 0; }
+        .stat-box span { font-size: 1.2rem; font-weight: bold; color: var(--neon-blue); display: block; text-align: center;}
+        
+        .section-box { max-width: 800px; margin: 20px auto; background: #111; padding: 20px; border-radius: 15px; border: 1px solid #222; }
+        .save-btn { position: fixed; bottom: 20px; right: 20px; background: var(--neon-orange); color: #000; border: none; padding: 15px 25px; border-radius: 50px; font-weight: bold; z-index: 3000; box-shadow: 0 5px 15px rgba(255,102,0,0.4); }
 
-        /* --- MVP Kürsüsü --- */
-        .mvp-section { max-width: 800px; margin: 40px auto; padding: 20px; background: linear-gradient(145deg, #111, #000); border-radius: 20px; border: 2px solid var(--gold); box-shadow: 0 0 25px rgba(255, 215, 0, 0.2); }
-        .mvp-item { background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-
-        /* --- Yoklama & Maçlar --- */
-        .section-box { max-width: 800px; margin: 40px auto; background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; }
-        .att-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
-        .att-btns button { background: #222; border: none; color: #444; padding: 8px 15px; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        .att-btns button.active { color: white; box-shadow: 0 0 10px currentColor; }
-        .geliyor.active { background: #28a745 !important; } .yok.active { background: #dc3545 !important; } .belki.active { background: #ffc107 !important; color: black !important; }
-
-        /* --- Alt Butonlar --- */
-        .save-btn { position: fixed; bottom: 30px; right: 30px; background: var(--neon-orange); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px var(--neon-orange); display: none; z-index: 3000; }
-        .reset-btn { background: transparent; border: 1px solid #dc3545; color: #dc3545; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; width: 100%; margin-top: 10px; }
+        .master-controls { display: none; flex-direction: column; gap: 15px; max-width: 800px; margin: 10px auto; padding: 15px; background: #111; border-radius: 15px; }
+        .input-group input { width: 90%; background: #222; border: 1px solid #444; color: white; padding: 10px; margin-bottom: 5px; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -84,157 +96,157 @@
 
     <header>
         <img src="badboysfc.jpg" alt="BAD BOYS FC" class="main-logo">
-        <h1 style="color:var(--neon-orange); margin:10px 0;">BAD BOYS FC</h1>
+        <h1 style="color:var(--neon-orange); margin:5px 0; font-size: 1.5rem;">BAD BOYS FC</h1>
     </header>
+
+    <div class="section-box">
+        <h2 style="color:var(--gold); text-align:center; margin:0 0 15px 0; font-size: 1.2rem;">📋 TAKTİK SAHASI</h2>
+        <p style="font-size: 0.7rem; text-align: center; color: #777;">(Oyuncuları parmağınla saha içine yerleştir)</p>
+        <div class="pitch-container" id="pitch">
+            <div class="penalty-area top-box"></div>
+            <div class="center-circle"></div>
+            <div class="penalty-area bottom-box"></div>
+            <!-- Oyuncular JS ile buraya gelecek -->
+        </div>
+    </div>
 
     <div class="master-controls" id="panel">
         <div class="input-group">
             <h3 style="margin:0; color:var(--neon-blue);">⚽ Maç Kaydı</h3>
             <input type="text" id="opp" placeholder="Rakip İsmi">
-            <div style="display:flex; gap:10px;">
-                <input type="number" id="s1" placeholder="Biz" style="flex:1">
-                <input type="number" id="s2" placeholder="Rakip" style="flex:1">
-            </div>
-            <button onclick="addMatch()" style="background:var(--neon-orange); border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">MAÇI EKLE</button>
+            <input type="number" id="s1" placeholder="Biz">
+            <input type="number" id="s2" placeholder="Rakip">
+            <button onclick="addMatch()" style="background:var(--neon-orange); border:none; padding:10px; border-radius:5px; font-weight:bold; width:100%;">EKLE</button>
         </div>
-
-        <div class="input-group">
-            <h3 style="margin:0; color:var(--gold);">🏆 MVP Oylama Sonucu</h3>
-            <select id="mvpSelect"></select>
-            <input type="text" id="mvpNote" placeholder="Kısa Bir Not (Örn: Hat-trick yaptı)">
-            <button onclick="addMvp()" style="background:var(--gold); color:black; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">MVP'Yİ KAYDET</button>
-        </div>
-        
-        <button class="reset-btn" onclick="fullReset()">SEZONU SIFIRLA (HER ŞEY SİLİNİR)</button>
     </div>
 
     <div class="player-grid" id="grid"></div>
 
-    <div class="mvp-section">
-        <h2 style="color:var(--gold); text-align:center; margin-top:0;">🏆 MVP KÜRSÜSÜ</h2>
-        <div id="mvpList"></div>
-    </div>
-
     <div class="section-box">
-        <h2 style="color:var(--neon-blue); text-align:center; margin-top:0;">📋 MAÇ YOKLAMASI</h2>
-        <div id="attList"></div>
-    </div>
-
-    <div class="section-box">
-        <h2 style="color:var(--neon-blue); margin-top:0;">🏟️ MAÇ GEÇMİŞİ</h2>
+        <h2 style="color:var(--neon-blue); text-align:center; margin-top:0;">🏟️ MAÇ GEÇMİŞİ</h2>
         <div id="matchHistory"></div>
     </div>
 
-    <button class="save-btn" id="saveFab" onclick="finalSave()">DEĞİŞİKLİKLERİ KAYDET</button>
+    <button class="save-btn" id="saveFab" onclick="finalSave()" style="display:none;">KAYDET</button>
 
 <script>
     const players = [
-        { name: "Hüseyin Yüksekdağ", role: "Kaleci", desc: "Kalede o varsa sırtımız sağlam", isGK: true },
-        { name: "Süleyman Tunçelik", role: "Defans", desc: "Defansın her alanına sorgusuzca geçer" },
-        { name: "Mehmet Uzun", role: "Defans", desc: "Takımın sert adamı" },
-        { name: "Yakup Sunay", role: "Kaptan", desc: "Her bölgeye yetişen koca bir kaptan" },
-        { name: "Murat Çaylı", role: "Forvet", desc: "Akrobatik hareketler ve çalım atmayı seviyor" },
-        { name: "Erol Gönül", role: "Orta Saha", desc: "Her yerden şut çekiyor sonra da nie koşmadın der" },
-        { name: "Eren Yılmaz", role: "Forvet", desc: "Eşi o maçı izlemeye geldiyse rakibe geçmiş olsun" },
-        { name: "Musa Aksu", role: "Forvet", desc: "Kıvrak bilekleri ile rakibe güven dosta korku veriyor" }
+        { name: "Hüseyin Yüksekdağ", role: "Kaleci", isGK: true },
+        { name: "Süleyman Tunçelik", role: "Defans" },
+        { name: "Mehmet Uzun", role: "Defans" },
+        { name: "Yakup Sunay", role: "Kaptan" },
+        { name: "Murat Çaylı", role: "Forvet" },
+        { name: "Erol Gönül", role: "Orta Saha" },
+        { name: "Eren Yılmaz", role: "Forvet" },
+        { name: "Musa Aksu", role: "Forvet" }
     ];
 
-    let stats = JSON.parse(localStorage.getItem('bb_v7_stats')) || players.map(() => ({ g: 0, a: 0, y: 0 }));
-    let matches = JSON.parse(localStorage.getItem('bb_v7_matches')) || [];
-    let att = JSON.parse(localStorage.getItem('bb_v7_att')) || Array(8).fill(null);
-    let mvps = JSON.parse(localStorage.getItem('bb_v7_mvps')) || [];
+    let stats = JSON.parse(localStorage.getItem('bb_v8_stats')) || players.map(() => ({ g: 0, a: 0, y: 0 }));
+    let matches = JSON.parse(localStorage.getItem('bb_v8_matches')) || [];
     let isLogged = false;
 
     function login() {
-        if(document.getElementById('passInput').value === "badboysfc1907") {
+        if(document.getElementById('passInput').value === "YakupS") {
             isLogged = true;
             document.getElementById('panel').style.display = 'flex';
             document.getElementById('saveFab').style.display = 'block';
-            const sel = document.getElementById('mvpSelect');
-            sel.innerHTML = players.map((p,i) => `<option value="${p.name}">${p.name}</option>`).join('');
             render();
-            alert("Sistem açıldı Kaptan!");
-        } else { alert("Şifre yanlış!"); }
+            alert("Hoş geldin Kaptan Yakup!");
+        } else { alert("Şifre hatalı!"); }
     }
 
     function render() {
-        // Kartlar
+        // İstatistik Kartları
         const g = document.getElementById('grid');
         g.innerHTML = '';
         players.forEach((p, i) => {
             g.innerHTML += `
                 <div class="player-card">
-                    <div class="smoke-effect"></div>
-                    <div class="player-header"><h3>${p.name}</h3><small>${p.role}</small><p>"${p.desc}"</p></div>
+                    <h3 style="margin:0; color:var(--neon-orange)">${p.name}</h3>
                     <div class="stats-container">
-                        <div class="stat-box"><label>GOL</label><span id="g-${i}">${stats[i].g}</span></div>
-                        <div class="stat-box"><label>ASİST</label><span id="a-${i}">${stats[i].a}</span></div>
-                        ${p.isGK ? `<div class="stat-box"><label>YENEN</label><span id="y-${i}">${stats[i].y}</span></div>` : ''}
+                        <div class="stat-box"><label>GOL</label><span>${stats[i].g}</span></div>
+                        <div class="stat-box"><label>ASİST</label><span>${stats[i].a}</span></div>
+                        ${p.isGK ? `<div class="stat-box"><label>YENEN</label><span>${stats[i].y}</span></div>` : ''}
                     </div>
-                    <div class="edit-row" style="display:${isLogged ? 'flex' : 'none'}"><small>GOL</small><div class="btn-group"><button class="btn-control minus" onclick="upd(${i},'g',-1)">-</button><button class="btn-control plus" onclick="upd(${i},'g',1)">+</button></div></div>
-                    <div class="edit-row" style="display:${isLogged ? 'flex' : 'none'}"><small>ASİST</small><div class="btn-group"><button class="btn-control minus" onclick="upd(${i},'a',-1)">-</button><button class="btn-control plus" onclick="upd(${i},'a',1)">+</button></div></div>
-                    ${p.isGK ? `<div class="edit-row" style="display:${isLogged ? 'flex' : 'none'}"><small>YENEN</small><div class="btn-group"><button class="btn-control minus" onclick="upd(${i},'y',-1)">-</button><button class="btn-control plus" onclick="upd(${i},'y',1)">+</button></div></div>` : ''}
                 </div>`;
         });
 
-        // MVP Listesi
-        const ml = document.getElementById('mvpList');
-        ml.innerHTML = mvps.slice().reverse().map(m => `
-            <div class="mvp-item">
-                <div><span style="font-weight:bold; color:var(--gold)">${m.player}</span><br><small style="color:#666">${m.date}</small></div>
-                <div style="font-style:italic; font-size:0.9rem;">"${m.note}"</div>
-            </div>
-        `).join('');
+        // Taktik Sahası Oyuncuları
+        const pitch = document.getElementById('pitch');
+        // Sadece çizgileri tut, eski oyuncuları temizle
+        const oldPlayers = pitch.querySelectorAll('.draggable-player');
+        oldPlayers.forEach(p => p.remove());
 
-        // Yoklama
-        const al = document.getElementById('attList');
-        al.innerHTML = players.map((p, i) => `
-            <div class="att-row">
-                <span>${p.name}</span>
-                <div class="att-btns">
-                    <button class="geliyor ${att[i] === 'g' ? 'active' : ''}" onclick="setAtt(${i},'g')">Geliyor</button>
-                    <button class="yok ${att[i] === 'n' ? 'active' : ''}" onclick="setAtt(${i},'n')">Yok</button>
-                    <button class="belki ${att[i] === 'b' ? 'active' : ''}" onclick="setAtt(${i},'b')">Belki</button>
-                </div>
-            </div>
-        `).join('');
+        players.forEach((p, i) => {
+            const div = document.createElement('div');
+            div.className = 'draggable-player';
+            div.innerText = p.name.split(' ')[0]; // Sadece isim
+            div.style.left = (10 + (i * 5)) + "px";
+            div.style.top = (20 + (i * 30)) + "px";
+            
+            // Sürükle Bırak Mantığı (Mobil & Masaüstü)
+            initDrag(div);
+            pitch.appendChild(div);
+        });
 
-        // Maçlar
+        // Maç Geçmişi
         const hl = document.getElementById('matchHistory');
         hl.innerHTML = matches.slice().reverse().map(m => `
-            <div style="background:#1a1a1a; padding:12px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                <div><small>${m.date}</small><br><strong>${m.opp}</strong></div>
-                <div style="font-size:1.3rem; font-weight:bold;">${m.s1} - ${m.s2}</div>
+            <div style="background:#1a1a1a; padding:10px; border-radius:8px; margin-bottom:5px; display:flex; justify-content:space-between;">
+                <span>${m.opp}</span><strong>${m.s1}-${m.s2}</strong>
             </div>
         `).join('');
     }
 
-    function upd(idx, k, v) { stats[idx][k] += v; if(stats[idx][k] < 0) stats[idx][k] = 0; render(); }
-    function setAtt(i, v) { att[i] = v; render(); }
+    function initDrag(el) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        
+        el.onmousedown = dragMouseDown;
+        el.ontouchstart = dragMouseDown;
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            const clientX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
+            pos3 = clientX;
+            pos4 = clientY;
+            document.onmouseup = closeDragElement;
+            document.ontouchend = closeDragElement;
+            document.onmousemove = elementDrag;
+            document.ontouchmove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
+            pos1 = pos3 - clientX;
+            pos2 = pos4 - clientY;
+            pos3 = clientX;
+            pos4 = clientY;
+            el.style.top = (el.offsetTop - pos2) + "px";
+            el.style.left = (el.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.ontouchend = null;
+            document.onmousemove = null;
+            document.ontouchmove = null;
+        }
+    }
 
     function addMatch() {
         const o = document.getElementById('opp').value, s1 = document.getElementById('s1').value, s2 = document.getElementById('s2').value;
-        if(!o || s1==="" || s2==="") return alert("Boş bırakma!");
-        matches.push({ opp: o, s1: s1, s2: s2, date: new Date().toLocaleDateString('tr-TR') });
-        render();
-    }
-
-    function addMvp() {
-        const p = document.getElementById('mvpSelect').value, n = document.getElementById('mvpNote').value;
-        mvps.push({ player: p, note: n || "Maçın adamı seçildi!", date: new Date().toLocaleDateString('tr-TR') });
+        if(!o) return;
+        matches.push({ opp: o, s1: s1, s2: s2 });
         render();
     }
 
     function finalSave() {
-        localStorage.setItem('bb_v7_stats', JSON.stringify(stats));
-        localStorage.setItem('bb_v7_matches', JSON.stringify(matches));
-        localStorage.setItem('bb_v7_att', JSON.stringify(att));
-        localStorage.setItem('bb_v7_mvps', JSON.stringify(mvps));
-        alert("Kaptan; İstatistikler, Maçlar, Yoklama ve MVP'ler başarıyla kaydedildi!");
-    }
-
-    function fullReset() {
-        if(confirm("DİKKAT: Her şey siliniyor! Emin misin?")) { localStorage.clear(); location.reload(); }
+        localStorage.setItem('bb_v8_stats', JSON.stringify(stats));
+        localStorage.setItem('bb_v8_matches', JSON.stringify(matches));
+        alert("Kaydedildi!");
     }
 
     render();
