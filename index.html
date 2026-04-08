@@ -13,6 +13,8 @@
             --gold: #ffd700;
             --pitch-green: #1a3a1a;
             --money-green: #2ecc71;
+            /* Dinamik Tema Rengi */
+            --theme-color: var(--neon-orange); 
         }
 
         body {
@@ -21,20 +23,29 @@
             font-family: 'Segoe UI', sans-serif;
             margin: 0;
             padding-bottom: 120px;
+            transition: 0.3s;
         }
 
         /* --- Admin --- */
         .admin-bar {
             background: rgba(0,0,0,0.9);
             padding: 15px;
-            border-bottom: 2px solid var(--neon-orange);
+            border-bottom: 2px solid var(--theme-color);
             display: flex; justify-content: center; gap: 15px;
             position: sticky; top: 0; z-index: 2000; backdrop-filter: blur(10px);
         }
-        .admin-bar input { background: #111; border: 1px solid var(--neon-orange); color: white; padding: 8px; border-radius: 5px; outline: none; }
+        .admin-bar input { background: #111; border: 1px solid var(--theme-color); color: white; padding: 8px; border-radius: 5px; outline: none; }
 
         header { text-align: center; padding: 30px; }
-        .main-logo { width: 140px; border: 3px solid var(--neon-orange); border-radius: 15px; box-shadow: 0 0 20px rgba(255,102,0,0.4); }
+        .main-logo { width: 140px; border: 3px solid var(--theme-color); border-radius: 15px; box-shadow: 0 0 20px rgba(255,102,0,0.4); transition: 0.3s; }
+
+        /* --- Dashboard Stili --- */
+        .dashboard {
+            max-width: 800px; margin: 0 auto 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px;
+        }
+        .dash-item { background: #111; padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #222; }
+        .dash-item span { display: block; font-size: 1.2rem; font-weight: bold; color: var(--theme-color); }
+        .dash-item label { font-size: 0.7rem; color: #777; text-transform: uppercase; }
 
         /* --- Taktik Sahası --- */
         .pitch-container {
@@ -54,10 +65,10 @@
         .bottom-box { bottom: 0; border-bottom: none; }
         
         .draggable-player {
-            position: absolute; background: var(--neon-orange); color: #000;
+            position: absolute; background: var(--theme-color); color: #000;
             padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold;
             cursor: move; z-index: 100; box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            touch-action: none; white-space: nowrap;
+            touch-action: none; white-space: nowrap; transition: background 0.3s;
         }
         .is-captain { background: var(--gold) !important; border: 2px solid #fff; box-shadow: 0 0 15px var(--gold) !important; }
         .captain-badge { background: #000; color: var(--gold); padding: 1px 5px; border-radius: 3px; font-size: 10px; margin-right: 8px; border: 1px solid var(--gold); }
@@ -70,13 +81,15 @@
         .input-group { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         .input-group input, .input-group select { background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; }
 
+        /* Tema Butonları */
+        .theme-selector { display: flex; gap: 10px; margin-top: 10px; }
+        .t-btn { flex: 1; height: 30px; border-radius: 5px; border: none; cursor: pointer; border: 2px solid transparent; }
+        .t-btn.active { border-color: white; }
+
         /* --- Kartlar & Statlar --- */
         .player-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 20px; }
         .player-card { background: var(--card-bg); border-radius: 20px; padding: 25px; position: relative; border: 1px solid #333; }
-        .player-header h3 { margin: 0; color: var(--neon-orange); text-transform: uppercase; display: flex; align-items: center; }
-        .player-header p { font-style: italic; color: #888; font-size: 0.85rem; margin: 10px 0; }
-        
-        /* Piyasa Değeri Stili */
+        .player-header h3 { margin: 0; color: var(--theme-color); text-transform: uppercase; display: flex; align-items: center; }
         .market-value { font-weight: bold; color: var(--money-green); font-size: 1.1rem; margin-top: 5px; display: block; }
 
         .stats-container { display: flex; justify-content: space-around; background: #000; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
@@ -87,15 +100,8 @@
         .btn-control { width: 30px; height: 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; }
         .plus { background: #28a745; } .minus { background: #dc3545; }
 
-        /* --- Listeler --- */
         .section-box { max-width: 800px; margin: 40px auto; background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; }
-        .att-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
-        .att-btns button { background: #222; border: none; color: #444; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-        .att-btns button.active { color: white; box-shadow: 0 0 10px currentColor; }
-        .geliyor.active { background: #28a745 !important; } .yok.active { background: #dc3545 !important; } .belki.active { background: #ffc107 !important; color: black !important; }
-        .mvp-item { background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-
-        .save-btn { position: fixed; bottom: 30px; right: 30px; background: var(--neon-orange); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px var(--neon-orange); display: none; z-index: 3000; }
+        .save-btn { position: fixed; bottom: 30px; right: 30px; background: var(--theme-color); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px var(--theme-color); display: none; z-index: 3000; }
         .reset-btn { background: transparent; border: 1px solid #dc3545; color: #dc3545; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; }
     </style>
 </head>
@@ -103,13 +109,20 @@
 
     <div class="admin-bar">
         <input type="password" id="passInput" placeholder="Kaptan Şifresi...">
-        <button onclick="login()" style="background:var(--neon-orange); border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">GİRİŞ</button>
+        <button onclick="login()" style="background:var(--theme-color); border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold; color: black;">GİRİŞ</button>
     </div>
 
     <header>
-        <img src="badboysfc.jpg" alt="BAD BOYS FC" class="main-logo">
-        <h1 style="color:var(--neon-orange); margin:10px 0;">BAD BOYS FC</h1>
+        <img src="badboysfc.jpg" alt="BAD BOYS FC" class="main-logo" id="logo">
+        <h1 style="color:var(--theme-color); margin:10px 0;">BAD BOYS FC</h1>
     </header>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+        <div class="dash-item"><label>Kadro Değeri</label><span id="totalValue">0M €</span></div>
+        <div class="dash-item"><label>Toplam Gol</label><span id="totalGoals">0</span></div>
+        <div class="dash-item"><label>Maç Sayısı</label><span id="totalMatches">0</span></div>
+    </div>
 
     <!-- TAKTİK SAHASI -->
     <div class="section-box">
@@ -124,13 +137,23 @@
     <!-- MASTER PANEL -->
     <div class="master-controls" id="panel">
         <div class="input-group">
+            <h3 style="margin:0; color:var(--neon-blue);">🎨 Tema Ayarları</h3>
+            <div class="theme-selector">
+                <button class="t-btn" onclick="setTheme('#ff6600')" style="background:#ff6600"></button>
+                <button class="t-btn" onclick="setTheme('#00d4ff')" style="background:#00d4ff"></button>
+                <button class="t-btn" onclick="setTheme('#2ecc71')" style="background:#2ecc71"></button>
+                <button class="t-btn" onclick="setTheme('#e74c3c')" style="background:#e74c3c"></button>
+            </div>
+        </div>
+        
+        <div class="input-group">
             <h3 style="margin:0; color:var(--neon-blue);">⚽ Maç Kaydı</h3>
             <input type="text" id="opp" placeholder="Rakip İsmi">
             <div style="display:flex; gap:10px;">
                 <input type="number" id="s1" placeholder="Biz" style="flex:1">
                 <input type="number" id="s2" placeholder="Rakip" style="flex:1">
             </div>
-            <button onclick="addMatch()" style="background:var(--neon-orange); border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">MAÇI EKLE</button>
+            <button onclick="addMatch()" style="background:var(--theme-color); color:black; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">MAÇI EKLE</button>
         </div>
 
         <div class="input-group">
@@ -139,25 +162,21 @@
             <input type="text" id="mvpNote" placeholder="Not (Örn: Hat-trick)">
             <button onclick="addMvp()" style="background:var(--gold); color:black; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">MVP KAYDET</button>
         </div>
-        <button class="reset-btn" onclick="fullReset()">SEZONU SIFIRLA (HER ŞEY SİLİNİR)</button>
+        <button class="reset-btn" onclick="fullReset()">SEZONU SIFIRLA</button>
     </div>
 
-    <!-- OYUNCU GRİDİ -->
     <div class="player-grid" id="grid"></div>
 
-    <!-- MVP KÜRSÜSÜ -->
     <div class="section-box">
         <h2 style="color:var(--gold); text-align:center; margin-top:0;">🏆 MVP KÜRSÜSÜ</h2>
         <div id="mvpList"></div>
     </div>
 
-    <!-- YOKLAMA -->
     <div class="section-box">
         <h2 style="color:var(--neon-blue); text-align:center; margin-top:0;">📋 MAÇ YOKLAMASI</h2>
         <div id="attList"></div>
     </div>
 
-    <!-- MAÇ GEÇMİŞİ -->
     <div class="section-box">
         <h2 style="color:var(--neon-blue); margin-top:0;">🏟️ MAÇ GEÇMİŞİ</h2>
         <div id="matchHistory"></div>
@@ -182,22 +201,33 @@
     let att = JSON.parse(localStorage.getItem('bb_v10_att')) || Array(8).fill(null);
     let mvps = JSON.parse(localStorage.getItem('bb_v10_mvps')) || [];
     let positions = JSON.parse(localStorage.getItem('bb_v10_pos')) || players.map((p, i) => ({ x: 10, y: 10 + (i * 35) }));
+    let activeTheme = localStorage.getItem('bb_v10_theme') || '#ff6600';
     
     let isLogged = false;
 
-    // Piyasa Değeri Hesaplama Fonksiyonu
-    function calculateMarketValue(idx) {
-        let base = 10.0; // Başlangıç 10 Milyon
-        let playerStats = stats[idx];
-        let playerName = players[idx].name;
-        
-        // MVP Sayısını Bul
-        let mvpCount = mvps.filter(m => m.player === playerName).length;
+    function setTheme(color) {
+        activeTheme = color;
+        document.documentElement.style.setProperty('--theme-color', color);
+        render();
+    }
 
-        // Hesaplama: Gol (+1M), Asist (+0.5M), Yenen (-0.5M), MVP (+1.5M)
-        let total = base + (playerStats.g * 1) + (playerStats.a * 0.5) - (playerStats.y * 0.5) + (mvpCount * 1.5);
-        
-        return total < 0 ? 0 : total.toFixed(1); // 0'ın altına düşmesin
+    function calculateMarketValue(idx) {
+        let base = 10.0;
+        let mvpCount = mvps.filter(m => m.player === players[idx].name).length;
+        let total = base + (stats[idx].g * 1) + (stats[idx].a * 0.5) - (stats[idx].y * 0.5) + (mvpCount * 1.5);
+        return total < 0 ? 0 : total;
+    }
+
+    function updateDashboard() {
+        let totalVal = 0;
+        let totalG = 0;
+        players.forEach((_, i) => {
+            totalVal += calculateMarketValue(i);
+            totalG += stats[i].g;
+        });
+        document.getElementById('totalValue').innerText = totalVal.toFixed(1) + "M €";
+        document.getElementById('totalGoals').innerText = totalG;
+        document.getElementById('totalMatches').innerText = matches.length;
     }
 
     function login() {
@@ -213,10 +243,13 @@
     }
 
     function render() {
+        document.documentElement.style.setProperty('--theme-color', activeTheme);
+        updateDashboard();
+        
         const g = document.getElementById('grid');
         g.innerHTML = '';
         players.forEach((p, i) => {
-            const mValue = calculateMarketValue(i);
+            const mValue = calculateMarketValue(i).toFixed(1);
             g.innerHTML += `
                 <div class="player-card" style="${p.isCaptain ? 'border-color: var(--gold)' : ''}">
                     <div class="player-header">
@@ -236,7 +269,6 @@
                 </div>`;
         });
 
-        // Taktik Sahası
         const pitch = document.getElementById('pitch');
         pitch.querySelectorAll('.draggable-player').forEach(o => o.remove());
         players.forEach((p, i) => {
@@ -251,7 +283,6 @@
         });
 
         document.getElementById('mvpList').innerHTML = mvps.slice().reverse().map(m => `<div class="mvp-item"><div><strong>${m.player}</strong><br><small>${m.date}</small></div><div>"${m.note}"</div></div>`).join('');
-        
         document.getElementById('attList').innerHTML = players.map((p, i) => `
             <div class="att-row">
                 <span>${p.name}</span>
@@ -261,7 +292,6 @@
                     <button class="belki ${att[i]==='b'?'active':''}" onclick="setAtt(${i},'b')">Belki</button>
                 </div>
             </div>`).join('');
-
         document.getElementById('matchHistory').innerHTML = matches.slice().reverse().map(m => `<div style="background:#1a1a1a; padding:12px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between;"><div><small>${m.date}</small><br><span>${m.opp}</span></div><strong>${m.s1}-${m.s2}</strong></div>`).join('');
     }
 
@@ -299,7 +329,7 @@
     function addMvp() {
         const p = document.getElementById('mvpSelect').value, n = document.getElementById('mvpNote').value;
         mvps.push({ player: p, note: n || "Maçın adamı!", date: new Date().toLocaleDateString('tr-TR') });
-        render(); // render() çağrıldığında market değeri otomatik güncellenir.
+        render();
     }
 
     function finalSave() {
@@ -308,12 +338,13 @@
         localStorage.setItem('bb_v10_att', JSON.stringify(att));
         localStorage.setItem('bb_v10_mvps', JSON.stringify(mvps));
         localStorage.setItem('bb_v10_pos', JSON.stringify(positions));
-        alert("Kaptan; Tüm veriler, piyasa değerleri ve saha dizilişi kaydedildi!");
+        localStorage.setItem('bb_v10_theme', activeTheme);
+        alert("Kaptan; Tüm veriler, Tema ve Dashboard kaydedildi!");
     }
 
     function fullReset() { if(confirm("DİKKAT: Her şey silinecek! Emin misin?")) { localStorage.clear(); location.reload(); } }
 
-    render();
+    setTheme(activeTheme);
 </script>
 </body>
 </html>
