@@ -13,67 +13,41 @@
             --gold: #ffd700;
             --pitch-green: #1a3a1a;
             --money-green: #2ecc71;
-            /* Dinamik Tema Rengi */
             --theme-color: var(--neon-orange); 
         }
 
-        body {
-            background-color: var(--deep-black);
-            color: #eee;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding-bottom: 120px;
-            transition: 0.3s;
-        }
+        body { background-color: var(--deep-black); color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 120px; transition: 0.3s; }
 
-        /* --- Admin --- */
         .admin-bar {
-            background: rgba(0,0,0,0.9);
-            padding: 15px;
-            border-bottom: 2px solid var(--theme-color);
-            display: flex; justify-content: center; gap: 15px;
-            position: sticky; top: 0; z-index: 2000; backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.9); padding: 15px; border-bottom: 2px solid var(--theme-color);
+            display: flex; justify-content: center; gap: 15px; position: sticky; top: 0; z-index: 2000; backdrop-filter: blur(10px);
         }
         .admin-bar input { background: #111; border: 1px solid var(--theme-color); color: white; padding: 8px; border-radius: 5px; outline: none; }
 
         header { text-align: center; padding: 30px; }
-        .main-logo { width: 140px; border: 3px solid var(--theme-color); border-radius: 15px; box-shadow: 0 0 20px rgba(255,102,0,0.4); transition: 0.3s; }
+        .main-logo { width: 140px; border: 3px solid var(--theme-color); border-radius: 15px; box-shadow: 0 0 20px rgba(255,102,0,0.4); }
 
-        /* --- Dashboard Stili --- */
-        .dashboard {
-            max-width: 800px; margin: 0 auto 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px;
-        }
+        .dashboard { max-width: 800px; margin: 0 auto 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; }
         .dash-item { background: #111; padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #222; }
         .dash-item span { display: block; font-size: 1.2rem; font-weight: bold; color: var(--theme-color); }
         .dash-item label { font-size: 0.7rem; color: #777; text-transform: uppercase; }
 
-        /* --- Taktik Sahası --- */
         .pitch-container {
-            width: 95%; max-width: 500px; aspect-ratio: 2/3;
-            background: var(--pitch-green);
-            margin: 20px auto;
-            border: 3px solid #fff;
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            background-image: linear-gradient(rgba(255,255,255,0.05) 50%, transparent 50%);
-            background-size: 100% 20%;
+            width: 95%; max-width: 500px; aspect-ratio: 2/3; background: var(--pitch-green);
+            margin: 20px auto; border: 3px solid #fff; border-radius: 10px; position: relative; overflow: hidden;
+            background-image: linear-gradient(rgba(255,255,255,0.05) 50%, transparent 50%); background-size: 100% 20%;
         }
         .center-circle { width: 80px; height: 80px; border: 2px solid #fff; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); position: absolute; }
         .penalty-area { width: 60%; height: 15%; border: 2px solid #fff; position: absolute; left: 20%; }
-        .top-box { top: 0; border-top: none; }
-        .bottom-box { bottom: 0; border-bottom: none; }
+        .top-box { top: 0; border-top: none; } .bottom-box { bottom: 0; border-bottom: none; }
         
         .draggable-player {
-            position: absolute; background: var(--theme-color); color: #000;
-            padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold;
-            cursor: move; z-index: 100; box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            touch-action: none; white-space: nowrap; transition: background 0.3s;
+            position: absolute; background: var(--theme-color); color: #000; padding: 5px 12px; border-radius: 15px; 
+            font-size: 11px; font-weight: bold; cursor: move; z-index: 100; box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            touch-action: none; white-space: nowrap;
         }
         .is-captain { background: var(--gold) !important; border: 2px solid #fff; box-shadow: 0 0 15px var(--gold) !important; }
-        .captain-badge { background: #000; color: var(--gold); padding: 1px 5px; border-radius: 3px; font-size: 10px; margin-right: 8px; border: 1px solid var(--gold); }
 
-        /* --- Master Panel --- */
         .master-controls {
             max-width: 800px; margin: 20px auto; background: #111; padding: 25px;
             border-radius: 20px; border: 2px dashed #444; display: none; flex-direction: column; gap: 20px;
@@ -81,26 +55,30 @@
         .input-group { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         .input-group input, .input-group select { background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; }
 
-        /* Tema Butonları */
         .theme-selector { display: flex; gap: 10px; margin-top: 10px; }
-        .t-btn { flex: 1; height: 30px; border-radius: 5px; border: none; cursor: pointer; border: 2px solid transparent; }
-        .t-btn.active { border-color: white; }
+        .t-btn { flex: 1; height: 30px; border-radius: 5px; border: 2px solid transparent; cursor: pointer; }
 
-        /* --- Kartlar & Statlar --- */
         .player-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 20px; }
         .player-card { background: var(--card-bg); border-radius: 20px; padding: 25px; position: relative; border: 1px solid #333; }
-        .player-header h3 { margin: 0; color: var(--theme-color); text-transform: uppercase; display: flex; align-items: center; }
         .market-value { font-weight: bold; color: var(--money-green); font-size: 1.1rem; margin-top: 5px; display: block; }
 
         .stats-container { display: flex; justify-content: space-around; background: #000; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .stat-box span { font-size: 1.5rem; font-weight: bold; color: var(--neon-blue); display: block; text-align: center;}
-        .stat-box label { font-size: 0.65rem; color: #666; display: block; text-align: center;}
-
+        
         .edit-row { display: none; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 5px 10px; border-radius: 8px; margin-bottom: 5px; }
         .btn-control { width: 30px; height: 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; }
         .plus { background: #28a745; } .minus { background: #dc3545; }
 
         .section-box { max-width: 800px; margin: 40px auto; background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222; }
+        
+        /* Yoklama Butonları Fix */
+        .att-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
+        .att-btns { display: flex; gap: 5px; }
+        .att-btns button { background: #222; border: none; color: #555; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; transition: 0.2s; }
+        .geliyor.active { background: #28a745 !important; color: white !important; box-shadow: 0 0 10px #28a745; }
+        .yok.active { background: #dc3545 !important; color: white !important; box-shadow: 0 0 10px #dc3545; }
+        .belki.active { background: #ffc107 !important; color: black !important; box-shadow: 0 0 10px #ffc107; }
+
         .save-btn { position: fixed; bottom: 30px; right: 30px; background: var(--theme-color); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px var(--theme-color); display: none; z-index: 3000; }
         .reset-btn { background: transparent; border: 1px solid #dc3545; color: #dc3545; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; }
     </style>
@@ -117,14 +95,12 @@
         <h1 style="color:var(--theme-color); margin:10px 0;">BAD BOYS FC</h1>
     </header>
 
-    <!-- DASHBOARD -->
     <div class="dashboard">
         <div class="dash-item"><label>Kadro Değeri</label><span id="totalValue">0M €</span></div>
         <div class="dash-item"><label>Toplam Gol</label><span id="totalGoals">0</span></div>
         <div class="dash-item"><label>Maç Sayısı</label><span id="totalMatches">0</span></div>
     </div>
 
-    <!-- TAKTİK SAHASI -->
     <div class="section-box">
         <h2 style="color:var(--gold); text-align:center; margin-top:0;">📋 TAKTİK TAHTASI</h2>
         <div class="pitch-container" id="pitch">
@@ -134,7 +110,6 @@
         </div>
     </div>
 
-    <!-- MASTER PANEL -->
     <div class="master-controls" id="panel">
         <div class="input-group">
             <h3 style="margin:0; color:var(--neon-blue);">🎨 Tema Ayarları</h3>
@@ -159,7 +134,7 @@
         <div class="input-group">
             <h3 style="margin:0; color:var(--gold);">🏆 MVP Oylama Sonucu</h3>
             <select id="mvpSelect"></select>
-            <input type="text" id="mvpNote" placeholder="Not (Örn: Hat-trick)">
+            <input type="text" id="mvpNote" placeholder="Not">
             <button onclick="addMvp()" style="background:var(--gold); color:black; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">MVP KAYDET</button>
         </div>
         <button class="reset-btn" onclick="fullReset()">SEZONU SIFIRLA</button>
@@ -191,14 +166,14 @@
         { name: "Mehmet Uzun", role: "Defans", desc: "Takımın sert adamı" },
         { name: "Yakup Sunay", role: "Kaptan", desc: "Her bölgeye yetişen koca bir kaptan", isCaptain: true },
         { name: "Murat Çaylı", role: "Forvet", desc: "Akrobatik hareketler ve çalım atmayı seviyor" },
-        { name: "Erol Gönül", role: "Orta Saha", desc: "Her yerden şut çekiyor sonra da nie koşmadın der" },
+        { name: "Erol Gönül", role: "Orta Saha", desc: "Her yerden şut çekiyor" },
         { name: "Eren Yılmaz", role: "Forvet", desc: "Eşi o maçı izlemeye geldiyse rakibe geçmiş olsun" },
-        { name: "Musa Aksu", role: "Forvet", desc: "Kıvrak bilekleri ile rakibe güven dosta korku veriyor" }
+        { name: "Musa Aksu", role: "Forvet", desc: "Kıvrak bilekleri ile rakibe güven veriyor" }
     ];
 
     let stats = JSON.parse(localStorage.getItem('bb_v10_stats')) || players.map(() => ({ g: 0, a: 0, y: 0 }));
     let matches = JSON.parse(localStorage.getItem('bb_v10_matches')) || [];
-    let att = JSON.parse(localStorage.getItem('bb_v10_att')) || Array(8).fill(null);
+    let att = JSON.parse(localStorage.getItem('bb_v10_att')) || Array(players.length).fill(null);
     let mvps = JSON.parse(localStorage.getItem('bb_v10_mvps')) || [];
     let positions = JSON.parse(localStorage.getItem('bb_v10_pos')) || players.map((p, i) => ({ x: 10, y: 10 + (i * 35) }));
     let activeTheme = localStorage.getItem('bb_v10_theme') || '#ff6600';
@@ -219,8 +194,7 @@
     }
 
     function updateDashboard() {
-        let totalVal = 0;
-        let totalG = 0;
+        let totalVal = 0, totalG = 0;
         players.forEach((_, i) => {
             totalVal += calculateMarketValue(i);
             totalG += stats[i].g;
@@ -238,8 +212,15 @@
             const sel = document.getElementById('mvpSelect');
             sel.innerHTML = players.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
             render();
-            alert("Hoş geldin Kaptan Yakup!");
+            alert("Hoş geldin Kaptan!");
         } else { alert("Şifre yanlış!"); }
+    }
+
+    // YOKLAMA FONKSİYONU - DÜZELTİLDİ
+    function setAtt(i, status) {
+        att[i] = status;
+        localStorage.setItem('bb_v10_att', JSON.stringify(att)); // Anında kaydet
+        render();
     }
 
     function render() {
@@ -256,16 +237,13 @@
                         <h3>${p.isCaptain ? '<span class="captain-badge">C</span>' : ''}${p.name}</h3>
                         <small>${p.role}</small>
                         <span class="market-value">💎 Değer: ${mValue}M €</span>
-                        <p>"${p.desc}"</p>
                     </div>
                     <div class="stats-container">
                         <div class="stat-box"><label>GOL</label><span>${stats[i].g}</span></div>
                         <div class="stat-box"><label>ASİST</label><span>${stats[i].a}</span></div>
-                        ${p.isGK ? `<div class="stat-box"><label>YENEN</label><span>${stats[i].y}</span></div>` : ''}
                     </div>
                     <div class="edit-row" style="display:${isLogged ? 'flex' : 'none'}"><small>GOL</small><button class="btn-control minus" onclick="upd(${i},'g',-1)">-</button><button class="btn-control plus" onclick="upd(${i},'g',1)">+</button></div>
                     <div class="edit-row" style="display:${isLogged ? 'flex' : 'none'}"><small>ASİST</small><button class="btn-control minus" onclick="upd(${i},'a',-1)">-</button><button class="btn-control plus" onclick="upd(${i},'a',1)">+</button></div>
-                    ${p.isGK ? `<div class="edit-row" style="display:${isLogged ? 'flex' : 'none'}"><small>YENEN</small><button class="btn-control minus" onclick="upd(${i},'y',-1)">-</button><button class="btn-control plus" onclick="upd(${i},'y',1)">+</button></div>` : ''}
                 </div>`;
         });
 
@@ -274,7 +252,7 @@
         players.forEach((p, i) => {
             const div = document.createElement('div');
             div.className = `draggable-player ${p.isCaptain ? 'is-captain' : ''}`;
-            div.innerHTML = (p.isCaptain ? '<b>(C) </b>' : '') + p.name.split(' ')[0];
+            div.innerHTML = (p.isCaptain ? '(C) ' : '') + p.name.split(' ')[0];
             div.style.left = positions[i].x + "px";
             div.style.top = positions[i].y + "px";
             div.dataset.index = i;
@@ -282,7 +260,9 @@
             pitch.appendChild(div);
         });
 
-        document.getElementById('mvpList').innerHTML = mvps.slice().reverse().map(m => `<div class="mvp-item"><div><strong>${m.player}</strong><br><small>${m.date}</small></div><div>"${m.note}"</div></div>`).join('');
+        document.getElementById('mvpList').innerHTML = mvps.slice().reverse().map(m => `<div class="mvp-item"><strong>${m.player}</strong> - ${m.note}</div>`).join('');
+        
+        // YOKLAMA LİSTESİ RENDER - DÜZELTİLDİ
         document.getElementById('attList').innerHTML = players.map((p, i) => `
             <div class="att-row">
                 <span>${p.name}</span>
@@ -292,7 +272,8 @@
                     <button class="belki ${att[i]==='b'?'active':''}" onclick="setAtt(${i},'b')">Belki</button>
                 </div>
             </div>`).join('');
-        document.getElementById('matchHistory').innerHTML = matches.slice().reverse().map(m => `<div style="background:#1a1a1a; padding:12px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between;"><div><small>${m.date}</small><br><span>${m.opp}</span></div><strong>${m.s1}-${m.s2}</strong></div>`).join('');
+
+        document.getElementById('matchHistory').innerHTML = matches.slice().reverse().map(m => `<div style="background:#1a1a1a; padding:10px; margin-bottom:5px; border-radius:5px;">${m.date} - ${m.opp}: ${m.s1}-${m.s2}</div>`).join('');
     }
 
     function initDrag(el) {
@@ -309,7 +290,7 @@
             const cx = e.type==="touchmove"?e.touches[0].clientX:e.clientX;
             const cy = e.type==="touchmove"?e.touches[0].clientY:e.clientY;
             p1=p3-cx; p2=p4-cy; p3=cx; p4=cy;
-            let nL = el.offsetLeft-p1; let nT = el.offsetTop-p2;
+            let nL = el.offsetLeft-p1, nT = el.offsetTop-p2;
             el.style.left=nL+"px"; el.style.top=nT+"px";
             positions[el.dataset.index] = { x: nL, y: nT };
         }
@@ -317,21 +298,17 @@
     }
 
     function upd(idx, k, v) { stats[idx][k] += v; if(stats[idx][k] < 0) stats[idx][k] = 0; render(); }
-    function setAtt(i, v) { att[i] = v; render(); }
-
     function addMatch() {
         const o = document.getElementById('opp').value, s1 = document.getElementById('s1').value, s2 = document.getElementById('s2').value;
-        if(!o || s1==="" || s2==="") return alert("Boş bırakma!");
+        if(!o || s1==="" || s2==="") return alert("Eksik bilgi!");
         matches.push({ opp: o, s1: s1, s2: s2, date: new Date().toLocaleDateString('tr-TR') });
         render();
     }
-
     function addMvp() {
         const p = document.getElementById('mvpSelect').value, n = document.getElementById('mvpNote').value;
         mvps.push({ player: p, note: n || "Maçın adamı!", date: new Date().toLocaleDateString('tr-TR') });
         render();
     }
-
     function finalSave() {
         localStorage.setItem('bb_v10_stats', JSON.stringify(stats));
         localStorage.setItem('bb_v10_matches', JSON.stringify(matches));
@@ -339,12 +316,11 @@
         localStorage.setItem('bb_v10_mvps', JSON.stringify(mvps));
         localStorage.setItem('bb_v10_pos', JSON.stringify(positions));
         localStorage.setItem('bb_v10_theme', activeTheme);
-        alert("Kaptan; Tüm veriler, Tema ve Dashboard kaydedildi!");
+        alert("Kaydedildi!");
     }
+    function fullReset() { if(confirm("Sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
 
-    function fullReset() { if(confirm("DİKKAT: Her şey silinecek! Emin misin?")) { localStorage.clear(); location.reload(); } }
-
-    setTheme(activeTheme);
+    render();
 </script>
 </body>
 </html>
