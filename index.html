@@ -12,6 +12,7 @@
             --card-bg: rgba(20, 20, 20, 0.95);
             --gold: #ffd700;
             --pitch-green: #1a3a1a;
+            --money-green: #2ecc71;
         }
 
         body {
@@ -74,6 +75,10 @@
         .player-card { background: var(--card-bg); border-radius: 20px; padding: 25px; position: relative; border: 1px solid #333; }
         .player-header h3 { margin: 0; color: var(--neon-orange); text-transform: uppercase; display: flex; align-items: center; }
         .player-header p { font-style: italic; color: #888; font-size: 0.85rem; margin: 10px 0; }
+        
+        /* Piyasa Değeri Stili */
+        .market-value { font-weight: bold; color: var(--money-green); font-size: 1.1rem; margin-top: 5px; display: block; }
+
         .stats-container { display: flex; justify-content: space-around; background: #000; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .stat-box span { font-size: 1.5rem; font-weight: bold; color: var(--neon-blue); display: block; text-align: center;}
         .stat-box label { font-size: 0.65rem; color: #666; display: block; text-align: center;}
@@ -180,6 +185,21 @@
     
     let isLogged = false;
 
+    // Piyasa Değeri Hesaplama Fonksiyonu
+    function calculateMarketValue(idx) {
+        let base = 10.0; // Başlangıç 10 Milyon
+        let playerStats = stats[idx];
+        let playerName = players[idx].name;
+        
+        // MVP Sayısını Bul
+        let mvpCount = mvps.filter(m => m.player === playerName).length;
+
+        // Hesaplama: Gol (+1M), Asist (+0.5M), Yenen (-0.5M), MVP (+1.5M)
+        let total = base + (playerStats.g * 1) + (playerStats.a * 0.5) - (playerStats.y * 0.5) + (mvpCount * 1.5);
+        
+        return total < 0 ? 0 : total.toFixed(1); // 0'ın altına düşmesin
+    }
+
     function login() {
         if(document.getElementById('passInput').value === "YakupS") {
             isLogged = true;
@@ -193,15 +213,16 @@
     }
 
     function render() {
-        // Oyuncu Kartları (Verdiklerin Aynen Korundu)
         const g = document.getElementById('grid');
         g.innerHTML = '';
         players.forEach((p, i) => {
+            const mValue = calculateMarketValue(i);
             g.innerHTML += `
                 <div class="player-card" style="${p.isCaptain ? 'border-color: var(--gold)' : ''}">
                     <div class="player-header">
                         <h3>${p.isCaptain ? '<span class="captain-badge">C</span>' : ''}${p.name}</h3>
                         <small>${p.role}</small>
+                        <span class="market-value">💎 Değer: ${mValue}M €</span>
                         <p>"${p.desc}"</p>
                     </div>
                     <div class="stats-container">
@@ -215,7 +236,7 @@
                 </div>`;
         });
 
-        // Taktik Sahası ve Konumlar
+        // Taktik Sahası
         const pitch = document.getElementById('pitch');
         pitch.querySelectorAll('.draggable-player').forEach(o => o.remove());
         players.forEach((p, i) => {
@@ -229,7 +250,6 @@
             pitch.appendChild(div);
         });
 
-        // Diğer Listeler (Yoklama, MVP, Maçlar - Verdiklerin Aynen Korundu)
         document.getElementById('mvpList').innerHTML = mvps.slice().reverse().map(m => `<div class="mvp-item"><div><strong>${m.player}</strong><br><small>${m.date}</small></div><div>"${m.note}"</div></div>`).join('');
         
         document.getElementById('attList').innerHTML = players.map((p, i) => `
@@ -279,7 +299,7 @@
     function addMvp() {
         const p = document.getElementById('mvpSelect').value, n = document.getElementById('mvpNote').value;
         mvps.push({ player: p, note: n || "Maçın adamı!", date: new Date().toLocaleDateString('tr-TR') });
-        render();
+        render(); // render() çağrıldığında market değeri otomatik güncellenir.
     }
 
     function finalSave() {
@@ -288,7 +308,7 @@
         localStorage.setItem('bb_v10_att', JSON.stringify(att));
         localStorage.setItem('bb_v10_mvps', JSON.stringify(mvps));
         localStorage.setItem('bb_v10_pos', JSON.stringify(positions));
-        alert("Kaptan; Tüm veriler ve saha dizilişi kaydedildi!");
+        alert("Kaptan; Tüm veriler, piyasa değerleri ve saha dizilişi kaydedildi!");
     }
 
     function fullReset() { if(confirm("DİKKAT: Her şey silinecek! Emin misin?")) { localStorage.clear(); location.reload(); } }
